@@ -11,7 +11,7 @@ namespace AeroScenery.OrthophotoSources
     /// https://developers.google.com/maps/documentation/javascript/examples/map-coordinates?csw=1
     /// This is very similar to the Bing calculations, but the way Google rounds things gives slightly different results
     /// </summary>
-    public class GoogleHelper
+    public class GoogleOrthophotoTileHelper
     { 
 
         private const int TileSize = 256;

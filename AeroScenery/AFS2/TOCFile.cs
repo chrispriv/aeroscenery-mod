@@ -23,6 +23,7 @@ namespace AeroScenery.AFS2
 
     public class TOCFile
     {
+        /*
         public string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -48,5 +49,6 @@ namespace AeroScenery.AFS2
 
             return sb.ToString();
         }
+        */
     }
 }

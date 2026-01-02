@@ -35,11 +35,26 @@ namespace AeroScenery.Common
 
         public bool? DownloadImageTiles { get; set; }
 
+        public bool? FixMissingTiles { get; set; }
+
         public bool? StitchImageTiles { get; set; }
 
         public bool? GenerateAIDAndTMCFiles { get; set; }
 
         public bool? RunGeoConvert { get; set; }
+
+        //#MOD_i
+        public bool? DownloadOSMDataEnable { get; set; }
+
+        //#MOD_h
+        public bool? DownloadOsmData { get; set; }
+
+        public bool? DownloadElevationData { get; set; }
+
+        //#MOD_g
+        public bool? RunTreesDetection { get; set; }
+        public bool? RunTreesDetectionMask { get; set; }
+        public bool? RunTreesDetectionDetection { get; set; }
 
         public bool? DeleteStitchedImageTiles { get; set; }
 
@@ -68,8 +83,19 @@ namespace AeroScenery.Common
 
         public bool? GeoConvertUseWrapper { get; set; }
 
+        public bool? ShowMultipleConcurrentSquaresWarning { get; set; }
+
         public string USGSUsername { get; set; }
         public string USGSPassword { get; set; }
+
+        public string LinzApiKey { get; set; }
+
+        //#MOD_e
+        public string MapboxApiKey { get; set; }
+        //#MOD_h
+        public string OpenTopographyApiKey { get; set; }
+        public string OpenTopographyDataSet { get; set; }
+        public string HereWeGoApiKey { get; set; }
 
         public int? MapControlLastZoomLevel { get; set;}
         public double? MapControlLastX { get; set; }
@@ -78,6 +104,11 @@ namespace AeroScenery.Common
         public bool? ShowAirports { get; set; }
         public double? ShrinkTMCGridSquareCoords { get; set; }
         public string AFS2UserDirectory { get; set; }
+
+        public string QGISDirectory { get; set; }
+
+        //#MOD_i
+        public string AFSSceneryFolder { get; set; }
 
         // Image procesing
         public bool? EnableImageProcessing { get; set; }
@@ -89,10 +120,31 @@ namespace AeroScenery.Common
         public int? GreenAdjustment { get; set; }
         public int? BlueAdjustment { get; set; }
 
+        //#MOD_i
+        public bool? RemoveAlphaChannelAdjustment { get; set; }
+
         public bool? GridSquareNamesFixed { get; set; }
 
         public OrthophotoSourceSettings OrthophotoSourceSettings { get; set; }
 
         public ElevationSettings ElevationSettings { get; set; }
+
+        //#MOD_g
+        public string TreesDetectionDirectory { get; set; }
+        public int? TreesDetectionDensity { get; set; }
+        public bool? TreesDetectionQuit { get; set; }
+
+        //#MOD_h
+        public int? TreesDetectionAltitudeMax { get; set; }
+        public bool? TreesDetectionAltitudeCheck { get; set; }
+
+        //#MOD_i
+        public int? TreesPresetIndex { get; set; }
+        public bool? TreesPresetHighTrees { get; set; }
+        public bool? TreesPresetBigShrubs { get; set; }
+
+        public bool? CreateAddForMobile { get; set; }
+
+
     }
 }

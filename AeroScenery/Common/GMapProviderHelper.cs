@@ -102,8 +102,8 @@ namespace AeroScenery.Common
                 case "BingHybridMap":
                     return GMapProviders.BingHybridMap;
                 case "BingSatelliteMap":
-                    return GMapProviders.BingSatelliteMap;
-                case "BingMap":
+                     return GMapProviders.BingSatelliteMap;
+                 case "BingMap":
                     return GMapProviders.BingMap;
                 case "WikiMapiaMap":
                     return GMapProviders.WikiMapiaMap;
@@ -161,8 +161,11 @@ namespace AeroScenery.Common
                     return GMapProviders.GoogleChinaMap;
                 case "GoogleHybridMap":
                     return GMapProviders.GoogleHybridMap;
+                //#MOD_f
+                // Mapped with "Open Cycle Map", cause "Open Street Map" doesn't work anymore (keep the inital gmapProviderName to avoid troubles with saved values in the User-DB when starting the App)
                 case "OpenStreetMap":
-                    return GMapProviders.OpenStreetMap;
+                    return GMapProviders.OpenStreet4UMap;
+                    //return GMapProviders.OpenCycleMap;
                 default:
                     return GMapProviders.GoogleHybridMap;
             }

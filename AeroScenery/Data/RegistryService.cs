@@ -87,7 +87,7 @@ namespace AeroScenery.Data
     {
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
 
-        private int settingsVersion = 8;
+        // private int settingsVersion = 8;
 
         /// <summary>
         /// Gets whether this installation has legacy registry settings
@@ -249,6 +249,7 @@ namespace AeroScenery.Data
                 // Settings verison 8
                 settings.AFS2UserDirectory = key.GetValueAsString("AFS2UserDirectory");
                 // --
+
             }
 
 

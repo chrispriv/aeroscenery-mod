@@ -13,7 +13,7 @@ namespace AeroScenery.OrthophotoSources
     // </copyright>
     // https://msdn.microsoft.com/en-us/library/bb259689.aspx
     //------------------------------------------------------------------------------
-    static class BingHelper
+    static class BingOrthophotoTileHelper
     {
         private const double EarthRadius = 6378137;
         private const double MinLatitude = -85.05112878;

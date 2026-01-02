@@ -33,7 +33,6 @@ namespace AeroScenery.FSCloudPort
                     dataRepository.UpdateFSCloudPortAirports(airports);
                 }
             });
-
         }
 
         public async Task<IList<FSCloudPortAirport>> GetAirportsAsync()

@@ -1,4 +1,6 @@
-﻿namespace AeroScenery
+﻿using AeroScenery.UI;
+
+namespace AeroScenery
 {
     partial class MainForm
     {
@@ -37,26 +39,30 @@
             this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.getSDKToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.openUserFolderToolstripButton = new System.Windows.Forms.ToolStripButton();
+            this.openSceneryEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.showAirportsToolstripButton = new System.Windows.Forms.ToolStripButton();
             this.mapTypeToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.hybridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.satelliteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.googleTerrainMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bingHybridMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bingSatelliteMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.binStandardMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openStreetMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.gridSquareSelectionSizeToolstripCombo = new System.Windows.Forms.ToolStripComboBox();
             this.versionToolStripLabel = new System.Windows.Forms.ToolStripLabel();
+            this.gridSquareSelectionSizeToolstripCombo = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.mainTabControl = new System.Windows.Forms.TabControl();
             this.mapTabPage = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSearchTileButton = new System.Windows.Forms.ToolStripButton();
             this.gridSquareLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDownloadedLabel = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -68,10 +74,21 @@
             this.openMapToolStripDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
             this.openInGoogleMapsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openInBingMApsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openInGoogleEarthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToClipboardToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.gridSquareBoundaryBox = new System.Windows.Forms.ToolStripLabel();
             this.progressTabPage = new System.Windows.Forms.TabPage();
             this.childTaskLabel = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.downloadThreadProgress8 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress7 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress6 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress5 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress4 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress3 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress2 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress1 = new AeroScenery.UI.DownloadThreadProgressControl();
             this.label6 = new System.Windows.Forms.Label();
             this.currentActionProgressBar = new System.Windows.Forms.ProgressBar();
             this.parentTaskLabel = new System.Windows.Forms.Label();
@@ -84,6 +101,14 @@
             this.zoomLevelLabel = new System.Windows.Forms.Label();
             this.zoomLevelTrackBar = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chooseActionsToRunHelpImage = new System.Windows.Forms.Label();
+            this.downloadElevationDataCheckBox = new System.Windows.Forms.CheckBox();
+            this.fixMissingTilesCheckBox = new System.Windows.Forms.CheckBox();
+            this.downloadOsmDataCheckBox = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.runTreesDetectionDetectionCheckBox = new System.Windows.Forms.CheckBox();
+            this.runTreesDetectionMaskCheckBox = new System.Windows.Forms.CheckBox();
+            this.runTreesDetectionCheckBox = new System.Windows.Forms.CheckBox();
             this.actionSetComboBox = new System.Windows.Forms.ComboBox();
             this.installSceneryIntoAFSCheckBox = new System.Windows.Forms.CheckBox();
             this.deleteStitchedImagesCheckBox = new System.Windows.Forms.CheckBox();
@@ -95,8 +120,20 @@
             this.afsLevelsCheckBoxList = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.imageSourceComboBox = new System.Windows.Forms.ComboBox();
+            this.imageSourceComboBox = new AeroScenery.UI.ImageComboBox();
             this.elevationTabPage = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.movingMapHideTilesCheckBox = new System.Windows.Forms.CheckBox();
+            this.movingMapTraceFlightCheckBox = new System.Windows.Forms.CheckBox();
+            this.movingMapFixCheckBox = new System.Windows.Forms.CheckBox();
+            this.movingMapRadioButtonFeet = new System.Windows.Forms.RadioButton();
+            this.movingMapRadioButtonMetric = new System.Windows.Forms.RadioButton();
+            this.movingMapHelpImage = new System.Windows.Forms.Label();
+            this.movingMapStartStopButton = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.MovingMapOutputPositionData = new System.Windows.Forms.TextBox();
+            this.movingMapOutputFlightData = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.usgsTestButton = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -112,10 +149,7 @@
             this.startStopButton = new System.Windows.Forms.Button();
             this.shutdownCheckbox = new System.Windows.Forms.CheckBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.downloadThreadProgress4 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress3 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress2 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress1 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.mainTabControl.SuspendLayout();
@@ -130,6 +164,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.zoomLevelTrackBar)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.elevationTabPage.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -157,12 +192,13 @@
             this.mainMap.ScaleMode = GMap.NET.WindowsForms.ScaleModes.Integer;
             this.mainMap.SelectedAreaFillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(65)))), ((int)(((byte)(105)))), ((int)(((byte)(225)))));
             this.mainMap.ShowTileGridLines = false;
-            this.mainMap.Size = new System.Drawing.Size(1034, 715);
+            this.mainMap.Size = new System.Drawing.Size(1064, 741);
             this.mainMap.TabIndex = 0;
             this.mainMap.Zoom = 0D;
             this.mainMap.OnMarkerClick += new GMap.NET.WindowsForms.MarkerClick(this.MainMap_OnMarkerClick);
             this.mainMap.OnMapDrag += new GMap.NET.MapDrag(this.MainMap_OnMapDrag);
             this.mainMap.OnMapZoomChanged += new GMap.NET.MapZoomChanged(this.MainMap_OnMapZoomChanged);
+            this.mainMap.Load += new System.EventHandler(this.mainMap_Load);
             this.mainMap.DoubleClick += new System.EventHandler(this.mainMap_DoubleClick);
             this.mainMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MainMap_MouseDown);
             this.mainMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainMap_MouseUp);
@@ -171,9 +207,9 @@
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStripLabel1});
-            this.statusStrip.Location = new System.Drawing.Point(0, 812);
+            this.statusStrip.Location = new System.Drawing.Point(0, 838);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1461, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1491, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip";
             // 
@@ -190,18 +226,20 @@
             this.settingsButton,
             this.helpToolStripButton,
             this.getSDKToolStripButton,
+            this.openUserFolderToolstripButton,
+            this.openSceneryEditorToolStripButton,
             this.toolStripSeparator4,
             this.showAirportsToolstripButton,
             this.mapTypeToolStripDropDown,
             this.toolStripSeparator7,
             this.toolStripLabel2,
-            this.gridSquareSelectionSizeToolstripCombo,
             this.versionToolStripLabel,
+            this.gridSquareSelectionSizeToolstripCombo,
             this.toolStripSeparator5});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(12, 5, 0, 5);
-            this.toolStrip1.Size = new System.Drawing.Size(1461, 42);
+            this.toolStrip1.Size = new System.Drawing.Size(1491, 42);
             this.toolStrip1.TabIndex = 4;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -223,6 +261,7 @@
             this.helpToolStripButton.Name = "helpToolStripButton";
             this.helpToolStripButton.Size = new System.Drawing.Size(55, 29);
             this.helpToolStripButton.Text = "Help";
+            this.helpToolStripButton.ToolTipText = "Link to Nick Hoddinott\'s original AeroScenery on GitHub";
             this.helpToolStripButton.Click += new System.EventHandler(this.helpToolStripButton_Click);
             // 
             // getSDKToolStripButton
@@ -231,9 +270,31 @@
             this.getSDKToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("getSDKToolStripButton.Image")));
             this.getSDKToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.getSDKToolStripButton.Name = "getSDKToolStripButton";
-            this.getSDKToolStripButton.Size = new System.Drawing.Size(147, 29);
-            this.getSDKToolStripButton.Text = "Get AeroFly FS2 SDK";
+            this.getSDKToolStripButton.Size = new System.Drawing.Size(145, 29);
+            this.getSDKToolStripButton.Text = "Get Aerofly FS2 SDK";
+            this.getSDKToolStripButton.ToolTipText = "IPAC\'s GeoConvert tool is needed for conversion of images --> Set path to SDK fol" +
+    "der under Settings";
             this.getSDKToolStripButton.Click += new System.EventHandler(this.getSDKToolStripButton_Click);
+            // 
+            // openUserFolderToolstripButton
+            // 
+            this.openUserFolderToolstripButton.Image = ((System.Drawing.Image)(resources.GetObject("openUserFolderToolstripButton.Image")));
+            this.openUserFolderToolstripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.openUserFolderToolstripButton.Name = "openUserFolderToolstripButton";
+            this.openUserFolderToolstripButton.Size = new System.Drawing.Size(118, 29);
+            this.openUserFolderToolstripButton.Text = "Open User Folder";
+            this.openUserFolderToolstripButton.ToolTipText = "Open the AFS User scenery folder";
+            this.openUserFolderToolstripButton.Click += new System.EventHandler(this.openUserFolderToolstripButton_Click);
+            // 
+            // openSceneryEditorToolStripButton
+            // 
+            this.openSceneryEditorToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("openSceneryEditorToolStripButton.Image")));
+            this.openSceneryEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.openSceneryEditorToolStripButton.Name = "openSceneryEditorToolStripButton";
+            this.openSceneryEditorToolStripButton.Size = new System.Drawing.Size(134, 29);
+            this.openSceneryEditorToolStripButton.Text = "Open Scenery Editor";
+            this.openSceneryEditorToolStripButton.ToolTipText = "Open the FS2 Cultivation Editor by Nabeel";
+            this.openSceneryEditorToolStripButton.Click += new System.EventHandler(this.openSceneryEditorToolStripButton_Click);
             // 
             // toolStripSeparator4
             // 
@@ -247,14 +308,17 @@
             this.showAirportsToolstripButton.Name = "showAirportsToolstripButton";
             this.showAirportsToolstripButton.Size = new System.Drawing.Size(101, 29);
             this.showAirportsToolstripButton.Text = "Show Airports";
+            this.showAirportsToolstripButton.ToolTipText = "Show FS2 Airports from fscloudport.com";
             this.showAirportsToolstripButton.Click += new System.EventHandler(this.showAirportsToolstripButton_Click);
             // 
             // mapTypeToolStripDropDown
             // 
+            this.mapTypeToolStripDropDown.BackColor = System.Drawing.SystemColors.Control;
             this.mapTypeToolStripDropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hybridToolStripMenuItem,
             this.satelliteToolStripMenuItem,
             this.sToolStripMenuItem,
+            this.googleTerrainMapToolStripMenuItem,
             this.bingHybridMapToolStripMenuItem,
             this.bingSatelliteMapToolStripMenuItem,
             this.binStandardMapToolStripMenuItem,
@@ -262,7 +326,7 @@
             this.mapTypeToolStripDropDown.Image = ((System.Drawing.Image)(resources.GetObject("mapTypeToolStripDropDown.Image")));
             this.mapTypeToolStripDropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.mapTypeToolStripDropDown.Name = "mapTypeToolStripDropDown";
-            this.mapTypeToolStripDropDown.Size = new System.Drawing.Size(88, 29);
+            this.mapTypeToolStripDropDown.Size = new System.Drawing.Size(87, 29);
             this.mapTypeToolStripDropDown.Text = "Map Type";
             this.mapTypeToolStripDropDown.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.mapTypeToolStripDropDown_DropDownItemClicked);
             // 
@@ -272,7 +336,6 @@
             this.hybridToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.hybridToolStripMenuItem.Tag = "GoogleHybrid";
             this.hybridToolStripMenuItem.Text = "Google Hybrid Map";
-            this.hybridToolStripMenuItem.Click += new System.EventHandler(this.hybridToolStripMenuItem_Click);
             // 
             // satelliteToolStripMenuItem
             // 
@@ -287,6 +350,13 @@
             this.sToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.sToolStripMenuItem.Tag = "GoogleStandard";
             this.sToolStripMenuItem.Text = "Google Standard Map";
+            // 
+            // googleTerrainMapToolStripMenuItem
+            // 
+            this.googleTerrainMapToolStripMenuItem.Name = "googleTerrainMapToolStripMenuItem";
+            this.googleTerrainMapToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.googleTerrainMapToolStripMenuItem.Tag = "GoogleTerrain";
+            this.googleTerrainMapToolStripMenuItem.Text = "Google Terrain Map";
             // 
             // bingHybridMapToolStripMenuItem
             // 
@@ -314,7 +384,7 @@
             this.openStreetMapToolStripMenuItem.Name = "openStreetMapToolStripMenuItem";
             this.openStreetMapToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.openStreetMapToolStripMenuItem.Tag = "OpenStreetMap";
-            this.openStreetMapToolStripMenuItem.Text = "Open Street Map";
+            this.openStreetMapToolStripMenuItem.Text = "Open Cycle Map";
             // 
             // toolStripSeparator7
             // 
@@ -328,27 +398,33 @@
             this.toolStripLabel2.Size = new System.Drawing.Size(161, 29);
             this.toolStripLabel2.Text = "Grid Square Selection Size";
             // 
+            // versionToolStripLabel
+            // 
+            this.versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.versionToolStripLabel.Name = "versionToolStripLabel";
+            this.versionToolStripLabel.RightToLeftAutoMirrorImage = true;
+            this.versionToolStripLabel.Size = new System.Drawing.Size(30, 29);
+            this.versionToolStripLabel.Text = "vX.X";
+            this.versionToolStripLabel.Click += new System.EventHandler(this.versionToolStripLabel_Click);
+            // 
             // gridSquareSelectionSizeToolstripCombo
             // 
             this.gridSquareSelectionSizeToolstripCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.gridSquareSelectionSizeToolstripCombo.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.gridSquareSelectionSizeToolstripCombo.Items.AddRange(new object[] {
-            "Size 9 (Largest)",
+            "Size 9 (Default)",
             "Size 10",
             "Size 11",
             "Size 12 ",
             "Size 13",
-            "Size 14 (Smallest)"});
+            "Size 14 (Smallest)",
+            "#Size 7 (elevation)",
+            "#Size 8 (elevation)"});
             this.gridSquareSelectionSizeToolstripCombo.Name = "gridSquareSelectionSizeToolstripCombo";
             this.gridSquareSelectionSizeToolstripCombo.Size = new System.Drawing.Size(121, 32);
+            this.gridSquareSelectionSizeToolstripCombo.ToolTipText = "Select Size 9 as default --> You may do smaller tiles with higher resolution late" +
+    "r";
             this.gridSquareSelectionSizeToolstripCombo.SelectedIndexChanged += new System.EventHandler(this.gridSquareSelectionSizeToolstripCombo_SelectedIndexChanged);
-            // 
-            // versionToolStripLabel
-            // 
-            this.versionToolStripLabel.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.versionToolStripLabel.Name = "versionToolStripLabel";
-            this.versionToolStripLabel.Size = new System.Drawing.Size(30, 29);
-            this.versionToolStripLabel.Text = "vX.X";
             // 
             // toolStripSeparator5
             // 
@@ -367,7 +443,7 @@
             this.mainTabControl.Location = new System.Drawing.Point(401, 45);
             this.mainTabControl.Name = "mainTabControl";
             this.mainTabControl.SelectedIndex = 0;
-            this.mainTabControl.Size = new System.Drawing.Size(1048, 751);
+            this.mainTabControl.Size = new System.Drawing.Size(1078, 777);
             this.mainTabControl.TabIndex = 6;
             this.mainTabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.MainTabControl_Selecting);
             // 
@@ -378,7 +454,7 @@
             this.mapTabPage.Location = new System.Drawing.Point(4, 26);
             this.mapTabPage.Name = "mapTabPage";
             this.mapTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.mapTabPage.Size = new System.Drawing.Size(1040, 721);
+            this.mapTabPage.Size = new System.Drawing.Size(1070, 747);
             this.mapTabPage.TabIndex = 0;
             this.mapTabPage.Text = "Map";
             this.mapTabPage.UseVisualStyleBackColor = true;
@@ -389,7 +465,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1034, 30);
+            this.panel1.Size = new System.Drawing.Size(1064, 30);
             this.panel1.TabIndex = 1;
             // 
             // toolStrip2
@@ -398,6 +474,7 @@
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
+            this.toolStripSearchTileButton,
             this.gridSquareLabel,
             this.toolStripDownloadedLabel,
             this.toolStripSeparator3,
@@ -406,10 +483,12 @@
             this.deleteImagesToolStripButton,
             this.resetSquareToolStripButton,
             this.toolStripSeparator2,
-            this.openMapToolStripDropDownButton});
+            this.openMapToolStripDropDownButton,
+            this.copyToClipboardToolStripButton,
+            this.gridSquareBoundaryBox});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(1034, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(1064, 25);
             this.toolStrip2.TabIndex = 1;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -420,6 +499,15 @@
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(82, 22);
             this.toolStripLabel1.Text = "Grid Square:";
+            // 
+            // toolStripSearchTileButton
+            // 
+            this.toolStripSearchTileButton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSearchTileButton.Image")));
+            this.toolStripSearchTileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSearchTileButton.Name = "toolStripSearchTileButton";
+            this.toolStripSearchTileButton.Size = new System.Drawing.Size(23, 22);
+            this.toolStripSearchTileButton.ToolTipText = "Serach Tile/ Location";
+            this.toolStripSearchTileButton.Click += new System.EventHandler(this.toolStripSearchTileButton_Click);
             // 
             // gridSquareLabel
             // 
@@ -460,6 +548,7 @@
             this.installSceneryToolStripButton.Name = "installSceneryToolStripButton";
             this.installSceneryToolStripButton.Size = new System.Drawing.Size(110, 22);
             this.installSceneryToolStripButton.Text = "Install Scenery";
+            this.installSceneryToolStripButton.ToolTipText = "Install Scenery after GeoConvert process to User scenery folder";
             this.installSceneryToolStripButton.Click += new System.EventHandler(this.InstallSceneryToolStripButton_ClickAsync);
             // 
             // deleteImagesToolStripButton
@@ -493,7 +582,8 @@
             // 
             this.openMapToolStripDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openInGoogleMapsToolStripMenuItem,
-            this.openInBingMApsToolStripMenuItem});
+            this.openInBingMApsToolStripMenuItem,
+            this.openInGoogleEarthToolStripMenuItem});
             this.openMapToolStripDropDownButton.Enabled = false;
             this.openMapToolStripDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("openMapToolStripDropDownButton.Image")));
             this.openMapToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -501,6 +591,7 @@
             this.openMapToolStripDropDownButton.Size = new System.Drawing.Size(114, 22);
             this.openMapToolStripDropDownButton.Text = "Open In Map";
             this.openMapToolStripDropDownButton.ToolTipText = "Open Square In Map";
+            this.openMapToolStripDropDownButton.Click += new System.EventHandler(this.openMapToolStripDropDownButton_Click);
             // 
             // openInGoogleMapsToolStripMenuItem
             // 
@@ -516,6 +607,33 @@
             this.openInBingMApsToolStripMenuItem.Text = "Open In Bing Maps";
             this.openInBingMApsToolStripMenuItem.Click += new System.EventHandler(this.openInBingMApsToolStripMenuItem_Click);
             // 
+            // openInGoogleEarthToolStripMenuItem
+            // 
+            this.openInGoogleEarthToolStripMenuItem.Name = "openInGoogleEarthToolStripMenuItem";
+            this.openInGoogleEarthToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.openInGoogleEarthToolStripMenuItem.Text = "Open in Google Earth";
+            this.openInGoogleEarthToolStripMenuItem.Click += new System.EventHandler(this.openInGoogleEarthToolStripMenuItem_Click);
+            // 
+            // copyToClipboardToolStripButton
+            // 
+            this.copyToClipboardToolStripButton.Enabled = false;
+            this.copyToClipboardToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("copyToClipboardToolStripButton.Image")));
+            this.copyToClipboardToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.copyToClipboardToolStripButton.Name = "copyToClipboardToolStripButton";
+            this.copyToClipboardToolStripButton.Size = new System.Drawing.Size(104, 22);
+            this.copyToClipboardToolStripButton.Text = "To Clipboard";
+            this.copyToClipboardToolStripButton.ToolTipText = "Copy boundary box coodinates to clipboard";
+            this.copyToClipboardToolStripButton.Click += new System.EventHandler(this.copyToClipboardToolStripButton_Click);
+            // 
+            // gridSquareBoundaryBox
+            // 
+            this.gridSquareBoundaryBox.AutoSize = false;
+            this.gridSquareBoundaryBox.Margin = new System.Windows.Forms.Padding(0, 1, 8, 2);
+            this.gridSquareBoundaryBox.Name = "gridSquareBoundaryBox";
+            this.gridSquareBoundaryBox.Size = new System.Drawing.Size(90, 22);
+            this.gridSquareBoundaryBox.Text = "BoundaryBox";
+            this.gridSquareBoundaryBox.Visible = false;
+            // 
             // progressTabPage
             // 
             this.progressTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -528,7 +646,7 @@
             this.progressTabPage.Location = new System.Drawing.Point(4, 26);
             this.progressTabPage.Name = "progressTabPage";
             this.progressTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.progressTabPage.Size = new System.Drawing.Size(1040, 721);
+            this.progressTabPage.Size = new System.Drawing.Size(1070, 747);
             this.progressTabPage.TabIndex = 1;
             this.progressTabPage.Text = "Progress";
             // 
@@ -556,16 +674,116 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.downloadThreadProgress8);
+            this.groupBox1.Controls.Add(this.downloadThreadProgress7);
+            this.groupBox1.Controls.Add(this.downloadThreadProgress6);
+            this.groupBox1.Controls.Add(this.downloadThreadProgress5);
             this.groupBox1.Controls.Add(this.downloadThreadProgress4);
             this.groupBox1.Controls.Add(this.downloadThreadProgress3);
             this.groupBox1.Controls.Add(this.downloadThreadProgress2);
             this.groupBox1.Controls.Add(this.downloadThreadProgress1);
             this.groupBox1.Location = new System.Drawing.Point(9, 154);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1025, 501);
+            this.groupBox1.Size = new System.Drawing.Size(1055, 571);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Downloaders";
+            // 
+            // downloadThreadProgress8
+            // 
+            this.downloadThreadProgress8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress8.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress8.Location = new System.Drawing.Point(6, 477);
+            this.downloadThreadProgress8.Margin = new System.Windows.Forms.Padding(3, 21, 3, 21);
+            this.downloadThreadProgress8.Name = "downloadThreadProgress8";
+            this.downloadThreadProgress8.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress8.TabIndex = 7;
+            // 
+            // downloadThreadProgress7
+            // 
+            this.downloadThreadProgress7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress7.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress7.Location = new System.Drawing.Point(6, 413);
+            this.downloadThreadProgress7.Margin = new System.Windows.Forms.Padding(3, 16, 3, 16);
+            this.downloadThreadProgress7.Name = "downloadThreadProgress7";
+            this.downloadThreadProgress7.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress7.TabIndex = 6;
+            // 
+            // downloadThreadProgress6
+            // 
+            this.downloadThreadProgress6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress6.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress6.Location = new System.Drawing.Point(6, 350);
+            this.downloadThreadProgress6.Margin = new System.Windows.Forms.Padding(3, 12, 3, 12);
+            this.downloadThreadProgress6.Name = "downloadThreadProgress6";
+            this.downloadThreadProgress6.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress6.TabIndex = 5;
+            // 
+            // downloadThreadProgress5
+            // 
+            this.downloadThreadProgress5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress5.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress5.Location = new System.Drawing.Point(6, 286);
+            this.downloadThreadProgress5.Margin = new System.Windows.Forms.Padding(3, 9, 3, 9);
+            this.downloadThreadProgress5.Name = "downloadThreadProgress5";
+            this.downloadThreadProgress5.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress5.TabIndex = 4;
+            // 
+            // downloadThreadProgress4
+            // 
+            this.downloadThreadProgress4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress4.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress4.Location = new System.Drawing.Point(7, 222);
+            this.downloadThreadProgress4.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
+            this.downloadThreadProgress4.Name = "downloadThreadProgress4";
+            this.downloadThreadProgress4.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress4.TabIndex = 3;
+            // 
+            // downloadThreadProgress3
+            // 
+            this.downloadThreadProgress3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress3.Location = new System.Drawing.Point(7, 156);
+            this.downloadThreadProgress3.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
+            this.downloadThreadProgress3.Name = "downloadThreadProgress3";
+            this.downloadThreadProgress3.Size = new System.Drawing.Size(995, 59);
+            this.downloadThreadProgress3.TabIndex = 2;
+            // 
+            // downloadThreadProgress2
+            // 
+            this.downloadThreadProgress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress2.Location = new System.Drawing.Point(7, 93);
+            this.downloadThreadProgress2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.downloadThreadProgress2.Name = "downloadThreadProgress2";
+            this.downloadThreadProgress2.Size = new System.Drawing.Size(995, 54);
+            this.downloadThreadProgress2.TabIndex = 1;
+            // 
+            // downloadThreadProgress1
+            // 
+            this.downloadThreadProgress1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress1.Location = new System.Drawing.Point(7, 31);
+            this.downloadThreadProgress1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.downloadThreadProgress1.Name = "downloadThreadProgress1";
+            this.downloadThreadProgress1.Size = new System.Drawing.Size(995, 48);
+            this.downloadThreadProgress1.TabIndex = 0;
             // 
             // label6
             // 
@@ -582,7 +800,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.currentActionProgressBar.Location = new System.Drawing.Point(16, 120);
             this.currentActionProgressBar.Name = "currentActionProgressBar";
-            this.currentActionProgressBar.Size = new System.Drawing.Size(1004, 18);
+            this.currentActionProgressBar.Size = new System.Drawing.Size(994, 18);
             this.currentActionProgressBar.TabIndex = 2;
             // 
             // parentTaskLabel
@@ -601,7 +819,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 26);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(1040, 721);
+            this.tabPage5.Size = new System.Drawing.Size(1070, 747);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "Log";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -617,7 +835,7 @@
             this.logTextBox.Name = "logTextBox";
             this.logTextBox.ReadOnly = true;
             this.logTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logTextBox.Size = new System.Drawing.Size(1034, 715);
+            this.logTextBox.Size = new System.Drawing.Size(1064, 741);
             this.logTextBox.TabIndex = 0;
             // 
             // sideTabControl
@@ -630,7 +848,7 @@
             this.sideTabControl.Location = new System.Drawing.Point(12, 45);
             this.sideTabControl.Name = "sideTabControl";
             this.sideTabControl.SelectedIndex = 0;
-            this.sideTabControl.Size = new System.Drawing.Size(379, 646);
+            this.sideTabControl.Size = new System.Drawing.Size(379, 679);
             this.sideTabControl.TabIndex = 7;
             this.sideTabControl.SelectedIndexChanged += new System.EventHandler(this.sideTabControl_SelectedIndexChanged);
             this.sideTabControl.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.sideTabControl_Selecting);
@@ -650,7 +868,7 @@
             this.imagesTabPage.Location = new System.Drawing.Point(4, 26);
             this.imagesTabPage.Name = "imagesTabPage";
             this.imagesTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.imagesTabPage.Size = new System.Drawing.Size(371, 616);
+            this.imagesTabPage.Size = new System.Drawing.Size(371, 649);
             this.imagesTabPage.TabIndex = 0;
             this.imagesTabPage.Text = "Images";
             this.imagesTabPage.UseVisualStyleBackColor = true;
@@ -669,7 +887,7 @@
             // 
             this.generateAFS2LevelsHelpImage.AutoSize = true;
             this.generateAFS2LevelsHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("generateAFS2LevelsHelpImage.Image")));
-            this.generateAFS2LevelsHelpImage.Location = new System.Drawing.Point(151, 139);
+            this.generateAFS2LevelsHelpImage.Location = new System.Drawing.Point(144, 140);
             this.generateAFS2LevelsHelpImage.Name = "generateAFS2LevelsHelpImage";
             this.generateAFS2LevelsHelpImage.Size = new System.Drawing.Size(16, 17);
             this.generateAFS2LevelsHelpImage.TabIndex = 10;
@@ -702,6 +920,14 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.chooseActionsToRunHelpImage);
+            this.groupBox2.Controls.Add(this.downloadElevationDataCheckBox);
+            this.groupBox2.Controls.Add(this.fixMissingTilesCheckBox);
+            this.groupBox2.Controls.Add(this.downloadOsmDataCheckBox);
+            this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.runTreesDetectionDetectionCheckBox);
+            this.groupBox2.Controls.Add(this.runTreesDetectionMaskCheckBox);
+            this.groupBox2.Controls.Add(this.runTreesDetectionCheckBox);
             this.groupBox2.Controls.Add(this.actionSetComboBox);
             this.groupBox2.Controls.Add(this.installSceneryIntoAFSCheckBox);
             this.groupBox2.Controls.Add(this.deleteStitchedImagesCheckBox);
@@ -709,12 +935,117 @@
             this.groupBox2.Controls.Add(this.generateAFSFilesCheckBox);
             this.groupBox2.Controls.Add(this.stitchImageTilesCheckBox);
             this.groupBox2.Controls.Add(this.downloadImageTileCheckBox);
-            this.groupBox2.Location = new System.Drawing.Point(16, 356);
+            this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(16, 336);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(339, 241);
+            this.groupBox2.Size = new System.Drawing.Size(339, 298);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
+            // 
+            // chooseActionsToRunHelpImage
+            // 
+            this.chooseActionsToRunHelpImage.AutoSize = true;
+            this.chooseActionsToRunHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("chooseActionsToRunHelpImage.Image")));
+            this.chooseActionsToRunHelpImage.Location = new System.Drawing.Point(289, 33);
+            this.chooseActionsToRunHelpImage.Name = "chooseActionsToRunHelpImage";
+            this.chooseActionsToRunHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.chooseActionsToRunHelpImage.TabIndex = 12;
+            this.chooseActionsToRunHelpImage.Text = "  ";
+            // 
+            // downloadElevationDataCheckBox
+            // 
+            this.downloadElevationDataCheckBox.AutoSize = true;
+            this.downloadElevationDataCheckBox.Enabled = false;
+            this.downloadElevationDataCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.downloadElevationDataCheckBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.downloadElevationDataCheckBox.Location = new System.Drawing.Point(19, 269);
+            this.downloadElevationDataCheckBox.Name = "downloadElevationDataCheckBox";
+            this.downloadElevationDataCheckBox.Size = new System.Drawing.Size(304, 21);
+            this.downloadElevationDataCheckBox.TabIndex = 13;
+            this.downloadElevationDataCheckBox.Text = "Download Elevation Data (30m) for selected area ";
+            this.downloadElevationDataCheckBox.UseVisualStyleBackColor = true;
+            this.downloadElevationDataCheckBox.CheckedChanged += new System.EventHandler(this.downloadElevationCheckBox_CheckedChanged);
+            // 
+            // fixMissingTilesCheckBox
+            // 
+            this.fixMissingTilesCheckBox.AutoSize = true;
+            this.fixMissingTilesCheckBox.Enabled = false;
+            this.fixMissingTilesCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fixMissingTilesCheckBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.fixMissingTilesCheckBox.Location = new System.Drawing.Point(190, 68);
+            this.fixMissingTilesCheckBox.Name = "fixMissingTilesCheckBox";
+            this.fixMissingTilesCheckBox.Size = new System.Drawing.Size(115, 21);
+            this.fixMissingTilesCheckBox.TabIndex = 12;
+            this.fixMissingTilesCheckBox.Text = "Fix missing Tiles";
+            this.fixMissingTilesCheckBox.UseVisualStyleBackColor = true;
+            this.fixMissingTilesCheckBox.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
+            // downloadOsmDataCheckBox
+            // 
+            this.downloadOsmDataCheckBox.AutoSize = true;
+            this.downloadOsmDataCheckBox.Enabled = false;
+            this.downloadOsmDataCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.downloadOsmDataCheckBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.downloadOsmDataCheckBox.Location = new System.Drawing.Point(19, 194);
+            this.downloadOsmDataCheckBox.Name = "downloadOsmDataCheckBox";
+            this.downloadOsmDataCheckBox.Size = new System.Drawing.Size(150, 21);
+            this.downloadOsmDataCheckBox.TabIndex = 11;
+            this.downloadOsmDataCheckBox.Text = "Download OSM Data";
+            this.downloadOsmDataCheckBox.UseVisualStyleBackColor = true;
+            this.downloadOsmDataCheckBox.CheckedChanged += new System.EventHandler(this.downloadOsmDataCheckBox_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label5.Location = new System.Drawing.Point(39, 245);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(120, 13);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "(Zoom Level 16/15 only)";
+            // 
+            // runTreesDetectionDetectionCheckBox
+            // 
+            this.runTreesDetectionDetectionCheckBox.AutoSize = true;
+            this.runTreesDetectionDetectionCheckBox.Enabled = false;
+            this.runTreesDetectionDetectionCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.runTreesDetectionDetectionCheckBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.runTreesDetectionDetectionCheckBox.Location = new System.Drawing.Point(167, 242);
+            this.runTreesDetectionDetectionCheckBox.Name = "runTreesDetectionDetectionCheckBox";
+            this.runTreesDetectionDetectionCheckBox.Size = new System.Drawing.Size(159, 21);
+            this.runTreesDetectionDetectionCheckBox.TabIndex = 9;
+            this.runTreesDetectionDetectionCheckBox.Text = "Generate TSC/TOC Files";
+            this.runTreesDetectionDetectionCheckBox.UseVisualStyleBackColor = true;
+            this.runTreesDetectionDetectionCheckBox.CheckedChanged += new System.EventHandler(this.RunTreesDetectionDetectionCheckBox_CheckedChanged);
+            // 
+            // runTreesDetectionMaskCheckBox
+            // 
+            this.runTreesDetectionMaskCheckBox.AutoSize = true;
+            this.runTreesDetectionMaskCheckBox.Enabled = false;
+            this.runTreesDetectionMaskCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.runTreesDetectionMaskCheckBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.runTreesDetectionMaskCheckBox.Location = new System.Drawing.Point(167, 221);
+            this.runTreesDetectionMaskCheckBox.Name = "runTreesDetectionMaskCheckBox";
+            this.runTreesDetectionMaskCheckBox.Size = new System.Drawing.Size(153, 21);
+            this.runTreesDetectionMaskCheckBox.TabIndex = 8;
+            this.runTreesDetectionMaskCheckBox.Text = "Create Mask (optional)";
+            this.runTreesDetectionMaskCheckBox.UseVisualStyleBackColor = true;
+            this.runTreesDetectionMaskCheckBox.CheckedChanged += new System.EventHandler(this.RunTreesDetectionMask_CheckedChanged);
+            // 
+            // runTreesDetectionCheckBox
+            // 
+            this.runTreesDetectionCheckBox.AutoSize = true;
+            this.runTreesDetectionCheckBox.Enabled = false;
+            this.runTreesDetectionCheckBox.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.runTreesDetectionCheckBox.Location = new System.Drawing.Point(19, 221);
+            this.runTreesDetectionCheckBox.Name = "runTreesDetectionCheckBox";
+            this.runTreesDetectionCheckBox.Size = new System.Drawing.Size(142, 21);
+            this.runTreesDetectionCheckBox.TabIndex = 7;
+            this.runTreesDetectionCheckBox.Text = "Run TreesDetection:";
+            this.runTreesDetectionCheckBox.UseVisualStyleBackColor = true;
+            this.runTreesDetectionCheckBox.CheckedChanged += new System.EventHandler(this.runTreesDetectionCheckBox_CheckedChanged);
             // 
             // actionSetComboBox
             // 
@@ -725,7 +1056,7 @@
             "Choose Actions To Run"});
             this.actionSetComboBox.Location = new System.Drawing.Point(19, 30);
             this.actionSetComboBox.Name = "actionSetComboBox";
-            this.actionSetComboBox.Size = new System.Drawing.Size(299, 25);
+            this.actionSetComboBox.Size = new System.Drawing.Size(256, 25);
             this.actionSetComboBox.TabIndex = 6;
             this.actionSetComboBox.SelectedIndexChanged += new System.EventHandler(this.actionSetComboBox_SelectedIndexChanged);
             // 
@@ -733,19 +1064,20 @@
             // 
             this.installSceneryIntoAFSCheckBox.AutoSize = true;
             this.installSceneryIntoAFSCheckBox.Enabled = false;
-            this.installSceneryIntoAFSCheckBox.Location = new System.Drawing.Point(19, 203);
+            this.installSceneryIntoAFSCheckBox.Location = new System.Drawing.Point(166, 149);
             this.installSceneryIntoAFSCheckBox.Name = "installSceneryIntoAFSCheckBox";
-            this.installSceneryIntoAFSCheckBox.Size = new System.Drawing.Size(269, 21);
+            this.installSceneryIntoAFSCheckBox.Size = new System.Drawing.Size(109, 21);
             this.installSceneryIntoAFSCheckBox.TabIndex = 5;
-            this.installSceneryIntoAFSCheckBox.Text = "Install Scenery In AFS User Scenery Folder";
+            this.installSceneryIntoAFSCheckBox.Text = "Install Scenery";
             this.installSceneryIntoAFSCheckBox.UseVisualStyleBackColor = true;
+            this.installSceneryIntoAFSCheckBox.Visible = false;
             this.installSceneryIntoAFSCheckBox.CheckedChanged += new System.EventHandler(this.installSceneryIntoAFSCheckBox_CheckedChanged);
             // 
             // deleteStitchedImagesCheckBox
             // 
             this.deleteStitchedImagesCheckBox.AutoSize = true;
             this.deleteStitchedImagesCheckBox.Enabled = false;
-            this.deleteStitchedImagesCheckBox.Location = new System.Drawing.Point(19, 176);
+            this.deleteStitchedImagesCheckBox.Location = new System.Drawing.Point(166, 167);
             this.deleteStitchedImagesCheckBox.Name = "deleteStitchedImagesCheckBox";
             this.deleteStitchedImagesCheckBox.Size = new System.Drawing.Size(160, 21);
             this.deleteStitchedImagesCheckBox.TabIndex = 4;
@@ -796,9 +1128,9 @@
             this.downloadImageTileCheckBox.Enabled = false;
             this.downloadImageTileCheckBox.Location = new System.Drawing.Point(19, 68);
             this.downloadImageTileCheckBox.Name = "downloadImageTileCheckBox";
-            this.downloadImageTileCheckBox.Size = new System.Drawing.Size(156, 21);
+            this.downloadImageTileCheckBox.Size = new System.Drawing.Size(165, 21);
             this.downloadImageTileCheckBox.TabIndex = 0;
-            this.downloadImageTileCheckBox.Text = "Download Image Tiles";
+            this.downloadImageTileCheckBox.Text = "Download Image Tiles /";
             this.downloadImageTileCheckBox.UseVisualStyleBackColor = true;
             this.downloadImageTileCheckBox.CheckedChanged += new System.EventHandler(this.downloadImageTileCheckBox_CheckedChanged);
             // 
@@ -817,8 +1149,8 @@
             this.afsLevelsCheckBoxList.FormattingEnabled = true;
             this.afsLevelsCheckBoxList.Location = new System.Drawing.Point(16, 177);
             this.afsLevelsCheckBoxList.Name = "afsLevelsCheckBoxList";
-            this.afsLevelsCheckBoxList.Size = new System.Drawing.Size(339, 164);
-            this.afsLevelsCheckBoxList.TabIndex = 5;
+            this.afsLevelsCheckBoxList.Size = new System.Drawing.Size(339, 144);
+            this.afsLevelsCheckBoxList.TabIndex = 7;
             this.afsLevelsCheckBoxList.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.gridSquareLevelsCheckBoxList_ItemCheck);
             this.afsLevelsCheckBoxList.SelectedIndexChanged += new System.EventHandler(this.afsLevelsCheckBoxList_SelectedIndexChanged);
             this.afsLevelsCheckBoxList.Leave += new System.EventHandler(this.afsLevelsCheckBoxList_Leave);
@@ -843,20 +1175,21 @@
             // 
             // imageSourceComboBox
             // 
+            this.imageSourceComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.imageSourceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.imageSourceComboBox.FormattingEnabled = true;
-            this.imageSourceComboBox.Items.AddRange(new object[] {
-            "Bing",
-            "Google",
-            "USGS (Coming Soon)"});
+            this.imageSourceComboBox.ImageList = null;
             this.imageSourceComboBox.Location = new System.Drawing.Point(112, 19);
             this.imageSourceComboBox.Name = "imageSourceComboBox";
-            this.imageSourceComboBox.Size = new System.Drawing.Size(243, 25);
+            this.imageSourceComboBox.Size = new System.Drawing.Size(243, 26);
             this.imageSourceComboBox.TabIndex = 1;
             this.imageSourceComboBox.SelectedIndexChanged += new System.EventHandler(this.imageSourceComboBox_SelectedIndexChanged);
             // 
             // elevationTabPage
             // 
+            this.elevationTabPage.CausesValidation = false;
+            this.elevationTabPage.Controls.Add(this.groupBox4);
+            this.elevationTabPage.Controls.Add(this.button1);
             this.elevationTabPage.Controls.Add(this.button2);
             this.elevationTabPage.Controls.Add(this.usgsTestButton);
             this.elevationTabPage.Controls.Add(this.groupBox3);
@@ -867,25 +1200,163 @@
             this.elevationTabPage.Location = new System.Drawing.Point(4, 26);
             this.elevationTabPage.Name = "elevationTabPage";
             this.elevationTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.elevationTabPage.Size = new System.Drawing.Size(371, 616);
+            this.elevationTabPage.Size = new System.Drawing.Size(371, 649);
             this.elevationTabPage.TabIndex = 1;
-            this.elevationTabPage.Text = "Elevation";
+            this.elevationTabPage.Text = "Moving Map";
             this.elevationTabPage.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.movingMapHideTilesCheckBox);
+            this.groupBox4.Controls.Add(this.movingMapTraceFlightCheckBox);
+            this.groupBox4.Controls.Add(this.movingMapFixCheckBox);
+            this.groupBox4.Controls.Add(this.movingMapRadioButtonFeet);
+            this.groupBox4.Controls.Add(this.movingMapRadioButtonMetric);
+            this.groupBox4.Controls.Add(this.movingMapHelpImage);
+            this.groupBox4.Controls.Add(this.movingMapStartStopButton);
+            this.groupBox4.Controls.Add(this.label9);
+            this.groupBox4.Controls.Add(this.MovingMapOutputPositionData);
+            this.groupBox4.Controls.Add(this.movingMapOutputFlightData);
+            this.groupBox4.Location = new System.Drawing.Point(16, 19);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(339, 344);
+            this.groupBox4.TabIndex = 7;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Moving Map";
+            // 
+            // movingMapHideTilesCheckBox
+            // 
+            this.movingMapHideTilesCheckBox.AutoSize = true;
+            this.movingMapHideTilesCheckBox.Location = new System.Drawing.Point(201, 302);
+            this.movingMapHideTilesCheckBox.Name = "movingMapHideTilesCheckBox";
+            this.movingMapHideTilesCheckBox.Size = new System.Drawing.Size(134, 21);
+            this.movingMapHideTilesCheckBox.TabIndex = 30;
+            this.movingMapHideTilesCheckBox.Text = "Hide working Tiles";
+            this.movingMapHideTilesCheckBox.UseVisualStyleBackColor = true;
+            this.movingMapHideTilesCheckBox.CheckedChanged += new System.EventHandler(this.movingMapHideTilesCheckBox_CheckedChanged);
+            // 
+            // movingMapTraceFlightCheckBox
+            // 
+            this.movingMapTraceFlightCheckBox.AutoSize = true;
+            this.movingMapTraceFlightCheckBox.Location = new System.Drawing.Point(201, 275);
+            this.movingMapTraceFlightCheckBox.Name = "movingMapTraceFlightCheckBox";
+            this.movingMapTraceFlightCheckBox.Size = new System.Drawing.Size(131, 21);
+            this.movingMapTraceFlightCheckBox.TabIndex = 29;
+            this.movingMapTraceFlightCheckBox.Text = "Trace Flight Route";
+            this.movingMapTraceFlightCheckBox.UseVisualStyleBackColor = true;
+            this.movingMapTraceFlightCheckBox.CheckedChanged += new System.EventHandler(this.movingMapTraceFlightCheckBox_CheckedChanged);
+            // 
+            // movingMapFixCheckBox
+            // 
+            this.movingMapFixCheckBox.AutoSize = true;
+            this.movingMapFixCheckBox.Checked = true;
+            this.movingMapFixCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.movingMapFixCheckBox.Location = new System.Drawing.Point(201, 248);
+            this.movingMapFixCheckBox.Name = "movingMapFixCheckBox";
+            this.movingMapFixCheckBox.Size = new System.Drawing.Size(86, 21);
+            this.movingMapFixCheckBox.TabIndex = 28;
+            this.movingMapFixCheckBox.Text = "Map fixed";
+            this.movingMapFixCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // movingMapRadioButtonFeet
+            // 
+            this.movingMapRadioButtonFeet.AutoSize = true;
+            this.movingMapRadioButtonFeet.Checked = true;
+            this.movingMapRadioButtonFeet.Location = new System.Drawing.Point(15, 247);
+            this.movingMapRadioButtonFeet.Name = "movingMapRadioButtonFeet";
+            this.movingMapRadioButtonFeet.Size = new System.Drawing.Size(84, 21);
+            this.movingMapRadioButtonFeet.TabIndex = 27;
+            this.movingMapRadioButtonFeet.TabStop = true;
+            this.movingMapRadioButtonFeet.Text = "feet/knots";
+            this.movingMapRadioButtonFeet.UseVisualStyleBackColor = true;
+            // 
+            // movingMapRadioButtonMetric
+            // 
+            this.movingMapRadioButtonMetric.AutoSize = true;
+            this.movingMapRadioButtonMetric.Location = new System.Drawing.Point(105, 247);
+            this.movingMapRadioButtonMetric.Name = "movingMapRadioButtonMetric";
+            this.movingMapRadioButtonMetric.Size = new System.Drawing.Size(62, 21);
+            this.movingMapRadioButtonMetric.TabIndex = 26;
+            this.movingMapRadioButtonMetric.Text = "metric";
+            this.movingMapRadioButtonMetric.UseVisualStyleBackColor = true;
+            // 
+            // movingMapHelpImage
+            // 
+            this.movingMapHelpImage.AutoSize = true;
+            this.movingMapHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("movingMapHelpImage.Image")));
+            this.movingMapHelpImage.Location = new System.Drawing.Point(302, 31);
+            this.movingMapHelpImage.Name = "movingMapHelpImage";
+            this.movingMapHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.movingMapHelpImage.TabIndex = 25;
+            this.movingMapHelpImage.Text = "  ";
+            this.movingMapHelpImage.Click += new System.EventHandler(this.movingMapHelpImage_Click);
+            // 
+            // movingMapStartStopButton
+            // 
+            this.movingMapStartStopButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.movingMapStartStopButton.Location = new System.Drawing.Point(13, 292);
+            this.movingMapStartStopButton.Name = "movingMapStartStopButton";
+            this.movingMapStartStopButton.Size = new System.Drawing.Size(154, 31);
+            this.movingMapStartStopButton.TabIndex = 20;
+            this.movingMapStartStopButton.Text = "Start";
+            this.movingMapStartStopButton.UseVisualStyleBackColor = true;
+            this.movingMapStartStopButton.Visible = false;
+            this.movingMapStartStopButton.Click += new System.EventHandler(this.movingMapStartStopButton_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(9, 151);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(106, 17);
+            this.label9.TabIndex = 24;
+            this.label9.Text = "Console/Position";
+            // 
+            // MovingMapOutputPositionData
+            // 
+            this.MovingMapOutputPositionData.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MovingMapOutputPositionData.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.MovingMapOutputPositionData.Location = new System.Drawing.Point(12, 171);
+            this.MovingMapOutputPositionData.Multiline = true;
+            this.MovingMapOutputPositionData.Name = "MovingMapOutputPositionData";
+            this.MovingMapOutputPositionData.Size = new System.Drawing.Size(314, 60);
+            this.MovingMapOutputPositionData.TabIndex = 23;
+            // 
+            // movingMapOutputFlightData
+            // 
+            this.movingMapOutputFlightData.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.movingMapOutputFlightData.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.movingMapOutputFlightData.Location = new System.Drawing.Point(10, 31);
+            this.movingMapOutputFlightData.Multiline = true;
+            this.movingMapOutputFlightData.Name = "movingMapOutputFlightData";
+            this.movingMapOutputFlightData.Size = new System.Drawing.Size(276, 109);
+            this.movingMapOutputFlightData.TabIndex = 22;
+            this.movingMapOutputFlightData.Text = "Heading:\r\nAltitude:\r\nSpeed:\r\nVS:";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(196, 603);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(138, 32);
+            this.button1.TabIndex = 19;
+            this.button1.Text = "TEST";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(55, 526);
+            this.button2.Location = new System.Drawing.Point(28, 612);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(139, 23);
             this.button2.TabIndex = 18;
             this.button2.Text = "Get USGS Download";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Visible = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // usgsTestButton
             // 
-            this.usgsTestButton.Location = new System.Drawing.Point(55, 486);
+            this.usgsTestButton.Location = new System.Drawing.Point(28, 573);
             this.usgsTestButton.Name = "usgsTestButton";
             this.usgsTestButton.Size = new System.Drawing.Size(139, 23);
             this.usgsTestButton.TabIndex = 17;
@@ -893,7 +1364,6 @@
             this.usgsTestButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.usgsTestButton.UseVisualStyleBackColor = true;
             this.usgsTestButton.Visible = false;
-            this.usgsTestButton.Click += new System.EventHandler(this.usgsTestButton_Click);
             // 
             // groupBox3
             // 
@@ -904,9 +1374,9 @@
             this.groupBox3.Controls.Add(this.checkBox4);
             this.groupBox3.Controls.Add(this.checkBox5);
             this.groupBox3.Controls.Add(this.checkBox6);
-            this.groupBox3.Location = new System.Drawing.Point(16, 265);
+            this.groupBox3.Location = new System.Drawing.Point(16, 379);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(339, 185);
+            this.groupBox3.Size = new System.Drawing.Size(339, 188);
             this.groupBox3.TabIndex = 16;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Actions";
@@ -1016,7 +1486,7 @@
             this.startStopButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.startStopButton.Enabled = false;
             this.startStopButton.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.startStopButton.Location = new System.Drawing.Point(12, 733);
+            this.startStopButton.Location = new System.Drawing.Point(12, 759);
             this.startStopButton.Name = "startStopButton";
             this.startStopButton.Size = new System.Drawing.Size(379, 63);
             this.startStopButton.TabIndex = 3;
@@ -1030,12 +1500,13 @@
             this.shutdownCheckbox.AutoSize = true;
             this.shutdownCheckbox.Enabled = false;
             this.shutdownCheckbox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.shutdownCheckbox.Location = new System.Drawing.Point(12, 704);
+            this.shutdownCheckbox.Location = new System.Drawing.Point(12, 730);
             this.shutdownCheckbox.Name = "shutdownCheckbox";
             this.shutdownCheckbox.Size = new System.Drawing.Size(223, 21);
             this.shutdownCheckbox.TabIndex = 8;
             this.shutdownCheckbox.Text = "Shut Down Computer When Done";
             this.shutdownCheckbox.UseVisualStyleBackColor = true;
+            this.shutdownCheckbox.Visible = false;
             // 
             // imageList1
             // 
@@ -1044,59 +1515,16 @@
             this.imageList1.Images.SetKeyName(0, "arrow_down.png");
             this.imageList1.Images.SetKeyName(1, "arrow_down_active.png");
             // 
-            // downloadThreadProgress4
+            // toolStripButton1
             // 
-            this.downloadThreadProgress4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress4.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress4.Location = new System.Drawing.Point(7, 222);
-            this.downloadThreadProgress4.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.downloadThreadProgress4.Name = "downloadThreadProgress4";
-            this.downloadThreadProgress4.Size = new System.Drawing.Size(1012, 57);
-            this.downloadThreadProgress4.TabIndex = 3;
-            // 
-            // downloadThreadProgress3
-            // 
-            this.downloadThreadProgress3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress3.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress3.Location = new System.Drawing.Point(7, 155);
-            this.downloadThreadProgress3.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.downloadThreadProgress3.Name = "downloadThreadProgress3";
-            this.downloadThreadProgress3.Size = new System.Drawing.Size(1012, 59);
-            this.downloadThreadProgress3.TabIndex = 2;
-            // 
-            // downloadThreadProgress2
-            // 
-            this.downloadThreadProgress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress2.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress2.Location = new System.Drawing.Point(7, 93);
-            this.downloadThreadProgress2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.downloadThreadProgress2.Name = "downloadThreadProgress2";
-            this.downloadThreadProgress2.Size = new System.Drawing.Size(1012, 53);
-            this.downloadThreadProgress2.TabIndex = 1;
-            // 
-            // downloadThreadProgress1
-            // 
-            this.downloadThreadProgress1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress1.Location = new System.Drawing.Point(7, 31);
-            this.downloadThreadProgress1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.downloadThreadProgress1.Name = "downloadThreadProgress1";
-            this.downloadThreadProgress1.Size = new System.Drawing.Size(1012, 48);
-            this.downloadThreadProgress1.TabIndex = 0;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 23);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1461, 834);
+            this.ClientSize = new System.Drawing.Size(1491, 860);
             this.Controls.Add(this.shutdownCheckbox);
             this.Controls.Add(this.sideTabControl);
             this.Controls.Add(this.startStopButton);
@@ -1131,6 +1559,8 @@
             this.groupBox2.PerformLayout();
             this.elevationTabPage.ResumeLayout(false);
             this.elevationTabPage.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -1166,6 +1596,10 @@
         private UI.DownloadThreadProgressControl downloadThreadProgress1;
         private UI.DownloadThreadProgressControl downloadThreadProgress4;
         private UI.DownloadThreadProgressControl downloadThreadProgress3;
+        private UI.DownloadThreadProgressControl downloadThreadProgress6;
+        private UI.DownloadThreadProgressControl downloadThreadProgress5;
+        private UI.DownloadThreadProgressControl downloadThreadProgress8;
+        private UI.DownloadThreadProgressControl downloadThreadProgress7;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox runGeoConvertCheckBox;
         private System.Windows.Forms.CheckBox generateAFSFilesCheckBox;
@@ -1174,7 +1608,7 @@
         private System.Windows.Forms.CheckedListBox afsLevelsCheckBoxList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox imageSourceComboBox;
+        private ImageComboBox imageSourceComboBox;
         private System.Windows.Forms.CheckBox installSceneryIntoAFSCheckBox;
         private System.Windows.Forms.CheckBox deleteStitchedImagesCheckBox;
         private System.Windows.Forms.Panel panel1;
@@ -1226,6 +1660,34 @@
         private System.Windows.Forms.ToolStripMenuItem binStandardMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openStreetMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton installSceneryToolStripButton;
+        private System.Windows.Forms.CheckBox runTreesDetectionCheckBox;
+        private System.Windows.Forms.CheckBox runTreesDetectionMaskCheckBox;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton copyToClipboardToolStripButton;
+        private System.Windows.Forms.ToolStripLabel gridSquareBoundaryBox;
+        private System.Windows.Forms.ToolStripMenuItem openInGoogleEarthToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem googleTerrainMapToolStripMenuItem;
+        private System.Windows.Forms.CheckBox runTreesDetectionDetectionCheckBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ToolStripButton openUserFolderToolstripButton;
+        private System.Windows.Forms.ToolStripButton openSceneryEditorToolStripButton;
+        private System.Windows.Forms.ToolStripButton toolStripSearchTileButton;
+        private System.Windows.Forms.CheckBox downloadOsmDataCheckBox;
+        private System.Windows.Forms.CheckBox fixMissingTilesCheckBox;
+        private System.Windows.Forms.CheckBox downloadElevationDataCheckBox;
+        private System.Windows.Forms.Label chooseActionsToRunHelpImage;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox movingMapOutputFlightData;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button movingMapStartStopButton;
+        private System.Windows.Forms.TextBox MovingMapOutputPositionData;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label movingMapHelpImage;
+        private System.Windows.Forms.RadioButton movingMapRadioButtonMetric;
+        private System.Windows.Forms.RadioButton movingMapRadioButtonFeet;
+        private System.Windows.Forms.CheckBox movingMapFixCheckBox;
+        private System.Windows.Forms.CheckBox movingMapTraceFlightCheckBox;
+        private System.Windows.Forms.CheckBox movingMapHideTilesCheckBox;
     }
 }
 

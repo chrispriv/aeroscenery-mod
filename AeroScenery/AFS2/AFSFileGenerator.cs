@@ -14,8 +14,9 @@ namespace AeroScenery.AFS2
 {
     public class AFSFileGenerator
     {
+        //#TRY_j: Not used?
         // The prefix of each image tile and aero file, e.g. g_19_
-        private string filenamePrefix;
+        //private string filenamePrefix;
 
         private XmlSerializer xmlSerializer;
 
@@ -80,7 +81,7 @@ namespace AeroScenery.AFS2
                         }
                         catch (Exception ex)
                         {
-
+                            log.Error(ex.Message);
                         }
 
                         i++;

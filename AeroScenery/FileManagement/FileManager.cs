@@ -21,7 +21,7 @@ namespace AeroScenery.FileManagement
             {
                 System.IO.DirectoryInfo di = new DirectoryInfo(gridSquareDirectory);
 
-                // Loop through the outer directories for orthophoto sources, "g", "b", "usgs"
+                // Loop through the outer directories for orthophoto sources, "g", "b", "usgs" etc.
                 foreach (DirectoryInfo directoryInfo in di.GetDirectories())
                 {
                     System.IO.DirectoryInfo innerDirectoryInfo = new DirectoryInfo(directoryInfo.FullName);
@@ -71,12 +71,18 @@ namespace AeroScenery.FileManagement
                             // Lastly, delete the empty directory
                             try
                             {
-                                Directory.Delete(dir.FullName);
+                                if (Directory.Exists(dir.FullName))
+                                {
+                                    Directory.Delete(dir.FullName);
+                                }
                             }
                             catch (IOException)
                             {
                                 Thread.Sleep(100);
-                                Directory.Delete(dir.FullName);
+                                if (Directory.Exists(dir.FullName))
+                                {
+                                    Directory.Delete(dir.FullName);
+                                }
                             }
 
                         }

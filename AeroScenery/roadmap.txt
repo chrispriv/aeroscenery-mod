@@ -1,4 +1,0 @@
-﻿v1.1
-
-Before and after for image processing preview images
-ArcGIS image source

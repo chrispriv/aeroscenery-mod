@@ -25,14 +25,15 @@ namespace AeroScenery.AFS2
                 {
                     foreach (string tmcFilename in tmcFiles)
                     {
-                        string geoconvertPath = String.Format("{0}\\aerofly_fs_2_geoconvert", AeroSceneryManager.Instance.Settings.AFS2SDKDirectory);
+                        string geoconvertPath = String.Format("{0}aerofly_fs_2_geoconvert", AeroSceneryManager.Instance.Settings.AFS2SDKDirectory);
                         string geoconvertFilename = String.Format("{0}\\aerofly_fs_2_geoconvert.exe", geoconvertPath);
 
                         if (!File.Exists(geoconvertFilename))
                         {
-                            log.Error("Could not find GeoConvert");
+                            //#MOD_i
+                            log.Error(String.Format("Could not find GeoConvert in {0}", geoconvertFilename));
 
-                            var messageBox = new CustomMessageBox("Could not find GeoConvert",
+                            var messageBox = new CustomMessageBox(String.Format("Could not find GeoConvert in {0} \n\nPlease check the path of the Aerofly FS2 SDK containing the GeoConvert App under Settings.", geoconvertFilename),
                                 "AeroScenery",
                                 MessageBoxIcon.Error);
 
@@ -52,9 +53,10 @@ namespace AeroScenery.AFS2
 
                                 if (!File.Exists(geoconvertWrapperPath))
                                 {
-                                    log.Error("Could not find GeoConvert Wrapper");
+                                    //#MOD_i
+                                    log.Error(String.Format("Could not find GeoConvert Wrapper in {0}", geoconvertWrapperPath));
 
-                                    var messageBox = new CustomMessageBox("Could not find GeoConvert Wrapper",
+                                    var messageBox = new CustomMessageBox(String.Format("Could not find GeoConvert Wrapper in {0}", geoconvertWrapperPath),
                                         "AeroScenery",
                                         MessageBoxIcon.Error);
 

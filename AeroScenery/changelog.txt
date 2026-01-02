@@ -7,13 +7,91 @@
                                                                 |___/ 
 
                            By Nick Hoddinott
-						GNU GENERAL PUBLIC LICENSE
 
 Change log
 
-1.0
+1.1.3 Mod_j by chrispriv
+ - Now also to be used as a moving map for Aerofly reading UDP data port with data streaming 'on' in Aerofly FS2/4 Settings
+ - Added "map fixed", "flight tracing" & "hide working tiles" mode, detecting IP address and interpolation for smother movement in moving map
+ - Enhanced Search Tile/Location function, which also allows you to search for places, regions etc. (performs geocoding for location search using OpenStreet Map Data) 
 
-- 
+1.1.3 Mod_i by chrispriv
+ - Added tooltips and hints making the use of AeroScenery easier for beginners, working scenery name kann be set under Settings for easy installation (using "Install Scenery" for selected tiles)
+ - New support for downloading elevation data with 10m resolution with USGS as source from OpenTopography for mesh creation (worldwide coverage 30m for other sources as before)
+ - Added the selection of typical “Trees Presets” under Settings (works together with the updated version of the TreesDetection App 1.0 Beta from chrispriv)
+ - Added the ability to perform an additional batch conversion of raw images to tcc files, which works for Mobile platform Android only (needs content converter from Aerofly FS2 SDK)
+
+1.1.3 Mod_h by chrispriv
+ - Geoportals (Switzerland) works again
+ - Linz (New Zealand) works again
+ - Here WeGo works again (needs now an API key under Settings)
+ - Google changed to secured https:// server (line with the <GM_OrthophotoSourceUrlTemplate> has to be manually deleted in settings.xml)
+ - Additional PowerShell Script for download of elevation data as GeoTIFF with 30m resolution from OpenTopography for the selected aera/tiles (needs an API-Key to be added in Settings)
+ - Ability to integrate QGIS Processing Executor, to fix peaks near coastlines and decompress downloaded GeoTIFF's (Path to GQIS-bin-Folder to be set under Settings)
+ - Separate selection boxes for downloading OSM data as well as for download of elevation data from Opentopography under "Choose Actions To Run" (PowerShell scripts are now executed)
+ - Ability to define a maximum altitude under Settings for Treesdetection and new handing over of the boundary box coordinates as area restriction
+ - Not only in case of missing tiles but now also for empty tiles, only the missing resp. empty Image tiles are downloaded 
+ - Enhanced PowerShell Script of Mod_e, fixes not only missing tiles but now also empty tiles (works only partially with Google Satellite Images)
+
+1.1.3 Mod_g by chrispriv
+ - Added TreesDetection App by chrispriv in "Actions to Run" & "Settings" to additional run Trees Detection process (with optional masking) based on the stitched aerial image tiles
+ - Allows now to change the number of simultaneous downloads in Settings going up to 8 instead of 4 (choice between: 1,2,4,6 or 8 --> recommended 6)
+ - New function: "Search Tile" allows to search a specific tile in the map by FS2 grid coordinates (e.g. "8500_a500")
+ - Added "Open AFS2 User-Folder" button in the main Toolbar
+ - Added "Open Scenery Editor" with link to FS2 Cultivation Editor by Nabeel in the main Toolbar
+
+1.1.3 Mod_f by chrispriv
+ - Additional PowerShell Script for manual download of OSM data from OpenStreetMap Overpass API of the selected gridsquare under "osm\"
+ - For speed up in case of missing tiles downloads only the missing Image tiles (to redownload all tiles again, the image tile folder must be deleted)
+ - New function: Copy boundary box coordinates to clipboard ("NWlng, NWlat, SElng, SElat") for use in AFS2 Editor from Nabeelamjad 
+ - Additional "Map Type" "Google Terrain" as map preview ("Open Street Map" replaced by "Open Cycle Map", cause its not supported anymore)
+ - Additional choice of "Open in Map" type for Google Earth (Web-Version only)
+ - For "Open in Map": Additionally copy the centre coordinates to the clipboard ("<lon> <lat>") for use in TSC-Files of Aerofly
+ - For "Open Folder": Additionally copy the name of the selected gridsquare to the clipboard (useful for manually install of the Scenery)
+
+1.1.3 Mod_e by chrispriv
+ - New source Mapbox added (needs an access token to be added in Setup)
+ - Number of attempts increased from 5 to 10 for downloading tiles for better reliability (for new HTTPS ArcGis as an exception even increased up to 30)
+   (never mind if ArcGIS is used, the "Waiting between downloads" should be increased to "15ms" and the "Randomize +/-" to 5ms in the settings (instead of 10ms /3ms))
+ - Enhanced PowerShell Script of Mod_c, that allows to download only the missing image tiles manually by running the script (instead of redownload the hole area)
+
+1.1.3 Mod_d by chrispriv
+ - ARrcGIS source working again (known issue: few image tiles may be missing)
+
+1.1.3 Mod_c by chrispriv
+ - Writing additional list of tiles as a PowerShell Script for manual download of all image tiles to be downloaded (temporary workaround)
+
+1.1.3 Mod_b by chrispriv
+ - Additional map-sources "Carto DB Light" for masking-purposes
+
+1.1.3 Mod_a by chrispriv
+ - Fix for fscloudport airports due to change of URL and specifications (a.o. to HTTPS)
+
+1.1.3
+- Temporary fix for HereWeGo maps version change
+- USGS source working again
+- Added GuleSider Orthophoto Source
+- Add option to disable confirmation message when running multiple GeoConvert concurrently
+
+1.1.2
+- Added support for Here WeGo maps orthophoto source
+
+1.1.1
+- Added retry for USGS tiles in the event of a non-success HTTP response
+
+1.1.0
+- Added support for many more orthophoto sources
+- Fixed issue where 'Shrink TMC grid squares" used culture specific decimal separator
+
+1.0.2
+- Fixed potential issue when hex folder names are changed
+- Use GeoConvert wrapper is now default for new installations
+
+1.0.1
+- Fixed issue with null registry entries causing exception
+- Fixed issue where sample images for image processing settings are not installed causing an exception
+
+1.0
 - Switched from registry based config to xml file config
 - Added "Install Scenery" map toolbar button
 - Fixed issue with decimal separator parsing of "Shrink TMC grid squares" value
@@ -27,14 +105,13 @@ Change log
 
 
 0.6
-
 - GeoConvert no longer runs if the user stops the generation process
 - Open Map toolbar item now uses decimal point irrespective of system culture
 - Map toolbar items are not enabled if a grid square is not selected
 - FSCloudPort airport coordinates are parsed with a decimal point irrespective of system culture
 - Custom message box form for catch all exception handling
 - Airport markers are now shown correctly when "Show Airports" is pressed if the map has not been moved
-- Database, wokring and SDK folders are now checked for existence on app start
+- Database, working and SDK folders are now checked for existence on app start
 - UI is locked while tasks are running to prevent collection modified exceptions
 - Recreate raw and ttc folders before running GeoConvert
 - Fixed issue with image tile stitcher where image was cropped to the wrong width

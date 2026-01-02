@@ -62,8 +62,6 @@ namespace AeroScenery.USGS
 
                 //string data2 = await client.DownloadStringTaskAsync("https://earthexplorer.usgs.gov/");
 
-                int i = 0;
-
             }
         }
 

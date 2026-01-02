@@ -38,6 +38,7 @@
             this.okButton = new System.Windows.Forms.Button();
             this.closeButton = new System.Windows.Forms.Button();
             this.allFilesCheckBox = new System.Windows.Forms.CheckBox();
+            this.osmFolderCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -112,7 +113,7 @@
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.okButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(209, 233);
+            this.okButton.Location = new System.Drawing.Point(209, 264);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(91, 32);
             this.okButton.TabIndex = 13;
@@ -125,7 +126,7 @@
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.closeButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeButton.Location = new System.Drawing.Point(306, 233);
+            this.closeButton.Location = new System.Drawing.Point(306, 264);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(96, 32);
             this.closeButton.TabIndex = 12;
@@ -144,13 +145,27 @@
             this.allFilesCheckBox.UseVisualStyleBackColor = true;
             this.allFilesCheckBox.CheckedChanged += new System.EventHandler(this.allFilesCheckBox_CheckedChanged);
             // 
+            // osmFolderCheckBox
+            // 
+            this.osmFolderCheckBox.AutoSize = true;
+            this.osmFolderCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.osmFolderCheckBox.Location = new System.Drawing.Point(17, 225);
+            this.osmFolderCheckBox.Name = "osmFolderCheckBox";
+            this.osmFolderCheckBox.Size = new System.Drawing.Size(97, 21);
+            this.osmFolderCheckBox.TabIndex = 15;
+            this.osmFolderCheckBox.Text = "OSM Folder";
+            this.osmFolderCheckBox.UseVisualStyleBackColor = true;
+            this.osmFolderCheckBox.Visible = false;
+            this.osmFolderCheckBox.CheckedChanged += new System.EventHandler(this.osmFolderCheckBox_CheckedChanged);
+            // 
             // DeleteSquareOptionsForm
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(414, 277);
+            this.ClientSize = new System.Drawing.Size(414, 308);
+            this.Controls.Add(this.osmFolderCheckBox);
             this.Controls.Add(this.allFilesCheckBox);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.closeButton);
@@ -185,5 +200,6 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.CheckBox allFilesCheckBox;
+        private System.Windows.Forms.CheckBox osmFolderCheckBox;
     }
 }

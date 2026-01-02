@@ -159,12 +159,11 @@ namespace AeroScenery.Data
 
                     transaction.Commit();
                 }
-                catch (SQLiteException ex)
+                catch (SQLiteException)
                 {
                     transaction.Rollback();
                 }
 
-                int i = 0;
             }
         }
 

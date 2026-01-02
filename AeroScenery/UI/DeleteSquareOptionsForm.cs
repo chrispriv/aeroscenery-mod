@@ -16,6 +16,7 @@ namespace AeroScenery.UI
         public bool DeleteStitchedImages { get; set; }
         public bool DeleteGeoconvertRawImages { get; set; }
         public bool DeleteTTCFiles { get; set; }
+        public bool DeleteOSMFolder { get; set; }
 
         public DeleteSquareOptionsForm()
         {
@@ -62,6 +63,17 @@ namespace AeroScenery.UI
             }
         }
 
+       //#DEVL
+        private void osmFolderCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            this.DeleteOSMFolder = this.osmFolderCheckBox.Checked;
+
+            if (!this.osmFolderCheckBox.Checked)
+            {
+                this.allFilesCheckBox.Checked = false;
+            }
+        }
+
         private void allFilesCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (this.allFilesCheckBox.Checked)
@@ -70,13 +82,17 @@ namespace AeroScenery.UI
                 this.stitchedImagesCheckBox.Checked = true;
                 this.rawImagesCheckBox.Checked = true;
                 this.ttcFilesCheckBox.Checked = true;
+                //#DEVL
+                this.osmFolderCheckBox.Checked = true;
             }
         }
+
 
         private void okButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
         }
+
     }
 }

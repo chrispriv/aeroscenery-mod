@@ -77,6 +77,7 @@
             this.imageTileCountLabel.TabIndex = 4;
             this.imageTileCountLabel.Text = "- of - Image Tiles";
             this.imageTileCountLabel.Click += new System.EventHandler(this.label3_Click);
+            
             // 
             // downloadThreadNumberLabel
             // 
@@ -87,6 +88,7 @@
             this.downloadThreadNumberLabel.TabIndex = 5;
             this.downloadThreadNumberLabel.Text = "1";
             this.downloadThreadNumberLabel.Click += new System.EventHandler(this.label4_Click);
+
             // 
             // DownloadThreadProgressControl
             // 

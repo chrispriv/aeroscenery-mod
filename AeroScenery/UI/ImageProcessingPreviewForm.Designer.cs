@@ -63,7 +63,7 @@
             "Urban 2"});
             this.previewImageCombo.Location = new System.Drawing.Point(110, 15);
             this.previewImageCombo.Name = "previewImageCombo";
-            this.previewImageCombo.Size = new System.Drawing.Size(389, 25);
+            this.previewImageCombo.Size = new System.Drawing.Size(605, 25);
             this.previewImageCombo.TabIndex = 2;
             this.previewImageCombo.SelectedIndexChanged += new System.EventHandler(this.previewImageCombo_SelectedIndexChanged);
             // 
@@ -71,7 +71,7 @@
             // 
             this.openImageButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.openImageButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.openImageButton.Location = new System.Drawing.Point(505, 12);
+            this.openImageButton.Location = new System.Drawing.Point(721, 12);
             this.openImageButton.Name = "openImageButton";
             this.openImageButton.Size = new System.Drawing.Size(111, 29);
             this.openImageButton.TabIndex = 3;
@@ -87,7 +87,7 @@
             this.previewPictureBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.previewPictureBox.Location = new System.Drawing.Point(12, 54);
             this.previewPictureBox.Name = "previewPictureBox";
-            this.previewPictureBox.Size = new System.Drawing.Size(604, 428);
+            this.previewPictureBox.Size = new System.Drawing.Size(820, 513);
             this.previewPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.previewPictureBox.TabIndex = 0;
             this.previewPictureBox.TabStop = false;
@@ -100,13 +100,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(628, 494);
+            this.ClientSize = new System.Drawing.Size(844, 579);
             this.Controls.Add(this.openImageButton);
             this.Controls.Add(this.previewImageCombo);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.previewPictureBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "ImageProcessingPreviewForm";
             this.ShowInTaskbar = false;
             this.Text = "Image Processing Preview";

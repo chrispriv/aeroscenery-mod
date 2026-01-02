@@ -10,6 +10,8 @@ namespace AeroScenery.UI
     {
         Selected,
         Active,
-        Downloaded
+        Downloaded,
+        //#MOD_g
+        Show
     }
 }

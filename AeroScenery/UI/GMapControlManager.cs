@@ -31,6 +31,12 @@ namespace AeroScenery.UI
                     polygon.Fill = new SolidBrush(Color.FromArgb(40, Color.Orange));
                     polygon.Stroke = new Pen(Color.Orange, 1);
                     break;
+                //#MOD_g
+                case GridSquareDisplayType.Show:
+                    polygon.Fill = new SolidBrush(Color.FromArgb(40, Color.GhostWhite));
+                    polygon.Stroke = new Pen(Color.GhostWhite, 1);
+                    break;
+
                 default:
                     break;
             }

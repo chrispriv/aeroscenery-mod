@@ -107,5 +107,38 @@ namespace AeroScenery.AFS2
 
             return afs2GridSquare;
         }
+
+        //#MOD_g
+        // Allows to search a specific tile in the map by FS2 grid coordinates (e.g. "8500_a500"), calculates the Lon & Lat position and gets resp. returns the AFS Gridsquare 
+        public AFS2GridSquare GetGridSquareName(string tile, int level)
+        {
+            var afs2GridSquare = new AFS2GridSquare();
+
+            var worldGridConstant = 2.3311223704144;
+
+            try 
+            {
+                var xHex = tile.Substring(0, 4);
+                var yHex = tile.Substring(tile.Length - 4, 4);
+
+                double xInt = int.Parse(xHex, System.Globalization.NumberStyles.HexNumber) / ((65536 / Math.Pow(2, level)));
+                double yInt = int.Parse(yHex, System.Globalization.NumberStyles.HexNumber) / ((65536 / Math.Pow(2, level)));
+
+                var nwX0 = xInt / Math.Pow(2, level);
+                var nwY0 = yInt / Math.Pow(2, level);
+
+                var westLongitude = (2 * (nwX0 - 0.5) * Math.PI * 180) / Math.PI + 0.01;
+                var northLatitude = (Math.Atan(worldGridConstant * 2 * (nwY0 - 0.5)) / worldGridConstant * Math.PI * 180) / Math.PI + 0.01;
+
+                afs2GridSquare = GetGridSquareAtLatLon(northLatitude, westLongitude, level);
+
+                return afs2GridSquare;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
     }
 }

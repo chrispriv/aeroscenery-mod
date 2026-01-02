@@ -152,7 +152,10 @@ Urban 2*/
         private void openImageButton_Click(object sender, EventArgs e)
         {
             this.openFileDialog1.Title = "Open Image File";
-            this.openFileDialog1.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|All Files (*.*)|*.*";
+            //#MOD_i
+            this.openFileDialog1.FileName = "";
+            //this.openFileDialog1.Filter = "JPEG Files (*.jpg)|*.jpg|PNG Files (*.png)|*.png|All Files (*.*)|*.*";
+            this.openFileDialog1.Filter = "PNG Files (*.png)|*.png|JPEG Files (*.jpg)|*.jpg|All Files (*.*)|*.*";
             this.openFileDialog1.InitialDirectory = AeroScenery.AeroSceneryManager.Instance.Settings.AFS2Directory;
             this.openFileDialog1.CheckFileExists = true;
             this.openFileDialog1.CheckPathExists = true;
