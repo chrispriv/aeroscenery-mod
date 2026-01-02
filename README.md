@@ -1,13 +1,33 @@
-## AeroScenery - A scenery generation and editing app for Aerofly FS2
+# AeroScenery Community Mod
 
-To give AeroScenery a try:
+This repository is an unofficial community-maintained fork of
+[AeroScenery](https://github.com/nickhod/aeroscenery).
 
-1. Download and install AeroScenery. Download the Aerofly SDK if you haven't already
-2. Start AeroScenery (you'll find it in the Windows Start menu once installed
-3. Click Settings in the top left and copy the directory of the Aerofly SDK, e.g. C:\aerofly_fs_2_sdk_tools_20171123\aerofly_fs_2_sdk_tools
-4. Click somewhere over land on the map to select a tile
-5. Select Google as the image source
-6. Select a zoom level depending on how long you're willing to wait. 16 or 17 are usually good choices
-7. Under "Generate AFS2 Levels" click "Choose For Me"
-8. Under "Actions" select "Run Default Actions"
-9. Click Start
+## Overview
+- Based on AeroScenery 1.1.3-beta
+- .NET Framework 4.8
+- Active maintenance and further development starting with **Mod j**
+- Original author currently inactive
+
+## Projects
+- **AeroScenery** – main application (extended and maintained)
+- **GeoConvertWrapper** – legacy wrapper (unchanged from original project)
+- **AeroSceneryInstaller** – deprecated MSI installer (no longer functional)
+
+## Installation
+1. Install the original AeroScenery using the MSI installer
+2. Download the desired Community Mod release (ZIP)
+3. Extract and overwrite the existing installation files
+
+## Releases
+Binary releases (ZIP packages) are provided via GitHub Releases.
+
+The first public community release is:
+- **v1.1.3-mod.j**
+
+## Notes
+- The MSI installer project is deprecated and kept for reference only
+- Some legacy wrapper code originates from the original AeroScenery project
+
+## License
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
