@@ -43,7 +43,7 @@ Learn more about the enhancements introduced by the community-maintained mod:
 - ❓ [FAQ](faq.md)  
   Frequently asked questions and known issues.
 
-- 📝 [Changelog](../CHANGELOG.md)  
+- 📝 [Changelog](https://github.com/chrispriv/aeroscenery-mod/blob/master/CHANGELOG.md)  
   Detailed list of changes and release history.
 
 ---
@@ -59,4 +59,4 @@ original design.
 
 ---
 
-⬅️ Return to the [GitHub repository](../README.md)
+⬅️ Return to the [GitHub repository](https://github.com/chrispriv/aeroscenery-mod)

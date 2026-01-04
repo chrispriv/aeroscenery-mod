@@ -75,7 +75,7 @@ AeroScenery requires `GeoConvert.exe`, which is part of the
 Aerofly FS 2 Software Development Kit (SDK).
 
 GeoConvert is **not included** in this project and must be obtained separately.
-It is no longer officially supported by IPACS, but still available via the
+It is no longer officially supported by IPACS, but still available on Aerofly-Sim.de:
 [Aerofly FS 2 Software Development Kit (SDK)](https://www.aerofly-sim.de/aerofly_fs_2_sdk).
 
 ➡️ See: [Installation](docs/installation.md) 
