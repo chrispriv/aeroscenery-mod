@@ -11,9 +11,7 @@ namespace AeroScenery.UI
         Selected,
         Active,
         Downloaded,
-        //#MOD
-        Show,
-        //#MOD_k
-        Data
+        //#MOD_g
+        Show
     }
 }

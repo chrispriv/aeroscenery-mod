@@ -10,12 +10,6 @@
 
 Change log
 
-1.1.3 Mod_k by chrispriv (in development)
- - Added additional water masking ...
- - Added option for manually N/S shift correction when running GeoConvert process
- - Added aeroflybridge.dll (shared memory) support for moving map in Aerofly FS4 (dll needs to be installed user\aerofly fs4\external_ddl folder) ...
- - ...
-
 1.1.3 Mod_j by chrispriv
  - Now also to be used as a moving map for Aerofly reading UDP data port with data streaming 'on' in Aerofly FS2/4 Settings
  - Added "map fixed", "flight tracing" & "hide working tiles" mode, detecting IP address and interpolation for smother movement in moving map

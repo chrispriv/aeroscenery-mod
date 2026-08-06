@@ -30,7 +30,7 @@ namespace AeroScenery.AFS2
 
                         if (!File.Exists(geoconvertFilename))
                         {
-                            //#MOD
+                            //#MOD_i
                             log.Error(String.Format("Could not find GeoConvert in {0}", geoconvertFilename));
 
                             var messageBox = new CustomMessageBox(String.Format("Could not find GeoConvert in {0} \n\nPlease check the path of the Aerofly FS2 SDK containing the GeoConvert App under Settings.", geoconvertFilename),
@@ -53,7 +53,7 @@ namespace AeroScenery.AFS2
 
                                 if (!File.Exists(geoconvertWrapperPath))
                                 {
-                                    //#MOD
+                                    //#MOD_i
                                     log.Error(String.Format("Could not find GeoConvert Wrapper in {0}", geoconvertWrapperPath));
 
                                     var messageBox = new CustomMessageBox(String.Format("Could not find GeoConvert Wrapper in {0}", geoconvertWrapperPath),

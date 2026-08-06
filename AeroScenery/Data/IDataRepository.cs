@@ -34,13 +34,6 @@ namespace AeroScenery.Data
         /// <param name="gridSquare"></param>
         void CreateGridSquare(GridSquare gridSquare);
 
-        //#MOD_k
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gridSquare"></param>
-        void CreateDataSquare(GridSquare gridSquare);
-
         /// <summary>
         /// 
         /// </summary>

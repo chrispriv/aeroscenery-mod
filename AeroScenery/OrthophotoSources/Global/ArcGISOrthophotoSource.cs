@@ -9,14 +9,14 @@ namespace AeroScenery.OrthophotoSources
 {
     public class ArcGISOrthophotoSource : GenericOrthophotoSource
     {
-        //#MOD
+        //#MOD_d
         // New secured HTTPS URL and downlaod as JPG
         public static string DefaultUrlTemplate = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{zoom}/{y}/{x}.jpg";
 
         // Initial HTTP URL
         //public static string DefaultUrlTemplate = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{zoom}/{y}/{x}";
 
-        //#TRY Just to try out the Esri Topo World Map
+        // Just to try out the Esri Topo World Map
         //public static string DefaultUrlTemplate = "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{zoom}/{y}/{x}.jpg";
 
         public ArcGISOrthophotoSource()
@@ -35,7 +35,7 @@ namespace AeroScenery.OrthophotoSources
         {
             this.width = 256;
             this.height = 256;
-            //#MOD
+            //#MOD_d
             this.imageExtension = "jpg";
             //this.imageExtension = "jfif";
             this.source = OrthophotoSourceDirectoryName.ArcGIS;

@@ -23,8 +23,10 @@ namespace AeroScenery.OrthoPhotoSources
         SE_Hitta,
         HereWeGo,
         NO_GuleSider,
-        //#MOD
+        //#MOD_e
         Mapbox,
+
+        //#MOD_b
         GoogleMaps,
         GoogleRoads,
         OSMMaps,
@@ -47,8 +49,9 @@ namespace AeroScenery.OrthoPhotoSources
         public static readonly string SE_Hitta = "se_hitta";
         public static readonly string HereWeGo = "hwg";
         public static readonly string NO_GuleSider = "no_gus";
-        //#MOD
+        //#MOD_e
         public static readonly string Mapbox = "mapb";
+        //#MOD_b
         public static readonly string GoogleMaps = "g-mask";
         public static readonly string GoogleRoads = "r-mask";
         public static readonly string OSMMaps = "o-mask";

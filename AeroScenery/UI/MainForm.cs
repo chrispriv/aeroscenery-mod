@@ -35,27 +35,9 @@ using System.Windows.Forms;
 using System.Net.Sockets;
 using GMap.NET.WindowsForms.Markers;
 using System.Net.NetworkInformation;
-using AeroScenery.FlightPathVisualizer.Models;
-using AeroScenery.FlightPathVisualizer.Services;
-using AeroScenery.FlightPathVisualizer.Terrain;
-using System.Web.UI.WebControls;
-using OSGeo.GDAL;
-using System.Security.Cryptography;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using Microsoft.VisualBasic.Logging;
-using MaxRev.Gdal.Core;
 //using SmartFormat.Core.Output;
 //using AForge.Imaging.Filters;
 //using System.Drawing.Imaging;
-
-//#TRY_k
-using System.Windows.Forms.Integration;
-using System.Windows.Media.Media3D;
-using AeroScenery.FlightPathVisualizer.Instruments;
-using Brushes = System.Drawing.Brushes;
-//using Color = System.Drawing.Color;
 
 namespace AeroScenery
 {
@@ -91,10 +73,7 @@ namespace AeroScenery
         private bool uiSetFromSettings;
 
         private MainFormSideTab currentMainFormSideTab;
-
-        //#DEVL_k
-        //private int afsGridSquareSelectionSize;
-        public int afsGridSquareSelectionSize;
+        private int afsGridSquareSelectionSize;
 
         // Whether the user should be shown a dialog about how changing the selection size
         // removes any current selections.
@@ -122,10 +101,6 @@ namespace AeroScenery
         private double movingMapPitch = 0;
         private double movingMapRoll = 0;
         private double movingMapVerticalSpeed = 0;
-        //#MOD_k
-        private double movingMapElevation = -100; //Value -100 if elevation data is not available
-        private double movingMapXpdr = 0;
-        private string movingMapAircraftName = "";
 
         private double movingMapTimeStampLast = 0;
         private double movingMapLongitudeLast = 0;
@@ -147,29 +122,6 @@ namespace AeroScenery
 
         private GMapOverlay traceOverlay;
         private GMapRoute traceRoute;
-
-        //###############################################################
-        //#TRY_k ### TO BE IMPLEMENTED IN GUI/ SETTINGS!!!
-        private bool useUdp = false; // UDP = true, Shared Memory = false
-        //###############################################################
-        private GMarkerGoogle airplaneLabelMarker;
-
-        //MOD_k
-        private TerrainData _terrainData;
-
-        private CancellationTokenSource hudTaskTokenSource;
-        private Task hudUpdateTask;
-
-        private CancellationTokenSource elevationTaskTokenSource;
-        private Task elevationUpdateTask;
-
-        private CancellationTokenSource elevationProfileTaskTokenSource;
-        private Task elevationProfileUpdateTask;
-
-        private HudOverlayControl hudOverlay;
-        private ElevationProfileOverlayControl elevationOverlay;
-
-        private System.Windows.Forms.Integration.ElementHost elementHost3DPreview;
 
 
         public MainForm()
@@ -201,13 +153,12 @@ namespace AeroScenery
             this.afsGridSquareSelectionSize = 9;
             this.gridSquareSelectionSizeToolstripCombo.SelectedIndex = 0;
 
-            // Initially 4 thread processes implemented for simultaneous download 
+            // TODO - Make this dynamic
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress1);
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress2);
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress3);
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress4);
-            //#MOD
-            //Number of thread processes increased from 4 to 8
+            //#MOD_g
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress5);
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress6);
             this.downloadThreadProgressControls.Add(this.downloadThreadProgress7);
@@ -217,14 +168,14 @@ namespace AeroScenery
             this.downloadThreadProgress2.SetDownloadThreadNumber(2);
             this.downloadThreadProgress3.SetDownloadThreadNumber(3);
             this.downloadThreadProgress4.SetDownloadThreadNumber(4);
-            //#MOD
+            //#MOD_g
             this.downloadThreadProgress5.SetDownloadThreadNumber(5);
             this.downloadThreadProgress6.SetDownloadThreadNumber(6);
             this.downloadThreadProgress7.SetDownloadThreadNumber(7);
             this.downloadThreadProgress8.SetDownloadThreadNumber(8);
 
             this.gridSquareLabel.Text = "";
-            //#MOD
+            //#MOD_f
             this.gridSquareBoundaryBox.Text = "";
 
             this.currentMainFormSideTab = MainFormSideTab.Images;
@@ -238,20 +189,20 @@ namespace AeroScenery
 
         public void Initialize()
         {
-            System.Windows.Forms.ToolTip toolTip1 = new System.Windows.Forms.ToolTip();
+            ToolTip toolTip1 = new ToolTip();
             toolTip1.IsBalloon = true;
             toolTip1.InitialDelay = 500;
-            //#MOD
+            //#MOD_i
             toolTip1.SetToolTip(this.generateAFS2LevelsHelpImage, "Select first the desired image resulution using the 'Image Detail (Zoom Level)' slider and then press [Choose for me].\nAeroScenery automatically selects the needed levels to be compiled for your Aerofly scenery using GeoConvert process.\nRecommended to use is level 16 with 2.389m resolution covering the whole 'Size 9' area (use higher resolutions for smaller areas).");
 
-            //#MOD
-            System.Windows.Forms.ToolTip toolTip2 = new System.Windows.Forms.ToolTip();
+            //#MOD_i
+            ToolTip toolTip2 = new ToolTip();
             toolTip2.IsBalloon = true;
             toolTip2.InitialDelay = 500;
             toolTip2.SetToolTip(this.chooseActionsToRunHelpImage, "Select 'Run Default actions' to automatically execute all the required steps sequentially.\nWhen GeoConvert process is completed, each selected tile can be installed using 'Install Scenery' to the path set under 'Settings'.\nBy selecting 'Choose actions to run' the steps can be executed separately resp. be done again, e.g. after editing of the stiched images.");
 
             //#MOD_j
-            System.Windows.Forms.ToolTip toolTip3 = new System.Windows.Forms.ToolTip();
+            ToolTip toolTip3 = new ToolTip();
             toolTip2.IsBalloon = true;
             toolTip2.InitialDelay = 500;
             toolTip2.SetToolTip(this.movingMapHelpImage, "To use AeroScenery as a moving map, switch in AeroFly FS2/4 under 'Settings> Miscellaneaus settings>' the option 'Broadcast flight info to IP address' to 'on'.\nFigure out your 'Broadcast IP address' by clicking on the tool tip (?) symbol and set it (e.g. 'xxx.xxx.00x.255') / 'Broadcast IP Port' is '49002'\nYou may need to allow AeroScenery access in your firewall and add an exception to your antivirus protection.");
@@ -267,7 +218,7 @@ namespace AeroScenery
             afsLevels.Add(new AFSLevel("Level 14", 14));
             afsLevels.Add(new AFSLevel("Level 15", 15));
 
-            //#MOD
+            //#MOD_i
             afsLevels.Add(new AFSLevel("Level 7", 7));
             afsLevels.Add(new AFSLevel("Level 8", 8));
 
@@ -280,7 +231,7 @@ namespace AeroScenery
             elevationAfsLevels.Add(new AFSLevel("Level 14", 14));
             elevationAfsLevels.Add(new AFSLevel("Level 15", 15));
 
-            //#MOD
+            //#MOD_i
             elevationAfsLevels.Add(new AFSLevel("Level 7", 7));
             elevationAfsLevels.Add(new AFSLevel("Level 8", 8));
 
@@ -308,7 +259,7 @@ namespace AeroScenery
             this.orthophotoSourceImages.Images.Add(AeroSceneryImages.nz_flag); //5
             this.orthophotoSourceImages.Images.Add(AeroSceneryImages.se_flag); //6
             this.orthophotoSourceImages.Images.Add(AeroSceneryImages.us_flag); //7
-            //#MOD
+            //#MOD_b
             this.orthophotoSourceImages.Images.Add(AeroSceneryImages.world_map); //8
 
             orthophotoSourceItems = new List<ImageComboItem>() {
@@ -316,7 +267,7 @@ namespace AeroScenery
                 new ImageComboItem() { Text = "Google", Value = OrthophotoSource.Google, ImageIndex = 0  },
                 new ImageComboItem() { Text = "ArcGIS", Value = OrthophotoSource.ArcGIS, ImageIndex = 0  },
                 new ImageComboItem() { Text = "Here WeGo", Value = OrthophotoSource.HereWeGo, ImageIndex = 0  },
-                //#MOD
+                //#MOD_e
                 new ImageComboItem() { Text = "Mapbox", Value = OrthophotoSource.Mapbox, ImageIndex = 0  },
 
                 new ImageComboItem() { Text = "Geoportal (Switzerland)", Value = OrthophotoSource.CH_Geoportal, ImageIndex = 1  },
@@ -330,33 +281,32 @@ namespace AeroScenery
                 new ImageComboItem() { Text = "Norge i Bilder (Norway)", Value = OrthophotoSource.NO_NorgeBilder, ImageIndex = 4  },
                 new ImageComboItem() { Text = "USGS (US)", Value = OrthophotoSource.US_USGS, ImageIndex = 7  },
 
-                //#MOD
+                //#MOD_b
                 //Currently no use of the additional maps 
                 //new ImageComboItem() { Text = "Google Maps (just for masking)", Value = OrthophotoSource.GoogleMaps, ImageIndex = 8  },
                 //new ImageComboItem() { Text = "Google Roads (just for masking)", Value = OrthophotoSource.GoogleRoads, ImageIndex = 8  },
                 //new ImageComboItem() { Text = "Google Road Map (just for masking)", Value = OrthophotoSource.GoogleRoads, ImageIndex = 8  },
                 //new ImageComboItem() { Text = "OSM Maps (just for masking)", Value = OrthophotoSource.OSMMaps, ImageIndex = 8  },
 
-                //MOD - No more need in the selection due to direct download vie "Action to Run" checkbox
+                //MOD_h - No more need in the selection due to direct download vie "Action to Run" checkbox
                 //new ImageComboItem() { Text = "Carto DB Light (just for masking)", Value = OrthophotoSource.CartoDBLight, ImageIndex = 8  }
-
             };
 
             imageSourceComboBox.ImageList = this.orthophotoSourceImages;
             imageSourceComboBox.DataSource = orthophotoSourceItems;
 
-            //#MOD
+            //#MOD_g
             var settings = AeroSceneryManager.Instance.Settings;
             //Hide the boxes resp. options for running Treesdetection if no path is set in the Settings
-            if (settings.TreesDetectionDirectory == "")
+            if (settings.TreesDetectionDirectory == "") 
             {
                 runTreesDetectionCheckBox.Visible = false;
                 runTreesDetectionCheckBox.Checked = false;
-                runTreesDetectionMaskCheckBox.Visible = false;
+                runTreesDetectionMaskCheckBox.Visible= false;
                 runTreesDetectionDetectionCheckBox.Visible = false;
                 label5.Visible = false;
             }
-            else
+            else 
             {
                 runTreesDetectionCheckBox.Visible = true;
                 runTreesDetectionMaskCheckBox.Visible = true;
@@ -364,20 +314,20 @@ namespace AeroScenery
                 label5.Visible = true;
             }
 
-            //#MOD
-            // Hide the box resp. option for running Download Elevation if no API-Key is set in the Settings
+            //#MOD_h
+            // Hide the boxes resp. options for running Download Elevation if no API-Key is set in the Settings
             if (settings.OpenTopographyApiKey == "")
             {
                 downloadElevationDataCheckBox.Visible = false;
                 downloadElevationDataCheckBox.Checked = false;
             }
-            else
+            else 
             {
                 downloadElevationDataCheckBox.Visible = true;
             }
 
-            //#MOD
-            // Hide the box resp. option for enabling Download OSM Data if Option is Set under Settings
+            //#MOD_i
+            // Hide the boxes resp. options for enabling Download OSM Data if Option is Set under Settings
             if (settings.DownloadOSMDataEnable == false)
             {
                 downloadOsmDataCheckBox.Visible = false;
@@ -386,43 +336,6 @@ namespace AeroScenery
             else
             {
                 downloadOsmDataCheckBox.Visible = true;
-            }
-
-            //#DEVL_k
-            if (settings.WaterMaskingEnable == false)
-            {
-                waterMaskingCheckBox.Visible = false;
-                waterMaskingCheckBox.Checked = false;
-            }
-            else
-            {
-                waterMaskingCheckBox.Visible = true;
-            }
-
-            if (settings.AllowShiftCorrectionEnable == false) 
-            {
-                allowShiftCorrectionCheckBox.Visible = false;
-                allowShiftCorrectionCheckBox.Checked = false;
-                shiftCorrectionLevel.Visible = false;
-            }
-            else
-            {
-                allowShiftCorrectionCheckBox.Visible = true;
-                shiftCorrectionLevel.Visible = true;
-                shiftCorrectionLevel.Value = settings.AllowShiftCorrectionLevel.Value;
-            }
-
-            //#MOD_k
-            // Hide resp. set the box for use of Elevation Data running the Moving Map (enable the Elevation Profile and the 3D Viewpanel)
-            if (settings.MovingMapElevationDataEnable == false)
-            {
-                panel3DUseElevationData.Visible = false;
-                panel3DUseElevationData.Checked = false;
-            }
-            else
-            {
-                panel3DUseElevationData.Visible = true;
-                panel3DUseElevationData.Checked = settings.MovingMapElevationData.Value;
             }
 
             this.UpdateUIFromSettings();
@@ -484,7 +397,7 @@ namespace AeroScenery
             {
                 AFSLevel level = (AFSLevel)afsLevelsCheckBoxList.Items[i];
 
-                //#MOD
+                //#MOD_i
                 //if (settings.AFSLevelsToGenerate.Contains(level.Level))
                 if ((settings.AFSLevelsToGenerate.Contains(level.Level)) && level.Level >= 9)
                 {
@@ -534,7 +447,7 @@ namespace AeroScenery
                 this.showAirportsToolstripButton.Text = "Show Airports";
             }
 
-            //#MOD
+            //#MOD_g
             // Hide not used downloaders/ threads
             if (settings.SimultaneousDownloads < 8)
             {
@@ -566,33 +479,25 @@ namespace AeroScenery
             this.generateAFSFilesCheckBox.Checked = true;
             this.runGeoConvertCheckBox.Checked = true;
             //this.installSceneryIntoAFSCheckBox.Checked = true;
-
-            //#MOD
+            //#MOD_h
             this.fixMissingTilesCheckBox.Checked = false;
             this.downloadOsmDataCheckBox.Checked = false;
             this.downloadElevationDataCheckBox.Checked = false;
+            //#MOD_g
             this.runTreesDetectionCheckBox.Checked = false;
 
             this.downloadImageTileCheckBox.Enabled = false;
             this.stitchImageTilesCheckBox.Enabled = false;
             this.generateAFSFilesCheckBox.Enabled = false;
             this.runGeoConvertCheckBox.Enabled = false;
-
             //this.installSceneryIntoAFSCheckBox.Enabled = false;
-            //#MOD
+            //#MOD_h
             this.fixMissingTilesCheckBox.Enabled = false;
             this.downloadOsmDataCheckBox.Enabled = false;
             this.downloadElevationDataCheckBox.Enabled = false;
+            //#MOD_g
             this.runTreesDetectionCheckBox.Enabled = false;
-
-            //#DEVL_k
-            this.waterMaskingCheckBox.Checked = false;
-            this.allowShiftCorrectionCheckBox.Checked = false;
-            this.shiftCorrectionLevel.Value = 0;
-
-            this.waterMaskingCheckBox.Enabled = false;
-            this.allowShiftCorrectionCheckBox.Enabled = false;
-            this.shiftCorrectionLevel.Enabled = false;
+            
 
         }
 
@@ -607,13 +512,11 @@ namespace AeroScenery
             this.deleteStitchedImagesCheckBox.Checked = settings.DeleteStitchedImageTiles.Value;
             //this.installSceneryIntoAFSCheckBox.Checked = settings.InstallScenery.Value;
 
-            //#MOD
+            //#MOD_h
             this.fixMissingTilesCheckBox.Checked = settings.FixMissingTiles.Value;
-            //#DEVL_k
-            this.waterMaskingCheckBox.Checked = settings.WaterMaskingProcessing.Value;
-            this.allowShiftCorrectionCheckBox.Checked = settings.AllowShiftCorrectionProcessing.Value;
             this.downloadOsmDataCheckBox.Checked = settings.DownloadOsmData.Value;
             this.downloadElevationDataCheckBox.Checked = settings.DownloadElevationData.Value;
+            //#MOD_g
             this.runTreesDetectionCheckBox.Checked = settings.RunTreesDetection.Value;
             this.runTreesDetectionMaskCheckBox.Checked = settings.RunTreesDetectionMask.Value;
             this.runTreesDetectionDetectionCheckBox.Checked = settings.RunTreesDetectionDetection.Value;
@@ -624,19 +527,12 @@ namespace AeroScenery
             this.runGeoConvertCheckBox.Enabled = true;
             //this.installSceneryIntoAFSCheckBox.Enabled = true;
 
-            //#MOD
+            //#MOD_h
             this.fixMissingTilesCheckBox.Enabled = true;
             this.downloadOsmDataCheckBox.Enabled = true;
             this.downloadElevationDataCheckBox.Enabled = true;
+            //#MOD_g
             this.runTreesDetectionCheckBox.Enabled = true;
-
-            //#DEVL_k
-            this.waterMaskingCheckBox.Enabled = true;
-            this.allowShiftCorrectionCheckBox.Enabled = true;
-            this.shiftCorrectionLevel.Enabled = true;   
-
-
-
 
         }
 
@@ -700,17 +596,14 @@ namespace AeroScenery
             this.stitchImageTilesCheckBox.Enabled = false;
             this.generateAFSFilesCheckBox.Enabled = false;
             this.runGeoConvertCheckBox.Enabled = false;
-            //#MOD
+            //#MOD_h
             this.fixMissingTilesCheckBox.Enabled = false;
             this.downloadOsmDataCheckBox.Enabled = false;
             this.downloadElevationDataCheckBox.Enabled = false;
+            //#MOD_g
             this.runTreesDetectionCheckBox.Enabled = false;
             this.deleteStitchedImagesCheckBox.Enabled = false;
             this.installSceneryIntoAFSCheckBox.Enabled = false;
-            //#DEVL_k
-            this.waterMaskingCheckBox.Enabled = false;
-            this.allowShiftCorrectionCheckBox.Enabled = false;
-            this.shiftCorrectionLevel.Enabled = false;
         }
 
         private void UnlockUI()
@@ -723,23 +616,20 @@ namespace AeroScenery
             //this.shutdownCheckbox.Enabled = true;
 
             // Only re-enable these if run custom actions is selected
-            if (AeroSceneryManager.Instance.Settings.ActionSet == ActionSet.Custom)
+            if(AeroSceneryManager.Instance.Settings.ActionSet == ActionSet.Custom)
             {
                 this.downloadImageTileCheckBox.Enabled = true;
                 this.stitchImageTilesCheckBox.Enabled = true;
                 this.generateAFSFilesCheckBox.Enabled = true;
                 this.runGeoConvertCheckBox.Enabled = true;
-                //#MOD
+                //#MOD_h
                 this.fixMissingTilesCheckBox.Enabled = true;
                 this.downloadOsmDataCheckBox.Enabled = true;
                 this.downloadElevationDataCheckBox.Enabled = true;
+                //#MOD_g
                 this.runTreesDetectionCheckBox.Enabled = true;
                 this.deleteStitchedImagesCheckBox.Enabled = true;
                 this.installSceneryIntoAFSCheckBox.Enabled = true;
-                //#DEVL_k
-                this.waterMaskingCheckBox.Enabled = true;
-                this.allowShiftCorrectionCheckBox.Enabled = true;
-                this.shiftCorrectionLevel.Enabled = true;
             }
         }
 
@@ -749,7 +639,7 @@ namespace AeroScenery
             this.downloadThreadProgress2.Reset();
             this.downloadThreadProgress3.Reset();
             this.downloadThreadProgress4.Reset();
-            //#MOD
+            //#MOD_g
             this.downloadThreadProgress5.Reset();
             this.downloadThreadProgress6.Reset();
             this.downloadThreadProgress7.Reset();
@@ -829,7 +719,7 @@ namespace AeroScenery
 
             gridSquareLabel.Text = gridSquare.Name;
 
-            //#MOD
+            //#MOD_f
             // Create a boundary box using "NWlng, NWlat, SElng, SElat" for use in AFS2 Editor from Nabeelamjad 
             gridSquareBoundaryBox.Text = gridSquare.WestLongitude.ToString("#.#######", CultureInfo.InvariantCulture) + "," + gridSquare.NorthLatitude.ToString("#.#######", CultureInfo.InvariantCulture) + ",";
             gridSquareBoundaryBox.Text = gridSquareBoundaryBox.Text + gridSquare.EastLongitude.ToString("#.#######", CultureInfo.InvariantCulture) + "," + gridSquare.SouthLatitude.ToString("#.#######", CultureInfo.InvariantCulture);
@@ -1004,7 +894,7 @@ namespace AeroScenery
                 this.deleteImagesToolStripButton.Enabled = true;
                 this.openMapToolStripDropDownButton.Enabled = true;
                 this.installSceneryToolStripButton.Enabled = true;
-                //#MOD
+                //#MOD_f
                 this.copyToClipboardToolStripButton.Enabled = true;
             }
             else
@@ -1013,7 +903,7 @@ namespace AeroScenery
                 this.deleteImagesToolStripButton.Enabled = false;
                 this.openMapToolStripDropDownButton.Enabled = false;
                 this.installSceneryToolStripButton.Enabled = false;
-                //#MOD
+                //#MOD_f
                 this.copyToClipboardToolStripButton.Enabled = false;
             }
 
@@ -1026,12 +916,7 @@ namespace AeroScenery
             foreach (GridSquare gridSquare in gridSquares)
             {
                 var afs2GridSqure = this.gridSquareMapper.ToAFS2GridSquare(gridSquare);
-                //#DEVL_k
                 var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Downloaded);
-                if (gridSquare.Fixed == 0)
-                {
-                    polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Data);
-                }
 
                 var gridSquareViewModel = new GridSquareViewModel();
                 gridSquareViewModel.GMapOverlay = polygonOverlay;
@@ -1045,18 +930,6 @@ namespace AeroScenery
         public void AddDownloadedGridSquare(AFS2GridSquare afs2GridSqure)
         {
             var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Downloaded);
-
-            var gridSquareViewModel = new GridSquareViewModel();
-            gridSquareViewModel.GMapOverlay = polygonOverlay;
-            gridSquareViewModel.AFS2GridSquare = afs2GridSqure;
-
-            this.DownloadedAFS2GridSquares[afs2GridSqure.Name] = gridSquareViewModel;
-
-        }
-        //#DEVL_k
-        public void AddDataGridSquare(AFS2GridSquare afs2GridSqure)
-        {
-            var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Data);
 
             var gridSquareViewModel = new GridSquareViewModel();
             gridSquareViewModel.GMapOverlay = polygonOverlay;
@@ -1098,7 +971,7 @@ namespace AeroScenery
                     // We therefore need to count clicks and close after the second click
                     if (this.fsCloudPortMarkerManager.ClickCount > 0)
                     {
-                        this.fsCloudPortMarkerManager.CloseAirportPopup();
+                        this.fsCloudPortMarkerManager.CloseAirportPopup();                    
                     }
 
                     this.fsCloudPortMarkerManager.ClickCount++;
@@ -1183,7 +1056,7 @@ namespace AeroScenery
 
                 System.Diagnostics.Process.Start(String.Format(googleMapsUrl, latStr, lngStr));
 
-                //#MOD
+                //#MOD_f
                 // Additionally copy the center coordinates to the clipoard as "<lon> <lat>" for use in TSC-Files of Aerofly
                 var centerCoodinateStr = selectedGridSquare.GetCenter().Lng.ToString("#.########", CultureInfo.InvariantCulture) + " " + selectedGridSquare.GetCenter().Lat.ToString("#.########", CultureInfo.InvariantCulture);
                 Clipboard.SetData(DataFormats.Text, (Object)centerCoodinateStr);
@@ -1191,7 +1064,7 @@ namespace AeroScenery
         }
 
         private void openInBingMApsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        {       
             if (this.SelectedAFS2GridSquare != null)
             {
                 var selectedGridSquare = this.SelectedAFS2GridSquare;
@@ -1202,13 +1075,13 @@ namespace AeroScenery
 
                 System.Diagnostics.Process.Start(String.Format(bingMapsUrl, latStr, lngStr));
 
-                //#MOD
+                //#MOD_f
                 // Additionally copy the center coordinates to the clipoard as "<lon> <lat>" for use in TSC-Files of Aerofly
                 var centerCoodinateStr = selectedGridSquare.GetCenter().Lng.ToString("#.########", CultureInfo.InvariantCulture) + " " + selectedGridSquare.GetCenter().Lat.ToString("#.########", CultureInfo.InvariantCulture);
                 Clipboard.SetData(DataFormats.Text, (Object)centerCoodinateStr);
             }
         }
-        //#MOD
+        //#MOD_f
         // Additional "Open in Map" type for Google Earth (Web-version only)
         private void openInGoogleEarthToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1222,13 +1095,13 @@ namespace AeroScenery
 
                 System.Diagnostics.Process.Start(String.Format(googleEarthUrl, latStr, lngStr));
 
-                //#MOD
+                //#MOD_f
                 // Additionally copy the center coordinates to the clipoard as "<lon> <lat>" for use in TSC-Files of Aerofly
                 var centerCoodinateStr = selectedGridSquare.GetCenter().Lng.ToString("#.########", CultureInfo.InvariantCulture) + " " + selectedGridSquare.GetCenter().Lat.ToString("#.########", CultureInfo.InvariantCulture);
                 Clipboard.SetData(DataFormats.Text, (Object)centerCoodinateStr);
             }
         }
-
+        
 
         private void openImageFolderToolstripButton_Click(object sender, EventArgs e)
         {
@@ -1245,15 +1118,15 @@ namespace AeroScenery
                         Verb = "open"
                     });
 
-                    //#MOD
+                    //#MOD_f
                     // Additionally copy the name of the selected gridsquare to the clipboard
                     Clipboard.SetData(DataFormats.Text, (Object)this.SelectedAFS2GridSquare.Name);
 
                 }
                 else
                 {
-                    var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", this.SelectedAFS2GridSquare.Name),
-                        "AeroScenery",
+                    var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", this.SelectedAFS2GridSquare.Name), 
+                        "AeroScenery", 
                         MessageBoxIcon.Information);
 
                     messageBox.ShowDialog();
@@ -1287,7 +1160,7 @@ namespace AeroScenery
 
                             //#DEVL
                             // Additionally delete the OSM folder in the root folder of the tile (seperate treatment needed) & also the new trees folder should be added as option!
-                            if (deleteSquareOptionsForm.DeleteOSMFolder == true)
+                            if (deleteSquareOptionsForm.DeleteOSMFolder == true) 
                             {
                                 // ...
                             }
@@ -1393,7 +1266,7 @@ namespace AeroScenery
                 var settings = AeroSceneryManager.Instance.Settings;
 
                 //var checkedLevel = e.Index + 9;
-                var afsLevel = (AFSLevel)this.afsLevelsCheckBoxList.Items[e.Index];
+                var afsLevel = (AFSLevel)this.afsLevelsCheckBoxList.Items[e.Index];                
                 var checkedLevel = afsLevel.Level;
 
                 if (e.NewValue == CheckState.Checked)
@@ -1410,7 +1283,7 @@ namespace AeroScenery
                 {
                     e.NewValue = e.CurrentValue;
 
-                    CustomMessageBox message = new CustomMessageBox("You cannnot selected an AFS Level bigger than the grid square selection size.",
+                    CustomMessageBox message = new CustomMessageBox("You cannnot selected an AFS Level bigger than the grid square selection size.", 
                         "AeroScenery", MessageBoxIcon.Information);
 
                     message.ShowDialog();
@@ -1446,7 +1319,7 @@ namespace AeroScenery
             AeroSceneryManager.Instance.SaveSettings();
         }
 
-        private void fixMissingTiles_CheckedChanged(object sender, EventArgs e)
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             if (fixMissingTilesCheckBox.Checked)
             {
@@ -1472,44 +1345,6 @@ namespace AeroScenery
             }
 
             AeroSceneryManager.Instance.SaveSettings();
-        }
-
-        //#DEVL_k
-        private void waterMaskingCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (waterMaskingCheckBox.Checked)
-            {
-                AeroSceneryManager.Instance.Settings.WaterMaskingProcessing = true;
-            }
-            else
-            {
-                AeroSceneryManager.Instance.Settings.WaterMaskingProcessing = false;
-            }
-
-            AeroSceneryManager.Instance.SaveSettings();
-        }
-
-        private void allowShiftCorrectionCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (allowShiftCorrectionCheckBox.Checked)
-            {
-                AeroSceneryManager.Instance.Settings.AllowShiftCorrectionProcessing = true;
-                //shiftCorrectionLevel.Visible = true;
-            }
-            else
-            {
-                AeroSceneryManager.Instance.Settings.AllowShiftCorrectionProcessing = false;
-                //shiftCorrectionLevel.Visible = false;
-            }
-
-            AeroSceneryManager.Instance.SaveSettings();
-        }
-
-        private void shiftCorrectionLevel_ValueChanged(object sender, EventArgs e)
-        {
-            AeroSceneryManager.Instance.Settings.AllowShiftCorrectionLevel = (int)shiftCorrectionLevel.Value;
-
-            AeroSceneryManager.Instance.SaveSettings(); 
         }
 
         private void generateAFSFilesCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1540,7 +1375,7 @@ namespace AeroScenery
             AeroSceneryManager.Instance.SaveSettings();
         }
 
-        //#MOD
+        //#MOD_h
         private void downloadOsmDataCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (downloadOsmDataCheckBox.Checked)
@@ -1553,8 +1388,7 @@ namespace AeroScenery
             }
             AeroSceneryManager.Instance.SaveSettings();
         }
-
-        //#MOD
+        //#MOD_g
         private void runTreesDetectionCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (runTreesDetectionCheckBox.Checked)
@@ -1562,14 +1396,13 @@ namespace AeroScenery
                 this.runTreesDetectionDetectionCheckBox.Enabled = true;
                 this.runTreesDetectionDetectionCheckBox.Checked = true;
                 this.runTreesDetectionMaskCheckBox.Enabled = true;
-                AeroSceneryManager.Instance.Settings.RunTreesDetection = true;
+                AeroSceneryManager.Instance.Settings.RunTreesDetection = true; 
             }
             else
             {
                 this.runTreesDetectionDetectionCheckBox.Enabled = false;
                 this.runTreesDetectionDetectionCheckBox.Checked = false;
                 this.runTreesDetectionMaskCheckBox.Enabled = false;
-                this.runTreesDetectionMaskCheckBox.Checked = false;
                 AeroSceneryManager.Instance.Settings.RunTreesDetection = false;
             }
 
@@ -1626,7 +1459,7 @@ namespace AeroScenery
 
         private void getSDKToolStripButton_Click(object sender, EventArgs e)
         {
-            //#MOD
+            //#MOD_i
             //var url = "https://www.aerofly.com/community/filebase/index.php?file/2-sdk-tools/";
             var url = "https://www.aerofly-sim.de/aerofly_fs_2_sdk/";
             System.Diagnostics.Process.Start(url);
@@ -1708,7 +1541,7 @@ namespace AeroScenery
 
                         this.SelectedAFS2GridSquare = null;
                         gridSquareLabel.Text = "";
-                        //#MOD
+                        //#MOD_f
                         gridSquareBoundaryBox.Text = "";
 
                         this.activeGridSquareOverlay.Clear();
@@ -1766,7 +1599,7 @@ namespace AeroScenery
                 case 0:
                     this.afsGridSquareSelectionSize = 9;
                     this.ClearAllSelectedAFSGridSquares();
-                    //#MOD
+                    //#MOD_i
                     minAFSLevel = 9;
                     break;
 
@@ -1805,7 +1638,7 @@ namespace AeroScenery
                     minAFSLevel = 14;
                     break;
 
-                //#MOD
+                //#MOD_i
                 // 7
                 case 6:
                     this.afsGridSquareSelectionSize = 7;
@@ -1891,7 +1724,7 @@ namespace AeroScenery
         //    await scraper.DownloadAsync(downloadPageUrl, @"E:\Temp");
         //}
 
-
+        
         /*
         private async void button2_Click(object sender, EventArgs e)
         {
@@ -1931,12 +1764,13 @@ namespace AeroScenery
 
             switch (this.afsGridSquareSelectionSize)
             {
-                //#MOD
+                //#MOD_i
                 case 7:
                     afsLevels.Add(7);
 
                     break;
-                //#MOD
+
+                //#MOD_i
                 case 8:
                     afsLevels.Add(8);
 
@@ -1945,7 +1779,7 @@ namespace AeroScenery
                 case 9:
 
                     afsLevels.Add(9);
-                    //#MOD
+                    //#MOD_e
                     afsLevels.Add(10);
                     afsLevels.Add(11);
                     afsLevels.Add(12);
@@ -1957,7 +1791,7 @@ namespace AeroScenery
 
                     if (zoomLevel > 16)
                     {
-                        afsLevels.Add(14);
+                        afsLevels.Add(14);                    
                     }
 
                     if (zoomLevel > 17)
@@ -1995,12 +1829,7 @@ namespace AeroScenery
 
                     afsLevels.Add(11);
                     afsLevels.Add(12);
-                    //#MOD_k
-                    //afsLevels.Add(13);
-                    if (zoomLevel > 15)
-                    {
-                        afsLevels.Add(13);
-                    }
+                    afsLevels.Add(13);
 
                     if (zoomLevel > 16)
                     {
@@ -2017,12 +1846,7 @@ namespace AeroScenery
                 case 12:
 
                     afsLevels.Add(12);
-                    //#MOD_k
-                    //afsLevels.Add(13);
-                    if (zoomLevel > 15)
-                    {
-                        afsLevels.Add(13);
-                    }
+                    afsLevels.Add(13);
 
                     if (zoomLevel > 16)
                     {
@@ -2038,12 +1862,7 @@ namespace AeroScenery
                 case 13:
 
                     afsLevels.Add(13);
-                    //#MOD_k
-                    //afsLevels.Add(14);
-                    if (zoomLevel > 16)
-                    {
-                        afsLevels.Add(14);
-                    }
+                    afsLevels.Add(14);
 
                     if (zoomLevel > 17)
                     {
@@ -2112,7 +1931,7 @@ namespace AeroScenery
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (item.Tag != null)
+                if (item.Tag != null) 
                 {
                     var icao = item.Tag.ToString();
                     this.fsCloudPortMarkerManager.ShowAirportPopup(icao, this, e.Location);
@@ -2141,7 +1960,7 @@ namespace AeroScenery
 
         private void mapTypeToolStripDropDown_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            switch (e.ClickedItem.Tag)
+            switch(e.ClickedItem.Tag)
             {
                 case "GoogleHybrid":
                     this.mainMap.MapProvider = GMapProviders.GoogleHybridMap;
@@ -2255,7 +2074,7 @@ namespace AeroScenery
         }
         private void copyToClipboardToolStripButton_Click(object sender, EventArgs e)
         {
-            //#MOD
+            //#MOD_f
             Clipboard.SetData(DataFormats.Text, (Object)gridSquareBoundaryBox.Text);
 
         }
@@ -2265,7 +2084,7 @@ namespace AeroScenery
 
         }
 
-        //#MOD
+        //#MOD_g
         private void RunTreesDetectionMask_CheckedChanged(object sender, EventArgs e)
         {
             if (runTreesDetectionMaskCheckBox.Checked)
@@ -2280,7 +2099,7 @@ namespace AeroScenery
             AeroSceneryManager.Instance.SaveSettings();
         }
 
-        //#MOD
+        //#MOD_g
         private void RunTreesDetectionDetectionCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (runTreesDetectionDetectionCheckBox.Checked)
@@ -2294,7 +2113,7 @@ namespace AeroScenery
 
             AeroSceneryManager.Instance.SaveSettings();
         }
-        //#MOD
+        //#MOD_g
 
         private void openUserFolderToolstripButton_Click(object sender, EventArgs e)
         {
@@ -2330,7 +2149,7 @@ namespace AeroScenery
 
         private void toolStripSearchTileButton_Click(object sender, EventArgs e)
         {
-            //#MOD
+            //#MOD_g
             string inputBoxText = "";
             if (CustomeInputBox.InputBox("Tile/ Location Search", "Tile or Location (e.g. '8500_a500' or 'Paris, France'):", ref inputBoxText) == DialogResult.OK)
             {
@@ -2338,7 +2157,7 @@ namespace AeroScenery
                 AFS2Grid aFS2Grid = new AFS2Grid();
                 string squareName = inputBoxText;
                 //
-                if (squareName.Length > 9)
+                if (squareName.Length > 9) 
                 {
                     squareName = inputBoxText.Substring(inputBoxText.Length - 9, 9);
                 }
@@ -2352,7 +2171,7 @@ namespace AeroScenery
                     this.mainMap.Zoom = 10;
                     this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2GridSquareSearch, GridSquareDisplayType.Show);
                 }
-                else
+                else 
                 {
                     //#MOD_j
                     // Perform geocoding for location search using OpenSreeet Map Data 
@@ -2388,7 +2207,7 @@ namespace AeroScenery
         {
 
         }
-
+        
         //#MOD_j
         //------------------------------------------------------------------------------------------------------------
         // Adding a moving map to AeroScenery reading UDP data port with data streaming 'on' in Aerofly FS2/4 Settings
@@ -2403,7 +2222,7 @@ namespace AeroScenery
 
                 IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, _port);
 
-                log.InfoFormat(String.Format("Listening for UDP data on port {0}", _port));
+                log.InfoFormat(String.Format("Listening for UDP data on port {0}",_port));
                 UpdateTxtMovingMapData($"Listening for UDP data on port {_port} ...");
 
                 bool receivingData = false;
@@ -2420,7 +2239,7 @@ namespace AeroScenery
                             // Splitting and processing the data
                             ProcessReceivedData(receivedText);
                         }
-                        if (!receivingData)
+                        if (!receivingData) 
                         {
                             log.InfoFormat(String.Format("Receiving UDP data on port {0}", _port));
                             receivingData = true;
@@ -2473,7 +2292,7 @@ namespace AeroScenery
                     this.movingMapLatitudeAverage = (this.movingMapLatitude + this.movingMapLatitudeLast) / 2;
 
                     // Determine vertical speed of airplane (value not broadcasted)
-                    if (this.movingMapAltitude != this.movingMapAltitudeLast)
+                    if (this.movingMapAltitude != this.movingMapAltitudeLast) 
                     {
                         this.movingMapVerticalSpeed = (this.movingMapAltitude - this.movingMapAltitudeLast) / (this.movingMapTimeStamp - this.movingMapTimeStampLast) * 1000;
                     }
@@ -2481,8 +2300,6 @@ namespace AeroScenery
                     // Only for testing purposes: Due to the circumstance that the data is only updated approximately every second, the map position is updated using a separate process with higher refresh rate 
                     //UpdateMovingMapPosition(movingMapLatitude, movingMapLongitude, movingMapHeading);
 
-                    UpdateTraceRoute();
-                    /*
                     //Trace route mode
                     if ((this.movingMapTraceFlightCheckBox.Checked) && (this.movingMapLatitude != 0) && (this.movingMapLongitude != 0))
                     {
@@ -2507,7 +2324,6 @@ namespace AeroScenery
 
                         }));
                     }
-                    */
                 }
             }
             else if (data.StartsWith("XATT"))
@@ -2529,205 +2345,37 @@ namespace AeroScenery
                 {
                 }
             }
-            
-            UpdateFlightInfoDisplay();
-
-        }
-
-
-
-        private void ListenForSharedMemoryData(CancellationToken cancellationToken)
-        {
-            AeroflyConnector connector = null;
-
-            log.Info("Waiting for AeroflyBridge shared memory...");
-            UpdateTxtMovingMapData("Waiting for AeroflyBridge.dll shared memory...");
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                connector = AeroflyConnector.TryCreate();
-                if (connector != null)
-                    break;
-
-                Thread.Sleep(500); // 0.5s warten, wenn noch nicht verfügbar
-            }
-
-            log.Info("AeroflyBridge shared memory connected.");
-            UpdateTxtMovingMapData("AeroflyBridge.dll shared memory connected.");
-
-            try
-            {
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    uint isValid = connector.ReadUInt32(8);
-                    if (isValid == 1)
-                    {
-                        double lat = connector.ReadDouble("Aircraft.Latitude") * 57.2958;
-                        double lon = connector.ReadDouble("Aircraft.Longitude") * 57.2958;
-                        double alt = connector.ReadDouble("Aircraft.Altitude");
-                        double trueHeading = connector.ReadDouble("Aircraft.TrueHeading");
-                        double magneticHeading = connector.ReadDouble("Aircraft.MagneticHeading"); // to be used (same as UDP)
-                        double pitch = connector.ReadDouble("Aircraft.Pitch") * 57.2958;
-                        double roll = connector.ReadDouble("Aircraft.Bank") * 57.2958;
-                        double groundSpeed = connector.ReadDouble("Aircraft.GroundSpeed");  // to be used(same as UDP)
-                        double airSpeed = connector.ReadDouble("Aircraft.IndicatedAirspeed");
-                        double verticalSpeed = connector.ReadDouble("Aircraft.VerticalSpeed");
-
-                        double xpdr = connector.ReadDouble("Communication.TransponderCode");
-                        string aircraftName = connector.ReadString("Aircraft.Name");
-
-                        this.movingMapTimeStamp = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-                        this.movingMapLatitude = lat;
-                        this.movingMapLongitude = lon;
-                        this.movingMapAltitude = alt;
-                        this.movingMapHeading = connector.ConvertAeroflyHeading(magneticHeading);
-                        this.movingMapPitch = pitch;
-                        this.movingMapRoll = roll;
-                        this.movingMapSpeed = groundSpeed;
-                        this.movingMapVerticalSpeed = verticalSpeed;
-
-                        this.movingMapXpdr = xpdr;
-                        this.movingMapAircraftName = aircraftName;  
-
-                        UpdateTraceRoute();
-                        UpdateFlightInfoDisplay();
-                    }
-
-                    Thread.Sleep(50); // 20 Hz
-                }
-            }
-            catch (Exception ex)
-            {
-                log.InfoFormat("Fehler bei Shared-Memory-Zugriff: " + ex.Message);
-                UpdateTxtMovingMapData("Fehler: AeroflyBridge.dll nicht mehr erreichbar.");
-            }
-            finally
-            {
-                connector?.Dispose();
-            }
-        }
-        private void UpdateTraceRoute()
-        {
-            //Trace route mode
-            if ((this.movingMapTraceFlightCheckBox.Checked) && (this.movingMapLatitude != 0) && (this.movingMapLongitude != 0))
-            {
-                // Add new point and update route 
-                Invoke(new Action(() =>
-                {
-                    // Add new Point to tracing route using an average again (positions are allready 
-                    // Use the average position for a better result                    
-                    //newPoint = new PointLatLng((this.movingMapLatitudeAverage + this.movingMapLatitudeAverageLast) / 2, (this.movingMapLongitudeAverage + this.movingMapLongitudeAverageLast) / 2);
-                    var newPoint = new PointLatLng(this.movingMapLatitude, this.movingMapLongitude);
-                    if (useUdp)
-                    {
-                        // Use the average position for a better result
-                        newPoint = new PointLatLng((this.movingMapLatitudeAverage + this.movingMapLatitudeAverageLast) / 2, (this.movingMapLongitudeAverage + this.movingMapLongitudeAverageLast) / 2);
-                    }
-                    /*
-                    if (traceRoute != null)
-                    {
-                        traceRoute.Points.Add(newPoint); // Add new point 
-                        traceRouteCount++;
-
-                        // For a better result, only every 5th point is retained
-                        if (((traceRouteCount % 5 != 0)) && (traceRouteCount > 2))
-                        {
-                            traceRoute.Points.RemoveAt(traceRoute.Points.Count - 2);
-                        }
-
-                        mainMap.Refresh(); // Refresh map to show the change
-                    }
-                    */
-                    if (traceRoute != null)
-                    {
-                        traceRoute.Points.Add(newPoint); // Neuen Punkt hinzufügen
-                        traceRouteCount++;
-
-                        int step = useUdp ? 5 : 20; // Bei UDP enger filtern, Shared Memory = seltener
-
-                        // Optional: nur jeden x-ten Punkt behalten
-                        if ((traceRouteCount % step != 0) && (traceRouteCount > 2))
-                        {
-                            traceRoute.Points.RemoveAt(traceRoute.Points.Count - 2);
-                        }
-
-                        // Begrenzung der maximalen Punkteanzahl (älteste Punkte löschen)
-                        int maxPoints = 100000;
-                        while (traceRoute.Points.Count > maxPoints)
-                        {
-                            traceRoute.Points.RemoveAt(0); // Entferne ältesten Punkt
-                        }
-
-                        mainMap.Refresh(); // Karte aktualisieren
-                    }
-
-                }));
-            }
-        }
-
-        private void UpdateFlightInfoDisplay()
-        {
-            // Berechnung aller Einheiten + Anzeige-Logik wie in ProcessReceivedData()
-
             Double movingMapAltitudeFt = movingMapAltitude * 3.2808399;
-            Double movingMapSpeedKmh = movingMapSpeed * 3.6 / 1.15078;
+            Double movingMapSpeedKmh = movingMapSpeed * 60 * 60 / 1000 / 1.15078 ;
             Double movingMapSpeedKnots = movingMapSpeedKmh / 1.852;
             String movingMapLongitudeDirection;
             String movingMapLatitudeDirection;
-            Double movingMapVerticalSpeedMS = movingMapVerticalSpeed;
-            if (useUdp) 
-            {
-                movingMapVerticalSpeedMS = (movingMapVerticalSpeed + movingMapVerticalSpeedLast) / 2;
-            } 
-
+            Double movingMapVerticalSpeedMS = (movingMapVerticalSpeed + movingMapVerticalSpeedLast) / 2;
             Double movingMapVerticalSpeed100FM = movingMapVerticalSpeedMS * 3.2808399 / 100 * 60;
 
             //Update the flight data
-            string altitudeAGLText = "";
-            if (this.movingMapRadioButtonMetric.Checked)
+            if (this.movingMapRadioButtonMetric.Checked) 
             {
-                //#DEVL_k
-                if (movingMapElevation > -100)
-                {
-                    altitudeAGLText = $" / {Math.Round(movingMapAltitude - movingMapElevation).ToString("#,0")} m (AGL)";
-                }
-
-                UpdateTxtMovingMapFlight($"Heading:\t{this.movingMapHeading.ToString("##0.0")} °\r\nAltitude:\t{Math.Round(this.movingMapAltitude, 0).ToString("#,0")} m{altitudeAGLText}\r\nSpeed:\t{Math.Round(movingMapSpeedKmh, 0).ToString("#,0")} kmh\r\nVS:\t{Math.Round(movingMapVerticalSpeedMS, 0).ToString("#,0")} m/s");
+                UpdateTxtMovingMapFlight($"Heading:\t{this.movingMapHeading.ToString("##0.0")}°\r\nAltitude:\t{Math.Round(this.movingMapAltitude,0).ToString("#,0")}m\r\nSpeed:\t{Math.Round(movingMapSpeedKmh,0).ToString("#,0")}kmh\r\nVS:\t{Math.Round(movingMapVerticalSpeedMS,0).ToString("#,0")}m/s");
             }
             else
             {
-                //#DEVL_k
-                if (movingMapElevation > -100)
-                {
-                    altitudeAGLText = $" / {Math.Round(movingMapAltitudeFt - movingMapElevation * 3.2808399).ToString("#,0")} ft (AGL)";
-                }
-                UpdateTxtMovingMapFlight($"Heading:\t{this.movingMapHeading.ToString("##0.0")} °\r\nAltitude:\t{Math.Round(movingMapAltitudeFt, 0).ToString("#,0")} ft{altitudeAGLText}\r\nSpeed:\t{Math.Round(movingMapSpeedKnots, 0).ToString("#,0")} kt\r\nVS:\t{Math.Round(movingMapVerticalSpeed100FM, 0).ToString("#,0")} ft/min");
+                UpdateTxtMovingMapFlight($"Heading:\t{this.movingMapHeading.ToString("##0.0")}°\r\nAltitude:\t{Math.Round(movingMapAltitudeFt,0).ToString("#,0")}ft\r\nSpeed:\t{Math.Round(movingMapSpeedKnots,0).ToString("#,0")}kn\r\nVS:\t{Math.Round(movingMapVerticalSpeed100FM,0).ToString("#,0")}ft/m");
             }
 
             //Update the position data 
-            if (movingMapLongitude >= 0) { movingMapLongitudeDirection = "E"; } else { movingMapLongitudeDirection = "W"; }
-            ;
-            if (movingMapLatitude >= 0) { movingMapLatitudeDirection = "N"; } else { movingMapLatitudeDirection = "S"; }
-            ;
-            UpdateTxtMovingMapData($"Latitude / Longitude:   {this.movingMapLatitude.ToString("##0.0000")} / {this.movingMapLongitude.ToString("##0.0000")} ({movingMapLatitudeDirection}{movingMapLongitudeDirection})\r\nPitsch:\t{this.movingMapPitch.ToString("##0.0")} °\r\nRoll:\t{this.movingMapRoll.ToString("##0.0")} °");
+            if (movingMapLongitude >= 0) { movingMapLongitudeDirection = "E"; } else { movingMapLongitudeDirection = "W"; };
+            if (movingMapLatitude >= 0) { movingMapLatitudeDirection = "N"; } else { movingMapLatitudeDirection = "S"; };
+            UpdateTxtMovingMapData($"Latitude / Longitude:   {this.movingMapLatitude.ToString("##0.0000")} / {this.movingMapLongitude.ToString("##0.0000")} ({movingMapLatitudeDirection}{movingMapLongitudeDirection})\r\nPitsch:\t{this.movingMapPitch.ToString("##0.0")}°\r\nRoll:\t{this.movingMapRoll.ToString("##0.0")}°");
+
         }
 
-
-        //#TRY_k 
         private async void StartListening()
         {
             _listeningCancellationTokenSource = new CancellationTokenSource();
             CancellationToken cancellationToken = _listeningCancellationTokenSource.Token;
 
-            if (useUdp) 
-            {
-                await Task.Run(() => ListenForUdpData(cancellationToken), cancellationToken);
-            } 
-            else 
-            {
-                await Task.Run(() => ListenForSharedMemoryData(cancellationToken), cancellationToken);
-            }
-
+            await Task.Run(() => ListenForUdpData(cancellationToken), cancellationToken);
         }
 
         private void StopListening()
@@ -2802,18 +2450,6 @@ namespace AeroScenery
                 airplaneMarker.Bitmap = rotatedIcon;
                 airplaneMarker.IsVisible = true;
 
-                //#TRY_k
-                // Label auf gleiche Geo-Position setzen
-                if (airplaneLabelMarker != null)
-                {
-                    airplaneLabelMarker.Position = new PointLatLng(posLat, posLon);
-
-                    // Tooltip-Position leicht nach oben verschieben
-                    // (funktioniert unabhängig vom Zoom)
-                    airplaneLabelMarker.ToolTipText = $"{movingMapAircraftName.ToUpper()}: FL{movingMapAltitude * 3.2808399 / 1000:000}\nXPDR: {movingMapXpdr}";
-                    //airplaneLabelMarker.ToolTip.Offset = new System.Drawing.Point(airplaneMarker.Bitmap.Height / 2 - 5, -airplaneMarker.Bitmap.Height / 2 + 5);
-                }
-
                 mainMap.Refresh();
             }
         }
@@ -2822,27 +2458,23 @@ namespace AeroScenery
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                double posLat = this.movingMapLatitude;
-                double posLon = this.movingMapLongitude;
 
-                if (useUdp) 
+                // Determine new position
+                double posLat = this.movingMapLatitudeAverageLast;
+                double posLon = this.movingMapLongitudeAverageLast;
+
+                double elapsedTimeSinceUpdate = Convert.ToDouble((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) - this.movingMapTimeStamp);
+                double deltaTimeStamp = this.movingMapTimeStampAverage - this.movingMapTimeStampAverageLast;
+                double deltaPosLat = this.movingMapLatitudeAverage - this.movingMapLatitudeAverageLast;
+                double deltaPosLon = this.movingMapLongitudeAverage - this.movingMapLongitudeAverageLast;
+
+
+                if (deltaTimeStamp != 0)
                 {
-                    // Determine new position smoothed using average (needed for UDP only)
-                    posLat = this.movingMapLatitudeAverageLast;
-                    posLon = this.movingMapLongitudeAverageLast;
-
-                    double elapsedTimeSinceUpdate = Convert.ToDouble((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) - this.movingMapTimeStamp);
-                    double deltaTimeStamp = this.movingMapTimeStampAverage - this.movingMapTimeStampAverageLast;
-                    double deltaPosLat = this.movingMapLatitudeAverage - this.movingMapLatitudeAverageLast;
-                    double deltaPosLon = this.movingMapLongitudeAverage - this.movingMapLongitudeAverageLast;
-
-                    if (deltaTimeStamp != 0)
-                    {
-                        posLat = posLat + elapsedTimeSinceUpdate / deltaTimeStamp * deltaPosLat;
-                        posLon = posLon + elapsedTimeSinceUpdate / deltaTimeStamp * deltaPosLon;
-                    }
-                } 
-
+                    posLat = posLat + elapsedTimeSinceUpdate / deltaTimeStamp * deltaPosLat;
+                    posLon = posLon + elapsedTimeSinceUpdate / deltaTimeStamp * deltaPosLon;
+                }
+                
                 // UpdateMovingMapPosition(posLat, posLon, movingMapHeading);
                 if (this.movingMapFixCheckBox.Checked)
                 {
@@ -2880,7 +2512,7 @@ namespace AeroScenery
                     // Update the position of the airplane marker
                     UpdateAirplaneMarkerPosition(posLat, posLon, movingMapHeading);
                     // Additionally updating the position of the map in trace mode (otherwise the refresh of the line is no longer displayed after a certain time) 
-                    if (this.movingMapTraceFlightCheckBox.Checked)
+                    if (this.movingMapTraceFlightCheckBox.Checked) 
                     {
                         var mapPos = mainMap.Position;
                         UpdateMovingMapPosition(mapPos.Lat, mapPos.Lng);
@@ -2914,9 +2546,9 @@ namespace AeroScenery
         }
 
 
-        private async void movingMapStartStopButton_Click(object sender, EventArgs e)
+        private void movingMapStartStopButton_Click(object sender, EventArgs e)
         {
-            if (this.ActionsRunning == false) //Start
+            if (this.ActionsRunning == false)
             {
                 log.InfoFormat("Moving Map Started");
 
@@ -2951,47 +2583,11 @@ namespace AeroScenery
                 //airplaneMarker.Size = new Size(48, 48); // would adjust icon size (not used)
                 airplaneMarkers.Markers.Add(airplaneMarker);
 
-
-                //#TRY_k
-                if (!useUdp) 
-                {
-                    airplaneLabelMarker = new GMarkerGoogle(mainMap.Position, new Bitmap(1, 1));
-                    airplaneLabelMarker.ToolTipMode = MarkerTooltipMode.Always;
-                    airplaneLabelMarker.ToolTipText = $" ";
-                    airplaneLabelMarker.ToolTip.Fill = Brushes.White;
-                    airplaneLabelMarker.ToolTip.Foreground = Brushes.Black;
-                    airplaneLabelMarker.ToolTip.Stroke = Pens.Transparent;
-                    airplaneLabelMarker.ToolTip.Font = new Font("Segoe UI", 8, FontStyle.Regular);
-                    airplaneLabelMarker.ToolTip.Offset = new System.Drawing.Point(airplaneMarker.Bitmap.Height / 2 - 5, -airplaneMarker.Bitmap.Height / 2 + 5);
-
-                    // Overlay hinzufügen
-                    airplaneMarkers.Markers.Add(airplaneLabelMarker);
-                }
-
-                // Start HUD task if HUD view is active
-                if (panel3DRadioButtonHUD.Checked)
-                {
-                    StartHudTask();
-                }
-
-                //#DEVL_k
-                panel3DUseElevationData.Enabled = false;
-                if (panel3DUseElevationData.Checked)
-                {
-                    InitializeTerrainData();   // Einmalig
-                    StartElevationUpdateTask(); // fortlaufend
-                    //await StartTerrain3DTask();
-                    if (panel3DRadioButtonProfile.Checked)
-                    {
-                        StartElevationProfileTask();
-                    }
-                }
-
             }
-            else // Stop
+            else 
             {
                 this.movingMapStartStopButton.Text = "Start";
-                if (this.MovingMapOutputPositionData.Text.Contains("Listening"))
+                if (this.MovingMapOutputPositionData.Text.Contains("Listening")) 
                 {
                     this.MovingMapOutputPositionData.Text = "";
                 }
@@ -2999,25 +2595,7 @@ namespace AeroScenery
                 StopRefreshPositionMovingMap();
 
                 airplaneMarkers.Markers.Remove(airplaneMarker);
-                if (airplaneLabelMarker != null)
-                {
-                    airplaneMarkers.Markers.Remove(airplaneLabelMarker);
-                    airplaneLabelMarker = null;
-                }
                 mainMap.ShowCenter = true;
-
-                // ✅ HUD-Task stoppen
-                StopHudTask();
-
-                //#DEVL_k
-                if (panel3DUseElevationData.Checked)
-                {
-                    StopElevationUpdateTask(); // beenden
-                    movingMapElevation = -100; // zurücksetzen
-                    //StopTerrain3DTask();
-                    StopElevationProfileTask();
-                }
-                panel3DUseElevationData.Enabled = true;
 
                 this.ActionsRunning = false;
 
@@ -3035,7 +2613,7 @@ namespace AeroScenery
                 traceOverlay = new GMapOverlay("traceOverlay");
                 traceRoute = new GMapRoute(new List<PointLatLng>(), "TraceRoute")
                 {
-                    Stroke = new System.Drawing.Pen(System.Drawing.Color.White, 3) // Set the color and thickness of the tracing line
+                    Stroke = new Pen(Color.White, 3) // Set the color and thickness of the tracing line
                 };
 
                 // Route zum Overlay hinzufügen und Overlay zur Karte hinzufügen
@@ -3075,7 +2653,7 @@ namespace AeroScenery
             }
         }
 
-        private async void showDownloadedAFS2GridSquaresAgain()
+        private async void showDownloadedAFS2GridSquaresAgain() 
         {
             // Shows the “downloaded grid squares” again running a task           
             await Task.Run(() => showDownloadedAFS2GridSquares());
@@ -3138,7 +2716,7 @@ namespace AeroScenery
                 return localIP;
             }
 
-            string yourIPAdress = GetLocalIPAddress();
+        string yourIPAdress = GetLocalIPAddress();
 
             var messageBox = new CustomMessageBox(String.Format("Your detected IP adress is: {0}", yourIPAdress),
             "AeroScenery",
@@ -3180,507 +2758,96 @@ namespace AeroScenery
         }
         */
 
-        //#
-
-
-
-        //#DEVL_k ---------------------------------------------------
-        //
-        private void StartHudTask()
+        //#TRY_k ---------------------------------------------------
+        private void button1_Click(object sender, EventArgs e)
         {
-            hudTaskTokenSource = new CancellationTokenSource();
-            var token = hudTaskTokenSource.Token;
-
-            if (hudOverlay == null || !panel3DPreview.Controls.Contains(hudOverlay))
+            string inputBoxText = "";
+            if (CustomeInputBox.InputBox("Tile Search", "Tile (e.g. 8500_a500}:", ref inputBoxText) == DialogResult.OK)
             {
-                hudOverlay = new HudOverlayControl
+
+                // Erstelle eine neue Instanz des GMap.NET-Steuerelements
+                //GMapControl gMap = new GMapControl();
+                //gMap.MapProvider = GMapProviders.GoogleMap;
+
+                // Dein Google API-Schlüssel (ersetze mit deinem tatsächlichen API-Schlüssel)
+                //string googleApiKey = "YOUR_GOOGLE_API_KEY";
+
+                // Google Maps-Provider mit API-Schlüssel konfigurieren
+                //GMapProviders.GoogleMap.ApiKey = googleApiKey;
+
+                // Beispiel: Suche nach "Paris"
+                //string address = "Paris, France";
+
+                // Geocoding durchführen
+                var geoCoder = GMapProviders.OpenStreetMap;
+
+                // Liste von gefundenen Punkten und Statuscode erhalten
+                List<PointLatLng> geocodingPointList;
+                var locations = geoCoder.GetPoints(inputBoxText, out geocodingPointList);
+
+                // Prüfen, ob die Suche erfolgreich war
+                // Überprüfen, ob die Liste nicht null ist und Ergebnisse enthält
+                if (geocodingPointList != null && geocodingPointList.Count > 0)
                 {
-                    Parent = panel3DPreview,
-                    Location = new System.Drawing.Point(0, 0),
-                    Size = panel3DPreview.Size,
-                    Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
-                };
-                panel3DPreview.Controls.Add(hudOverlay);
-            }
+                    // Den ersten Punkt aus der Liste verwenden (falls mehrere gefunden wurden)
+                    var location = geocodingPointList.First();
 
-            hudOverlay.Visible = true;
-            hudOverlay.BringToFront();
+                    //Console.WriteLine($"Gefundene Koordinaten für {address}: {location.Lat}°, {location.Lng}°");
+                    log.InfoFormat($"Gefundene Koordinaten für {inputBoxText}: {location.Lat}°, {location.Lng}°");
 
-            hudUpdateTask = Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    // UI-Aufruf im Main Thread
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        if (panel3DRadioButtonHUD.Checked && hudOverlay != null)
-                        {
-                            hudOverlay.Pitch = movingMapPitch;
-                            hudOverlay.Roll = movingMapRoll;
-
-                            hudOverlay.SpeedKt = movingMapSpeed * 60 * 60 / 1000 / 1.15078 / 1.852;
-                            hudOverlay.AltitudeFt = movingMapAltitude * 3.2808399;
-                            hudOverlay.HeadingDeg = movingMapHeading;
-                            if (useUdp) 
-                            {
-                                hudOverlay.VerticalSpeedFtM = (movingMapVerticalSpeed + movingMapVerticalSpeedLast) / 2 * 3.2808399 / 100 * 60;
-                            }
-                            else 
-                            {
-                                hudOverlay.VerticalSpeedFtM = movingMapVerticalSpeed * 3.2808399 / 100 * 60;
-                            }
-                            hudOverlay.ElevationFt = movingMapElevation * 3.2808399;
-
-                            hudOverlay.Invalidate();
-                        }
-                    }));
-
-                    await Task.Delay(50); // ca. 20 FPS
+                    // Optional: Die Koordinaten auf der Karte anzeigen
+                    // Wenn du eine GMap-Control verwendest, kannst du den Punkt wie folgt setzen:
+                    this.mainMap.Position = new PointLatLng(location.Lat, location.Lng);
                 }
-            }, token);
-        }
-
-        private void StartElevationProfileTask()
-        {
-            elevationProfileTaskTokenSource = new CancellationTokenSource();
-            var token = elevationProfileTaskTokenSource.Token;
-
-            if (elevationOverlay == null || !panel3DPreview.Controls.Contains(elevationOverlay))
-            {
-                elevationOverlay = new ElevationProfileOverlayControl
+                else
                 {
-                    Parent = panel3DPreview,
-                    Location = new System.Drawing.Point(0, 0),
-                    Size = panel3DPreview.Size,
-                    Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
-                };
-                panel3DPreview.Controls.Add(elevationOverlay);
-            }
-
-            elevationOverlay.Visible = true;
-            elevationOverlay.BringToFront();
-
-            elevationProfileUpdateTask = Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    // UI-Aufruf im Main Thread
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        if (panel3DRadioButtonProfile.Checked && elevationOverlay != null)
-                        {
-                            var profilePoints = CalculateElevationProfile();
-                            elevationOverlay.ElevationProfilePoints = profilePoints;
-                            elevationOverlay.AircraftAltitudeMeters = movingMapAltitude;
-                            elevationOverlay.AircraftHeadingDegrees = movingMapHeading;
-                            elevationOverlay.AircraftVerticalSpeedMs = movingMapVerticalSpeed;
-                            //elevationOverlay.ShowInFeet = movingMapRadioButtonFeet.Checked;
-                            elevationOverlay.ShowInFeet = false;
-
-                            elevationOverlay.Invalidate(); // neu zeichnen
-                        }
-                    }));
-
-                    await Task.Delay(50); // ca. 20 FPS
+                    //Console.WriteLine("Ort nicht gefunden.");
+                    log.InfoFormat("Ort nicht gefunden.");
                 }
-            }, token);
+
+                /*
+                AFS2GridSquare aFS2GridSquareSearch = new AFS2GridSquare();
+                AFS2Grid aFS2Grid = new AFS2Grid();
+                if (inputBoxText.Length > 9)
+                {
+                    inputBoxText = inputBoxText.Substring(inputBoxText.Length - 9, 9);
+                }
+                aFS2GridSquareSearch = aFS2Grid.GetGridSquareName(inputBoxText, this.afsGridSquareSelectionSize);
+
+                if (aFS2GridSquareSearch != null)
+                {
+                    this.ClearAllSelectedAFSGridSquares();
+
+                    mainMap.Position = new PointLatLng((aFS2GridSquareSearch.NorthLatitude + aFS2GridSquareSearch.SouthLatitude) / 2, (aFS2GridSquareSearch.WestLongitude + aFS2GridSquareSearch.EastLongitude) / 2);
+                    mainMap.Zoom = 10;
+                    this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2GridSquareSearch, GridSquareDisplayType.Show);
+                }
+                else
+                {
+                    var messageBox = new CustomMessageBox(String.Format("Map Tile '{0}' not found", inputBoxText),
+                    "AeroScenery",
+                    MessageBoxIcon.Information);
+
+                    messageBox.ShowDialog();
+
+                    //#TRY_j
+                    this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2Grid.GetGridSquareName("8500_a480", this.afsGridSquareSelectionSize), GridSquareDisplayType.Show);
+                    this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2Grid.GetGridSquareName("8580_a480", this.afsGridSquareSelectionSize), GridSquareDisplayType.Show);
+                    this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2Grid.GetGridSquareName("8500_a400", this.afsGridSquareSelectionSize), GridSquareDisplayType.Show);
+                    this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2Grid.GetGridSquareName("8580_a400", this.afsGridSquareSelectionSize), GridSquareDisplayType.Show);
+
+                    //mainMap.Overlays.Remove(this.activeGridSquareOverlay.GMapOverlay);
+
+                    //var squareAndOverlay = this.SelectedAFS2GridSquares[this.activeGridSquareOverlay.Name];
+                    //mainMap.Overlays.Remove(squareAndOverlay.GMapOverlay);
+
+                    this.activeGridSquareOverlay = this.gMapControlManager.DrawGridSquare(aFS2Grid.GetGridSquareName("8500_a480", this.afsGridSquareSelectionSize), GridSquareDisplayType.Downloaded);
+
+                }
+                */
+            }
 
         }
 
-        private void StopHudTask()
-        {
-            if (hudTaskTokenSource != null)
-            {
-                try
-                {
-                    hudTaskTokenSource.Cancel();
-                }
-                catch (Exception ex)
-                {
-                    log.Warn("Fehler beim Abbrechen der HUD-Task", ex);
-                }
-                finally
-                {
-                    hudTaskTokenSource.Dispose();
-                    hudTaskTokenSource = null;
-                    hudUpdateTask = null; // Task ist durch Token-Abbruch zum Stop gezwungen
-                }
-            }
-        }
-
-
-        private void StopElevationProfileTask()
-        {
-            if (elevationProfileTaskTokenSource != null)
-            {
-                try
-                {
-                    elevationProfileTaskTokenSource.Cancel();
-                }
-                catch (Exception ex)
-                {
-                    log.Warn("Fehler beim Abbrechen der ElevationProfile-Task", ex);
-                }
-                finally
-                {
-                    elevationProfileTaskTokenSource.Dispose();
-                    elevationProfileTaskTokenSource = null;
-                    elevationProfileUpdateTask = null;
-                }
-            }
-        }
-
-        private void InitializeTerrainData() //settings.AeroSceneryDBDirectory
-        {
-            try
-            {
-                if (_terrainData == null) 
-                {
-                    GdalBase.ConfigureAll();
-                    Gdal.AllRegister();
-
-                    log.Info($"GDAL initialized version: {Gdal.VersionInfo("RELEASE_NAME")}");
-
-                    //string demPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "gdal", "dem_area_90m.tif");
-                    var settings = AeroSceneryManager.Instance.Settings;
-                    string demPath = Path.Combine(settings.AeroSceneryDBDirectory, "elevation", settings.GeoTiffElevationMapFilename + ".tif");
-
-                    var loader = new GeoTiffLoader();
-                    _terrainData = loader.Load(demPath);
-
-                    log.Info($"DEM successfully loaded: {demPath}");
-
-                    panel3DViewButton.Visible = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error when loading DEM:\n" + ex.Message, "Elevation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                log.Info($"Error when loading DEM: {ex.Message}");
-            }
-        }
-
-
-
-        private void StartElevationUpdateTask()
-        {
-            elevationTaskTokenSource = new CancellationTokenSource();
-            var token = elevationTaskTokenSource.Token;
-
-            elevationUpdateTask = Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    if (_terrainData != null)
-                    {
-                        double elevation = GetElevationAt(_terrainData, movingMapLongitude, movingMapLatitude);
-                        if (!double.IsNaN(elevation))
-                        {
-                            movingMapElevation = elevation;
-                        }
-                        else
-                        {
-                            movingMapElevation = -100; // Ungültiger Wert
-                        }
-                    }
-
-                    await Task.Delay(200, token); // ca. 5x pro Sekunde reicht völlig
-                }
-            }, token);
-        }
-
-        private void StopElevationUpdateTask()
-        {
-            if (elevationTaskTokenSource != null)
-            {
-                try
-                {
-                    if (!elevationTaskTokenSource.IsCancellationRequested)
-                        elevationTaskTokenSource.Cancel();
-
-                    if (elevationUpdateTask != null && !elevationUpdateTask.IsCompleted)
-                        elevationUpdateTask.Wait();
-                }
-                catch (AggregateException ex)
-                {
-                    foreach (var inner in ex.InnerExceptions)
-                    {
-                        if (!(inner is OperationCanceledException))
-                            log.Warn("Unerwartete Ausnahme beim Stoppen der Elevation-Task", inner);
-                    }
-                }
-                finally
-                {
-                    elevationTaskTokenSource.Dispose();
-                    elevationTaskTokenSource = null;
-                    elevationUpdateTask = null;
-                }
-
-                log.Info("Elevation Update Task gestoppt.");
-            }
-        }
-
-
-        // Hilfsfunktion
-        private double GetElevationAt(TerrainData terrain, double lon, double lat)
-        {
-            if (terrain == null) return double.NaN;
-
-            int x = (int)((lon - terrain.OriginLongitude) / terrain.PixelSizeX);
-            int y = (int)((lat - terrain.OriginLatitude) / terrain.PixelSizeY);
-
-            if (terrain.PixelSizeY < 0)
-            {
-                y = (int)((lat - terrain.OriginLatitude) / terrain.PixelSizeY);
-            }
-
-            if (x >= 0 && x < terrain.Width && y >= 0 && y < terrain.Height)
-            {
-                return terrain.ElevationGrid[y, x];
-            }
-            else
-            {
-                return double.NaN;
-            }
-        }
-
-        private void panel3DUseElevationData_CheckedChanged(object sender, EventArgs e)
-        {
-            if (panel3DUseElevationData.Checked)
-            {
-                panel3DRadioButtonProfile.Enabled = true;
-                panel3DRadioButtonViewpanel.Enabled = true;
-                AeroSceneryManager.Instance.Settings.MovingMapElevationData = true;
-            }
-            else 
-            {
-                panel3DRadioButtonProfile.Enabled = false;
-                panel3DRadioButtonViewpanel.Enabled = false;
-                panel3DRadioButtonHUD.Checked = true;
-
-                panel3DViewButton.Visible = false;
-                _terrainData = null;
-                AeroSceneryManager.Instance.Settings.MovingMapElevationData = false;
-            }
-            AeroSceneryManager.Instance.SaveSettings();
-        }
-
-        private void panel3DRadioButtonHUD_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!this.ActionsRunning)
-                return;
-
-            if (panel3DRadioButtonHUD.Checked)
-            {
-                StopElevationProfileTask();
-                if (elevationOverlay != null) elevationOverlay.Visible = false;
-
-                StartHudTask();
-                hudOverlay.Visible = true;
-                hudOverlay.BringToFront();
-
-            }
-            else if (panel3DRadioButtonProfile.Checked)
-            {
-                StopHudTask();
-                if (hudOverlay != null) hudOverlay.Visible = false;
-
-                // Start only if Elevation Data is available
-                if (_terrainData != null)
-                {
-                    StartElevationProfileTask();
-                    elevationOverlay.Visible = true;
-                    elevationOverlay.BringToFront();
-                }
-            }
-            else if (panel3DRadioButtonViewpanel.Checked) 
-            {
-                StopHudTask();
-                if (hudOverlay != null) hudOverlay.Visible = false;
-                StopElevationProfileTask();
-                if (elevationOverlay != null) elevationOverlay.Visible = false;
-                
-                // Start only if Elevation Data is available
-                if (_terrainData != null) 
-                {
-                    panel3DViewButton_Click(this, e);
-                }
-            }
-        }
-
-        private void panel3DViewButton_Click(object sender, EventArgs e)
-        {
-            var cutoutData = new TerrainData
-            {
-                // Begrenzung auf 400x400 Punkte für Test
-                Width = 400,
-                Height = 400,
-                OriginLongitude = movingMapLongitude - _terrainData.PixelSizeX * 400 / 2,
-                OriginLatitude = movingMapLatitude - _terrainData.PixelSizeY * 400 / 2
-            };
-            cutoutData.HeightMap = CutoutTerrain(_terrainData.HeightMap, cutoutData.Width, cutoutData.Height, _terrainData, cutoutData.OriginLongitude, cutoutData.OriginLatitude);
-
-            var meshBuilder = new TerrainMeshBuilder();
-            var mesh = meshBuilder.BuildTerrainMesh(cutoutData.HeightMap, _terrainData.PixelSizeX * 111320.0, Math.Abs(_terrainData.PixelSizeY) * 111320.0, 1); // ca. 30m bzw. 90 Auflösung je nach Vorlage
-
-            var renderer = new TerrainSceneRenderer();
-            var viewport = renderer.RenderTerrainMesh(mesh, movingMapAltitude, movingMapHeading, movingMapPitch, movingMapRoll);
-
-            Embed3DPreview(mesh, movingMapAltitude, movingMapHeading);
-
-            //#DEBUG_k
-            var settings = AeroSceneryManager.Instance.Settings;
-            //string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "gdal");
-            string outputPath = Path.Combine(settings.AeroSceneryDBDirectory, "elevation");
-
-            //GeoTiffExporter.SaveCutoutAsGeoTiff(cutoutData.HeightMap, _terrainData, cutoutData.OriginLongitude, cutoutData.OriginLatitude, Path.Combine(outputPath, "terrainCutout.tif"));
-            //MessageBox.Show($"GeoTiff saved as terrainCutout.tif in {settings.AeroSceneryDBDirectory}elevation\\.", "GeoTiff Elevation Data Export");
-
-            //GeoTiffExporter.SaveCutoutAsGeoTiff(_terrainData.HeightMap, _terrainData, _terrainData.OriginLongitude, _terrainData.OriginLatitude, Path.Combine(outputPath, "terrainData.tif"));
-            //MessageBox.Show($"GeoTiff saved as terrainData.tif in {settings.AeroSceneryDBDirectory}elevation\\.", "GeoTiff Elevation Data Export");
-
-            //ModellExporter3D.ObjExporter(mesh, Path.Combine(outputPath, "terrainModell.obj"));
-            //MessageBox.Show($"Terrain 3D Modell saved as terrainModell.obj in {settings.AeroSceneryDBDirectory}elevation\\.", "3D Modell Export");
-
-            //ModellExporter3D.ColladaExporter(mesh, Path.Combine(outputPath, "terrainModell.dae"));
-            //MessageBox.Show($"Terrain 3D Modell saved as terrainModell.dae in {settings.AeroSceneryDBDirectory}elevation\\.", "3D Modell Export");
-
-            //SaveViewportAsPng(viewport, Path.Combine(outputPath, "terrainPreview.png"));
-            //MessageBox.Show($"Terrain Preview saved as terrainPreview.png in {settings.AeroSceneryDBDirectory}elevation\\.", "3D Preview Export");
-
-        }
-
-        // Hilfsfunktion für den Ausschnitt
-        private float[,] CutoutTerrain(float[,] fullHeightMap, int width, int height, TerrainData terrainData, double topLeftLon, double topLeftLat)
-        {
-            int fullWidth = fullHeightMap.GetLength(1);  // X (Longitude)
-            int fullHeight = fullHeightMap.GetLength(0); // Y (Latitude)
-
-            var cutout = new float[height, width]; // [row, col] = [lat, lon]
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    double lon = topLeftLon + x * terrainData.PixelSizeX;
-                    double lat = topLeftLat + y * terrainData.PixelSizeY;
-
-                    int fx = (int)((lon - terrainData.OriginLongitude) / terrainData.PixelSizeX);
-                    int fy;
-
-                    if (terrainData.PixelSizeY < 0)
-                        fy = (int)((terrainData.OriginLatitude - lat) / Math.Abs(terrainData.PixelSizeY));
-                    else
-                        fy = (int)((lat - terrainData.OriginLatitude) / terrainData.PixelSizeY);
-
-                    fx = Math.Max(0, Math.Min(fullWidth - 1, fx));
-                    fy = Math.Max(0, Math.Min(fullHeight - 1, fy));
-
-                    cutout[y, x] = fullHeightMap[fy, fx];  // [lat, lon]
-                }
-            }
-
-            return cutout;
-        }
-
-        private void Embed3DPreview(MeshGeometry3D mesh, double altitude, double heading)
-        {
-            var renderer = new TerrainSceneRenderer();
-            Viewport3D viewport = renderer.RenderTerrainMesh(mesh, altitude, heading, movingMapPitch, movingMapRoll);
-
-            if (elementHost3DPreview == null || !panel3DPreview.Controls.Contains(elementHost3DPreview))
-            {
-                //if (hudOverlay!=null) hudOverlay.Visible = false;
-                //if (elevationOverlay != null) elevationOverlay.Visible = false;
-
-                elementHost3DPreview = new System.Windows.Forms.Integration.ElementHost
-                {
-                    Dock = DockStyle.Fill,
-                    Child = viewport
-                };
-
-                // An ein Panel oder direkt an das Hauptformular anhängen
-                this.panel3DPreview.Controls.Clear();
-                this.panel3DPreview.Controls.Add(elementHost3DPreview);  // oder: this.Controls.Add(...)
-
-            }
-            else 
-            {
-                if (elementHost3DPreview.Child != viewport)
-                {
-                    elementHost3DPreview.Child = viewport;
-                }
-                elementHost3DPreview.BringToFront();
-            }
-        }
-
-        private List<double> CalculateElevationProfile(double distanceMeters = 10000, int samples = 200)
-        {
-            var points = new List<double>();
-            if (_terrainData == null) return points;
-
-            // Ursprungspunkt
-            double originLon = movingMapLongitude;
-            double originLat = movingMapLatitude;
-
-            // Heading in Radiant
-            double headingRad = movingMapHeading * Math.PI / 180.0;
-
-            // Schrittweite in Meter
-            double stepSize = distanceMeters / samples;
-
-            for (int i = 0; i < samples; i++)
-            {
-                double step = i * stepSize;
-
-                // Neue Position berechnen (einfache geodätische Approximation)
-                double dLat = step * Math.Cos(headingRad) / 111320.0; // ca. m/° Latitude
-                double dLon = step * Math.Sin(headingRad) / (111320.0 * Math.Cos(originLat * Math.PI / 180.0)); // m/° Longitude
-
-                double lat = originLat + dLat;
-                double lon = originLon + dLon;
-
-                //float elevation = _terrainData.GetElevationAt(lat, lon);
-                double elevation = GetElevationAt(_terrainData, lon, lat);
-                points.Add(elevation);
-            }
-
-            return points;
-        }
-
-        //#DEBUG_k
-        private void SaveViewportAsPng(Viewport3D viewport, string filename)
-        {
-            if (double.IsNaN(viewport.Width) || double.IsNaN(viewport.Height) || viewport.Width <= 0 || viewport.Height <= 0)
-            {
-                viewport.Width = 1400; //UWHD 21:9
-                viewport.Height = 600;
-            }
-
-            // **NEU: Layout-Erzwingung, damit WPF es wirklich aufbaut**
-            viewport.Measure(new System.Windows.Size(viewport.Width, viewport.Height));
-            viewport.Arrange(new System.Windows.Rect(0, 0, viewport.Width, viewport.Height));
-            viewport.UpdateLayout();
-
-            // Jetzt RenderTargetBitmap
-            int width = (int)Math.Round(viewport.Width);
-            int height = (int)Math.Round(viewport.Height);
-            var bitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
-            bitmap.Render(viewport);
-
-            // PNG speichern
-            PngBitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmap));
-
-            using (var stream = new FileStream(filename, FileMode.Create))
-            {
-                encoder.Save(stream);
-            }
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

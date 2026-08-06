@@ -39,21 +39,19 @@ namespace AeroScenery.Common
 
         public bool? StitchImageTiles { get; set; }
 
-        //#DEVL_k
-        public bool? WaterMaskingEnable { get; set; }
-
-        public bool? AllowShiftCorrectionEnable { get; set; }
-
-
         public bool? GenerateAIDAndTMCFiles { get; set; }
 
         public bool? RunGeoConvert { get; set; }
 
-        //#MOD
+        //#MOD_i
         public bool? DownloadOSMDataEnable { get; set; }
+
+        //#MOD_h
         public bool? DownloadOsmData { get; set; }
+
         public bool? DownloadElevationData { get; set; }
 
+        //#MOD_g
         public bool? RunTreesDetection { get; set; }
         public bool? RunTreesDetectionMask { get; set; }
         public bool? RunTreesDetectionDetection { get; set; }
@@ -92,8 +90,9 @@ namespace AeroScenery.Common
 
         public string LinzApiKey { get; set; }
 
-        //#MOD
+        //#MOD_e
         public string MapboxApiKey { get; set; }
+        //#MOD_h
         public string OpenTopographyApiKey { get; set; }
         public string OpenTopographyDataSet { get; set; }
         public string HereWeGoApiKey { get; set; }
@@ -106,9 +105,9 @@ namespace AeroScenery.Common
         public double? ShrinkTMCGridSquareCoords { get; set; }
         public string AFS2UserDirectory { get; set; }
 
-        //#MOD
         public string QGISDirectory { get; set; }
-        public string GeoTiffElevationMapFilename { get; set; }
+
+        //#MOD_i
         public string AFSSceneryFolder { get; set; }
 
         // Image procesing
@@ -121,18 +120,8 @@ namespace AeroScenery.Common
         public int? GreenAdjustment { get; set; }
         public int? BlueAdjustment { get; set; }
 
-        //#MOD
+        //#MOD_i
         public bool? RemoveAlphaChannelAdjustment { get; set; }
-
-        //#DEVL_k
-        public bool? WaterMaskingProcessing { get; set; }
-        public int? WaterFadeThresholdDistance { get; set; }
-        public int? WaterReplaceThresholdDistance { get; set; }
-        
-        public bool? AllowShiftCorrectionProcessing { get; set; }
-
-        public int? AllowShiftCorrectionLevel { get; set; }    
-
 
         public bool? GridSquareNamesFixed { get; set; }
 
@@ -140,25 +129,21 @@ namespace AeroScenery.Common
 
         public ElevationSettings ElevationSettings { get; set; }
 
-        //#MOD
+        //#MOD_g
         public string TreesDetectionDirectory { get; set; }
         public int? TreesDetectionDensity { get; set; }
         public bool? TreesDetectionQuit { get; set; }
+
+        //#MOD_h
         public int? TreesDetectionAltitudeMax { get; set; }
         public bool? TreesDetectionAltitudeCheck { get; set; }
+
+        //#MOD_i
         public int? TreesPresetIndex { get; set; }
         public bool? TreesPresetHighTrees { get; set; }
         public bool? TreesPresetBigShrubs { get; set; }
 
-        //#MOD
         public bool? CreateAddForMobile { get; set; }
-
-        //#DEVL_k
-        public bool? MovingMapElevationDataEnable { get; set; }
-        public bool? MovingMapElevationData { get; set; }
-        public string MovingMapElevationFileName { get; set; }
-        public int? MovingMapElevationDataRendering { get; set; }
-        public bool? MovingMapElevationEnable3DCapture { get; set; }
 
 
     }

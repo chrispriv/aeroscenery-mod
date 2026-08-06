@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace AeroScenery.OrthophotoSources.NewZealand
 {
-    public class LinzOrthophotoSource : GenericOrthophotoSource //#MOD
+    public class LinzOrthophotoSource : GenericOrthophotoSource
     {
         //public static string DefaultUrlTemplate = "http://koordinates-tiles-d.global.ssl.fastly.net/services;key=50721244e42045c58b2bbe2ee5487a9a/tiles/v4/layer=51769,style=auto;layer=88131,style=auto;layer=95497,style=auto/{zoom}/{x}/{y}.png"; // initial url
+
+        //#MOD_h
         //public static string DefaultUrlTemplate = "http://tiles-a.data-cdn.linz.govt.nz/services;key={apikey}/tiles/v4/set=4702/EPSG:3857/{zoom}/{x}/{y}.png"; // before change to new secured https://
         public static string DefaultUrlTemplate = "https://basemaps.linz.govt.nz/v1/tiles/aerial/3857/{zoom}/{x}/{y}.png?api={apikey}";
 

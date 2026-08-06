@@ -23,7 +23,7 @@ namespace AeroScenery.FSCloudPort
         public async Task<IList<FSCloudPortAirport>> ScrapeAirportsAsync()
         {
 
-            //#MOD
+            //#MOD_a
             //var urlTemplate = "http://www.fscloudport.com/phdi/p1.nsf/aeroscenery?OpenView&Start={0}&Count={1}";
             var urlTemplate = "https://www.fscloudport.com/atk/fscp.nsf/aeroscenery?OpenView&Start={0}&Count={1}"; 
 

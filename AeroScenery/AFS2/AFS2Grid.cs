@@ -108,7 +108,7 @@ namespace AeroScenery.AFS2
             return afs2GridSquare;
         }
 
-        //#MOD
+        //#MOD_g
         // Allows to search a specific tile in the map by FS2 grid coordinates (e.g. "8500_a500"), calculates the Lon & Lat position and gets resp. returns the AFS Gridsquare 
         public AFS2GridSquare GetGridSquareName(string tile, int level)
         {
