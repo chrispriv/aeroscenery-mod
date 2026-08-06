@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace AeroScenery.OrthophotoSources
 {
-    public class MapboxOrthophotoSource : GenericOrthophotoSource
+    public class MapboxOrthophotoSource : GenericOrthophotoSource //#MOD
     {
-        //#MOD_e
         public static string DefaultUrlTemplate = "https://api.mapbox.com/v4/mapbox.satellite/{zoom}/{x}/{y}.jpg?access_token={apikey}";
 
         private string apiKey;
@@ -51,11 +50,9 @@ namespace AeroScenery.OrthophotoSources
         {
             this.width = 256;
             this.height = 256;
-            //#MOD_e
             this.imageExtension = "jpg";
             this.source = OrthophotoSourceDirectoryName.Mapbox;
             this.tiledWebMapType = TiledWebMapType.Google;
-            //#MOD_e
             this.AdditionalUrlParams = new Dictionary<string, string>();
         }
 

@@ -30,17 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.elevationQGISHelpImage = new System.Windows.Forms.Label();
-            this.sdkCeoConvertHelpImage = new System.Windows.Forms.Label();
+            this.sdkGeoConvertHelpImage = new System.Windows.Forms.Label();
             this.label57 = new System.Windows.Forms.Label();
             this.afsSceneryFolderTextBox = new System.Windows.Forms.TextBox();
-            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
-            this.label43 = new System.Windows.Forms.Label();
             this.label42 = new System.Windows.Forms.Label();
-            this.qgisFolderButton = new System.Windows.Forms.Button();
-            this.qgisFolderTextBox = new System.Windows.Forms.TextBox();
-            this.label40 = new System.Windows.Forms.Label();
-            this.label39 = new System.Windows.Forms.Label();
             this.afs2UserFolderButton = new System.Windows.Forms.Button();
             this.afs2UserFolderTextBox = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -72,9 +65,12 @@
             this.maxTilesPerStitchedImageTextBox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.AllowShiftCorrectionEnabledCheckBox = new System.Windows.Forms.CheckBox();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label67 = new System.Windows.Forms.Label();
             this.multipleConcurrentSquaresWarningCheckBox = new System.Windows.Forms.CheckBox();
             this.label26 = new System.Windows.Forms.Label();
-            this.useGeoConvertWrapperCheckbox = new System.Windows.Forms.CheckBox();
+            this.useGeoConvertWrapperCheckBox = new System.Windows.Forms.CheckBox();
             this.label25 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.shrinkTMCGridSquaresTextBox = new System.Windows.Forms.TextBox();
@@ -95,7 +91,6 @@
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.conversionForMobileHelpImage = new System.Windows.Forms.Label();
             this.label55 = new System.Windows.Forms.Label();
-            this.label54 = new System.Windows.Forms.Label();
             this.label53 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
             this.createAddForMobileCheckBox = new System.Windows.Forms.CheckBox();
@@ -105,14 +100,6 @@
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.herewegoKeyTextBox = new System.Windows.Forms.TextBox();
             this.label38 = new System.Windows.Forms.Label();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.elevationMapHelpImage = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
-            this.openTopographyDataSetTextBox = new System.Windows.Forms.ComboBox();
-            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
-            this.openTopographyAPITextBox = new System.Windows.Forms.TextBox();
-            this.label35 = new System.Windows.Forms.Label();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.mapboxKeyTextBox = new System.Windows.Forms.TextBox();
@@ -122,6 +109,14 @@
             this.linzKeyTextBox = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label65 = new System.Windows.Forms.Label();
+            this.waterReplaceThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.label64 = new System.Windows.Forms.Label();
+            this.waterFadeThresholdTextBox = new System.Windows.Forms.TextBox();
+            this.label40 = new System.Windows.Forms.Label();
+            this.waterReplaceThresholdSlider = new System.Windows.Forms.TrackBar();
+            this.waterFadeThresholdSlider = new System.Windows.Forms.TrackBar();
+            this.WaterMaskingEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.imageProcessingHelpImage = new System.Windows.Forms.Label();
             this.imageRemoveAlphaChannelCheckBox = new System.Windows.Forms.CheckBox();
             this.resetButton = new System.Windows.Forms.Button();
@@ -149,7 +144,24 @@
             this.imgProcBrightnessSlider = new System.Windows.Forms.TrackBar();
             this.showPreviewWindowButton = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.enableDownloadOSMDataBox = new System.Windows.Forms.CheckBox();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.enableDownloadOsmDataCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.qgisFolderButton = new System.Windows.Forms.Button();
+            this.qgisFolderTextBox = new System.Windows.Forms.TextBox();
+            this.label39 = new System.Windows.Forms.Label();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.elevationMapHelpImage = new System.Windows.Forms.Label();
+            this.linkLabel5 = new System.Windows.Forms.LinkLabel();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label36 = new System.Windows.Forms.Label();
+            this.openTopographyDataSetTextBox = new System.Windows.Forms.ComboBox();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
+            this.openTopographyAPITextBox = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.treesDetectionHighTreesCheckBox = new System.Windows.Forms.CheckBox();
             this.treesDetectionBigShrubsCheckBox = new System.Windows.Forms.CheckBox();
@@ -179,6 +191,28 @@
             this.treesDetectionFolderTextBox = new System.Windows.Forms.TextBox();
             this.label29 = new System.Windows.Forms.Label();
             this.treesDetectionQuitCheckBox = new System.Windows.Forms.CheckBox();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.elevationQGISHelpImage = new System.Windows.Forms.Label();
+            this.movingMapElevationEnable3DCaptureCheckBox = new System.Windows.Forms.CheckBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.label62 = new System.Windows.Forms.Label();
+            this.label61 = new System.Windows.Forms.Label();
+            this.label60 = new System.Windows.Forms.Label();
+            this.label59 = new System.Windows.Forms.Label();
+            this.movingMapElevationEnableDataCheckBox = new System.Windows.Forms.CheckBox();
+            this.movingMapElevationDataRenderingSlider = new System.Windows.Forms.TrackBar();
+            this.movingMapElevationDataRenderingTextBox = new System.Windows.Forms.TextBox();
+            this.label58 = new System.Windows.Forms.Label();
+            this.movingMapElevationHelpImage = new System.Windows.Forms.Label();
+            this.movingMapElevationFileNameSetBox = new System.Windows.Forms.ComboBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.movingMapShowAirSpeedCheckBox = new System.Windows.Forms.CheckBox();
+            this.movingMapShowTrueHeadingCheckBox = new System.Windows.Forms.CheckBox();
+            this.movingMapUseAeroflyBridgeCheckBox = new System.Windows.Forms.CheckBox();
+            this.label68 = new System.Windows.Forms.Label();
+            this.movingMapConnectionHelpImage = new System.Windows.Forms.Label();
+            this.label66 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -191,10 +225,11 @@
             this.groupBox12.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox11.SuspendLayout();
-            this.groupBox10.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.waterReplaceThresholdSlider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waterFadeThresholdSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcBlueSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcGreenSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcRedSlider)).BeginInit();
@@ -203,27 +238,28 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgProcContrastSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcBrightnessSlider)).BeginInit();
             this.tabPage5.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.groupBox13.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treesDetectionAltitudeSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.treesDetectionDensitySlider)).BeginInit();
             this.groupBox7.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            this.groupBox17.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.movingMapElevationDataRenderingSlider)).BeginInit();
+            this.groupBox16.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.elevationQGISHelpImage);
-            this.groupBox1.Controls.Add(this.sdkCeoConvertHelpImage);
+            this.groupBox1.Controls.Add(this.sdkGeoConvertHelpImage);
             this.groupBox1.Controls.Add(this.label57);
             this.groupBox1.Controls.Add(this.afsSceneryFolderTextBox);
-            this.groupBox1.Controls.Add(this.linkLabel5);
-            this.groupBox1.Controls.Add(this.label43);
             this.groupBox1.Controls.Add(this.label42);
-            this.groupBox1.Controls.Add(this.qgisFolderButton);
-            this.groupBox1.Controls.Add(this.qgisFolderTextBox);
-            this.groupBox1.Controls.Add(this.label40);
-            this.groupBox1.Controls.Add(this.label39);
             this.groupBox1.Controls.Add(this.afs2UserFolderButton);
             this.groupBox1.Controls.Add(this.afs2UserFolderTextBox);
             this.groupBox1.Controls.Add(this.label9);
@@ -239,32 +275,20 @@
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(14, 9);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(665, 290);
+            this.groupBox1.Size = new System.Drawing.Size(665, 257);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Folders";
             // 
-            // elevationQGISHelpImage
+            // sdkGeoConvertHelpImage
             // 
-            this.elevationQGISHelpImage.AutoSize = true;
-            this.elevationQGISHelpImage.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.elevationQGISHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("elevationQGISHelpImage.Image")));
-            this.elevationQGISHelpImage.Location = new System.Drawing.Point(86, 199);
-            this.elevationQGISHelpImage.Name = "elevationQGISHelpImage";
-            this.elevationQGISHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.elevationQGISHelpImage.TabIndex = 23;
-            this.elevationQGISHelpImage.Text = "  ";
-            // 
-            // sdkCeoConvertHelpImage
-            // 
-            this.sdkCeoConvertHelpImage.AutoSize = true;
-            this.sdkCeoConvertHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkCeoConvertHelpImage.Image")));
-            this.sdkCeoConvertHelpImage.Location = new System.Drawing.Point(131, 94);
-            this.sdkCeoConvertHelpImage.Name = "sdkCeoConvertHelpImage";
-            this.sdkCeoConvertHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.sdkCeoConvertHelpImage.TabIndex = 17;
-            this.sdkCeoConvertHelpImage.Text = "  ";
-            this.sdkCeoConvertHelpImage.Click += new System.EventHandler(this.sdkCeoConvertHelpImage_Click);
+            this.sdkGeoConvertHelpImage.AutoSize = true;
+            this.sdkGeoConvertHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkGeoConvertHelpImage.Image")));
+            this.sdkGeoConvertHelpImage.Location = new System.Drawing.Point(131, 94);
+            this.sdkGeoConvertHelpImage.Name = "sdkGeoConvertHelpImage";
+            this.sdkGeoConvertHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.sdkGeoConvertHelpImage.TabIndex = 17;
+            this.sdkGeoConvertHelpImage.Text = "  ";
             // 
             // label57
             // 
@@ -280,32 +304,9 @@
             // 
             this.afsSceneryFolderTextBox.Location = new System.Drawing.Point(216, 156);
             this.afsSceneryFolderTextBox.Name = "afsSceneryFolderTextBox";
-            this.afsSceneryFolderTextBox.Size = new System.Drawing.Size(196, 25);
+            this.afsSceneryFolderTextBox.Size = new System.Drawing.Size(281, 25);
             this.afsSceneryFolderTextBox.TabIndex = 21;
-            this.afsSceneryFolderTextBox.TextChanged += new System.EventHandler(this.afsSceneryFolderTextBox_TextChanged);
-            // 
-            // linkLabel5
-            // 
-            this.linkLabel5.AutoSize = true;
-            this.linkLabel5.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.linkLabel5.Location = new System.Drawing.Point(21, 250);
-            this.linkLabel5.Name = "linkLabel5";
-            this.linkLabel5.Size = new System.Drawing.Size(159, 17);
-            this.linkLabel5.TabIndex = 20;
-            this.linkLabel5.TabStop = true;
-            this.linkLabel5.Text = "Get GQIS (from OSGeo4W)";
-            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel5_LinkClicked);
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label43.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label43.Location = new System.Drawing.Point(213, 250);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(399, 17);
-            this.label43.TabIndex = 12;
-            this.label43.Text = "*) used for processing elevation data (e.g. decompressing and peak fix)";
+            this.afsSceneryFolderTextBox.TextChanged += new System.EventHandler(this.AfsSceneryFolderTextBox_TextChanged);
             // 
             // label42
             // 
@@ -316,51 +317,6 @@
             this.label42.Size = new System.Drawing.Size(184, 17);
             this.label42.TabIndex = 17;
             this.label42.Text = "AFS Working Scenery Folder *)";
-            this.label42.Click += new System.EventHandler(this.label42_Click);
-            // 
-            // qgisFolderButton
-            // 
-            this.qgisFolderButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.qgisFolderButton.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.qgisFolderButton.Location = new System.Drawing.Point(603, 221);
-            this.qgisFolderButton.Name = "qgisFolderButton";
-            this.qgisFolderButton.Size = new System.Drawing.Size(33, 25);
-            this.qgisFolderButton.TabIndex = 16;
-            this.qgisFolderButton.Text = "...";
-            this.qgisFolderButton.UseVisualStyleBackColor = true;
-            this.qgisFolderButton.Click += new System.EventHandler(this.qgisFolderButton_Click);
-            // 
-            // qgisFolderTextBox
-            // 
-            this.qgisFolderTextBox.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.qgisFolderTextBox.Location = new System.Drawing.Point(216, 222);
-            this.qgisFolderTextBox.Name = "qgisFolderTextBox";
-            this.qgisFolderTextBox.Size = new System.Drawing.Size(381, 25);
-            this.qgisFolderTextBox.TabIndex = 15;
-            this.qgisFolderTextBox.TextChanged += new System.EventHandler(this.qgisFolderTextBox_TextChanged);
-            // 
-            // label40
-            // 
-            this.label40.AutoSize = true;
-            this.label40.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label40.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label40.Location = new System.Drawing.Point(20, 199);
-            this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(60, 17);
-            this.label40.TabIndex = 14;
-            this.label40.Text = "Elevation:";
-            this.label40.Click += new System.EventHandler(this.label40_Click);
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label39.Location = new System.Drawing.Point(21, 225);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(183, 17);
-            this.label39.TabIndex = 13;
-            this.label39.Text = "QGIS bin Folder (incl. GDAL) *)";
             // 
             // afs2UserFolderButton
             // 
@@ -379,7 +335,6 @@
             this.afs2UserFolderTextBox.Name = "afs2UserFolderTextBox";
             this.afs2UserFolderTextBox.Size = new System.Drawing.Size(381, 25);
             this.afs2UserFolderTextBox.TabIndex = 10;
-            this.afs2UserFolderTextBox.TextChanged += new System.EventHandler(this.afs2UserFolderTextBox_TextChanged);
             // 
             // label9
             // 
@@ -427,7 +382,6 @@
             this.afsSDKFolderTextBox.Name = "afsSDKFolderTextBox";
             this.afsSDKFolderTextBox.Size = new System.Drawing.Size(381, 25);
             this.afsSDKFolderTextBox.TabIndex = 5;
-            this.afsSDKFolderTextBox.TextChanged += new System.EventHandler(this.afsSDKFolderTextBox_TextChanged);
             // 
             // label3
             // 
@@ -462,7 +416,6 @@
             this.workingFolderTextBox.Name = "workingFolderTextBox";
             this.workingFolderTextBox.Size = new System.Drawing.Size(381, 25);
             this.workingFolderTextBox.TabIndex = 1;
-            this.workingFolderTextBox.TextChanged += new System.EventHandler(this.workingFolderTextBox_TextChanged);
             // 
             // label1
             // 
@@ -489,7 +442,8 @@
             this.groupBox2.Controls.Add(this.userAgentTextBox);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(14, 305);
+            this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.groupBox2.Location = new System.Drawing.Point(14, 286);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(665, 145);
             this.groupBox2.TabIndex = 9;
@@ -555,6 +509,7 @@
             // simultaneousDownloadsComboBox
             // 
             this.simultaneousDownloadsComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.simultaneousDownloadsComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.simultaneousDownloadsComboBox.FormattingEnabled = true;
             this.simultaneousDownloadsComboBox.Items.AddRange(new object[] {
             "1",
@@ -566,7 +521,6 @@
             this.simultaneousDownloadsComboBox.Name = "simultaneousDownloadsComboBox";
             this.simultaneousDownloadsComboBox.Size = new System.Drawing.Size(420, 25);
             this.simultaneousDownloadsComboBox.TabIndex = 3;
-            this.simultaneousDownloadsComboBox.SelectedIndexChanged += new System.EventHandler(this.simultaneousDownloadsComboBox_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -627,7 +581,7 @@
             this.groupBox3.Controls.Add(this.maxTilesPerStitchedImageTextBox);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(14, 456);
+            this.groupBox3.Location = new System.Drawing.Point(14, 448);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(665, 90);
             this.groupBox3.TabIndex = 12;
@@ -674,9 +628,12 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.AllowShiftCorrectionEnabledCheckBox);
+            this.groupBox4.Controls.Add(this.label69);
+            this.groupBox4.Controls.Add(this.label67);
             this.groupBox4.Controls.Add(this.multipleConcurrentSquaresWarningCheckBox);
             this.groupBox4.Controls.Add(this.label26);
-            this.groupBox4.Controls.Add(this.useGeoConvertWrapperCheckbox);
+            this.groupBox4.Controls.Add(this.useGeoConvertWrapperCheckBox);
             this.groupBox4.Controls.Add(this.label25);
             this.groupBox4.Controls.Add(this.label11);
             this.groupBox4.Controls.Add(this.shrinkTMCGridSquaresTextBox);
@@ -688,11 +645,40 @@
             this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(14, 9);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(654, 249);
+            this.groupBox4.Size = new System.Drawing.Size(654, 247);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "GeoConvert";
-            this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
+            // 
+            // AllowShiftCorrectionEnabledCheckBox
+            // 
+            this.AllowShiftCorrectionEnabledCheckBox.AutoSize = true;
+            this.AllowShiftCorrectionEnabledCheckBox.Location = new System.Drawing.Point(216, 210);
+            this.AllowShiftCorrectionEnabledCheckBox.Name = "AllowShiftCorrectionEnabledCheckBox";
+            this.AllowShiftCorrectionEnabledCheckBox.Size = new System.Drawing.Size(341, 21);
+            this.AllowShiftCorrectionEnabledCheckBox.TabIndex = 17;
+            this.AllowShiftCorrectionEnabledCheckBox.Text = "Allows for manual correction of the north-south offset";
+            this.AllowShiftCorrectionEnabledCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label69
+            // 
+            this.label69.AutoSize = true;
+            this.label69.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label69.Location = new System.Drawing.Point(20, 210);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(98, 17);
+            this.label69.TabIndex = 16;
+            this.label69.Text = "Shift Correction";
+            // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label67.Location = new System.Drawing.Point(352, 104);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(231, 17);
+            this.label67.TabIndex = 15;
+            this.label67.Text = "(value of 0.01 is strongly recommended)";
             // 
             // multipleConcurrentSquaresWarningCheckBox
             // 
@@ -714,15 +700,15 @@
             this.label26.TabIndex = 13;
             this.label26.Text = "Multiple Squares";
             // 
-            // useGeoConvertWrapperCheckbox
+            // useGeoConvertWrapperCheckBox
             // 
-            this.useGeoConvertWrapperCheckbox.AutoSize = true;
-            this.useGeoConvertWrapperCheckbox.Location = new System.Drawing.Point(216, 142);
-            this.useGeoConvertWrapperCheckbox.Name = "useGeoConvertWrapperCheckbox";
-            this.useGeoConvertWrapperCheckbox.Size = new System.Drawing.Size(367, 21);
-            this.useGeoConvertWrapperCheckbox.TabIndex = 12;
-            this.useGeoConvertWrapperCheckbox.Text = "(Allows multiple squares to be GeoConverted sequentially)";
-            this.useGeoConvertWrapperCheckbox.UseVisualStyleBackColor = true;
+            this.useGeoConvertWrapperCheckBox.AutoSize = true;
+            this.useGeoConvertWrapperCheckBox.Location = new System.Drawing.Point(216, 142);
+            this.useGeoConvertWrapperCheckBox.Name = "useGeoConvertWrapperCheckBox";
+            this.useGeoConvertWrapperCheckBox.Size = new System.Drawing.Size(359, 21);
+            this.useGeoConvertWrapperCheckBox.TabIndex = 12;
+            this.useGeoConvertWrapperCheckBox.Text = "Allows multiple squares to be GeoConverted sequentially";
+            this.useGeoConvertWrapperCheckBox.UseVisualStyleBackColor = true;
             // 
             // label25
             // 
@@ -873,11 +859,13 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(12, 19);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(701, 606);
+            this.tabControl1.Size = new System.Drawing.Size(701, 604);
             this.tabControl1.TabIndex = 15;
             // 
             // tabPage1
@@ -888,7 +876,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 26);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(693, 576);
+            this.tabPage1.Size = new System.Drawing.Size(693, 574);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "AeroScenery";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -900,7 +888,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(693, 576);
+            this.tabPage2.Size = new System.Drawing.Size(693, 574);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "GeoConvert";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -909,15 +897,14 @@
             // 
             this.groupBox12.Controls.Add(this.conversionForMobileHelpImage);
             this.groupBox12.Controls.Add(this.label55);
-            this.groupBox12.Controls.Add(this.label54);
             this.groupBox12.Controls.Add(this.label53);
             this.groupBox12.Controls.Add(this.label51);
             this.groupBox12.Controls.Add(this.createAddForMobileCheckBox);
             this.groupBox12.Controls.Add(this.label52);
             this.groupBox12.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox12.Location = new System.Drawing.Point(14, 273);
+            this.groupBox12.Location = new System.Drawing.Point(14, 270);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(654, 166);
+            this.groupBox12.Size = new System.Drawing.Size(654, 148);
             this.groupBox12.TabIndex = 15;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Additionally for Mobile";
@@ -941,17 +928,6 @@
             this.label55.Size = new System.Drawing.Size(474, 17);
             this.label55.TabIndex = 30;
             this.label55.Text = "7, 9, 10, 11 using Zoom Level 14 (9.555m) + add. 12 using Zoom Level 15 (4.777m)";
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label54.Location = new System.Drawing.Point(11, 125);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(497, 17);
-            this.label54.TabIndex = 29;
-            this.label54.Text = "Elevation Maps (30m) created only with Level 7 and 10 (instead of 8, 9 and 10 for" +
-    " PC\'s) ";
             // 
             // label53
             // 
@@ -982,7 +958,6 @@
             this.createAddForMobileCheckBox.TabIndex = 12;
             this.createAddForMobileCheckBox.Text = "Creates an additional working folder for conversion (Android only)";
             this.createAddForMobileCheckBox.UseVisualStyleBackColor = true;
-            this.createAddForMobileCheckBox.CheckedChanged += new System.EventHandler(this.createAddAndroidCheckBox_CheckedChanged);
             // 
             // label52
             // 
@@ -997,18 +972,16 @@
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.groupBox11);
-            this.tabPage3.Controls.Add(this.groupBox10);
             this.tabPage3.Controls.Add(this.groupBox8);
             this.tabPage3.Controls.Add(this.groupBox6);
             this.tabPage3.Controls.Add(this.groupBox5);
             this.tabPage3.Location = new System.Drawing.Point(4, 26);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(693, 576);
+            this.tabPage3.Size = new System.Drawing.Size(693, 574);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Image Source Accounts";
+            this.tabPage3.Text = "Image Sources";
             this.tabPage3.UseVisualStyleBackColor = true;
-            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
             // 
             // groupBox11
             // 
@@ -1032,7 +1005,7 @@
             this.linkLabel4.TabIndex = 15;
             this.linkLabel4.TabStop = true;
             this.linkLabel4.Text = "Get a Here WeGo API Key";
-            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel4_LinkClicked);
+            this.linkLabel4.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel4_LinkClicked);
             // 
             // herewegoKeyTextBox
             // 
@@ -1040,7 +1013,6 @@
             this.herewegoKeyTextBox.Name = "herewegoKeyTextBox";
             this.herewegoKeyTextBox.Size = new System.Drawing.Size(459, 25);
             this.herewegoKeyTextBox.TabIndex = 7;
-            this.herewegoKeyTextBox.TextChanged += new System.EventHandler(this.herewegoKeyTextBox_TextChanged);
             // 
             // label38
             // 
@@ -1051,105 +1023,6 @@
             this.label38.Size = new System.Drawing.Size(51, 17);
             this.label38.TabIndex = 3;
             this.label38.Text = "API Key";
-            this.label38.Click += new System.EventHandler(this.label38_Click);
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.elevationMapHelpImage);
-            this.groupBox10.Controls.Add(this.label37);
-            this.groupBox10.Controls.Add(this.label36);
-            this.groupBox10.Controls.Add(this.openTopographyDataSetTextBox);
-            this.groupBox10.Controls.Add(this.linkLabel3);
-            this.groupBox10.Controls.Add(this.openTopographyAPITextBox);
-            this.groupBox10.Controls.Add(this.label35);
-            this.groupBox10.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox10.Location = new System.Drawing.Point(14, 430);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(654, 136);
-            this.groupBox10.TabIndex = 18;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "OpenTopography (Elevation 30m,)";
-            this.groupBox10.Enter += new System.EventHandler(this.groupBox10_Enter);
-            // 
-            // elevationMapHelpImage
-            // 
-            this.elevationMapHelpImage.AutoSize = true;
-            this.elevationMapHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("elevationMapHelpImage.Image")));
-            this.elevationMapHelpImage.Location = new System.Drawing.Point(104, 32);
-            this.elevationMapHelpImage.Name = "elevationMapHelpImage";
-            this.elevationMapHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.elevationMapHelpImage.TabIndex = 24;
-            this.elevationMapHelpImage.Text = "  ";
-            // 
-            // label37
-            // 
-            this.label37.AutoSize = true;
-            this.label37.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label37.Location = new System.Drawing.Point(20, 105);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(572, 17);
-            this.label37.TabIndex = 23;
-            this.label37.Text = "*) A PowerShell PS1-Script and working folder for manual download of GeoTiff-Imag" +
-    "es will be created";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label36.Location = new System.Drawing.Point(20, 63);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(137, 17);
-            this.label36.TabIndex = 17;
-            this.label36.Text = "Global Datasets (30m)";
-            this.label36.Click += new System.EventHandler(this.label36_Click);
-            // 
-            // openTopographyDataSetTextBox
-            // 
-            this.openTopographyDataSetTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.openTopographyDataSetTextBox.FormattingEnabled = true;
-            this.openTopographyDataSetTextBox.Items.AddRange(new object[] {
-            "SRTMGL1 (SRTM GL1 30m)",
-            "AW3D30 (ALOS World 3D 30m)",
-            "COP30 (Copernicus Global DSM 30m)",
-            "NASADEM (NASADEM Global 30m)",
-            "EU_DTM (DTM 30m, Europe only)",
-            "USGS30m (3DEP 30m, USA only)",
-            "USGS10m (3DEP 10m, USA only)"});
-            this.openTopographyDataSetTextBox.Location = new System.Drawing.Point(174, 60);
-            this.openTopographyDataSetTextBox.Name = "openTopographyDataSetTextBox";
-            this.openTopographyDataSetTextBox.Size = new System.Drawing.Size(243, 25);
-            this.openTopographyDataSetTextBox.TabIndex = 16;
-            this.openTopographyDataSetTextBox.Text = "SRTMGL1 (SRTM GL1 30m)";
-            this.openTopographyDataSetTextBox.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // linkLabel3
-            // 
-            this.linkLabel3.AutoSize = true;
-            this.linkLabel3.Location = new System.Drawing.Point(440, 63);
-            this.linkLabel3.Name = "linkLabel3";
-            this.linkLabel3.Size = new System.Drawing.Size(193, 17);
-            this.linkLabel3.TabIndex = 15;
-            this.linkLabel3.TabStop = true;
-            this.linkLabel3.Text = "Get a OpenTopography API Key";
-            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
-            // 
-            // openTopographyAPITextBox
-            // 
-            this.openTopographyAPITextBox.Location = new System.Drawing.Point(174, 29);
-            this.openTopographyAPITextBox.Name = "openTopographyAPITextBox";
-            this.openTopographyAPITextBox.Size = new System.Drawing.Size(459, 25);
-            this.openTopographyAPITextBox.TabIndex = 7;
-            this.openTopographyAPITextBox.TextChanged += new System.EventHandler(this.openTopographyAPITextBox_TextChanged);
-            // 
-            // label35
-            // 
-            this.label35.AutoSize = true;
-            this.label35.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label35.Location = new System.Drawing.Point(20, 32);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(64, 17);
-            this.label35.TabIndex = 3;
-            this.label35.Text = "API Key *)";
             // 
             // groupBox8
             // 
@@ -1163,7 +1036,6 @@
             this.groupBox8.TabIndex = 17;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Mapbox";
-            this.groupBox8.Enter += new System.EventHandler(this.groupBox8_Enter);
             // 
             // linkLabel2
             // 
@@ -1174,7 +1046,7 @@
             this.linkLabel2.TabIndex = 15;
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Get a Mapbox Access Token";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel2_LinkClicked);
             // 
             // mapboxKeyTextBox
             // 
@@ -1182,7 +1054,6 @@
             this.mapboxKeyTextBox.Name = "mapboxKeyTextBox";
             this.mapboxKeyTextBox.Size = new System.Drawing.Size(459, 25);
             this.mapboxKeyTextBox.TabIndex = 7;
-            this.mapboxKeyTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label28
             // 
@@ -1206,7 +1077,6 @@
             this.groupBox6.TabIndex = 16;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Linz";
-            this.groupBox6.Enter += new System.EventHandler(this.groupBox6_Enter);
             // 
             // linkLabel1
             // 
@@ -1217,8 +1087,7 @@
             this.linkLabel1.TabIndex = 15;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "Get a Linz 90 day API Key";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            this.linkLabel1.Click += new System.EventHandler(this.linkLabel1_Click);
+            this.linkLabel1.Click += new System.EventHandler(this.LinkLabel1_Click);
             // 
             // linzKeyTextBox
             // 
@@ -1226,7 +1095,6 @@
             this.linzKeyTextBox.Name = "linzKeyTextBox";
             this.linzKeyTextBox.Size = new System.Drawing.Size(459, 25);
             this.linzKeyTextBox.TabIndex = 7;
-            this.linzKeyTextBox.TextChanged += new System.EventHandler(this.linzKeyTextBox_TextChanged);
             // 
             // label27
             // 
@@ -1240,6 +1108,14 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label65);
+            this.tabPage4.Controls.Add(this.waterReplaceThresholdTextBox);
+            this.tabPage4.Controls.Add(this.label64);
+            this.tabPage4.Controls.Add(this.waterFadeThresholdTextBox);
+            this.tabPage4.Controls.Add(this.label40);
+            this.tabPage4.Controls.Add(this.waterReplaceThresholdSlider);
+            this.tabPage4.Controls.Add(this.waterFadeThresholdSlider);
+            this.tabPage4.Controls.Add(this.WaterMaskingEnabledCheckBox);
             this.tabPage4.Controls.Add(this.imageProcessingHelpImage);
             this.tabPage4.Controls.Add(this.imageRemoveAlphaChannelCheckBox);
             this.tabPage4.Controls.Add(this.resetButton);
@@ -1269,11 +1145,93 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 26);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(693, 576);
+            this.tabPage4.Size = new System.Drawing.Size(693, 574);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Image Processing";
             this.tabPage4.UseVisualStyleBackColor = true;
-            this.tabPage4.Click += new System.EventHandler(this.tabPage4_Click);
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Image = ((System.Drawing.Image)(resources.GetObject("label65.Image")));
+            this.label65.Location = new System.Drawing.Point(307, 426);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(16, 17);
+            this.label65.TabIndex = 33;
+            this.label65.Text = "  ";
+            // 
+            // waterReplaceThresholdTextBox
+            // 
+            this.waterReplaceThresholdTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.waterReplaceThresholdTextBox.Location = new System.Drawing.Point(104, 510);
+            this.waterReplaceThresholdTextBox.Name = "waterReplaceThresholdTextBox";
+            this.waterReplaceThresholdTextBox.Size = new System.Drawing.Size(42, 25);
+            this.waterReplaceThresholdTextBox.TabIndex = 32;
+            this.waterReplaceThresholdTextBox.Text = "0";
+            this.waterReplaceThresholdTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(10, 513);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(90, 17);
+            this.label64.TabIndex = 31;
+            this.label64.Text = "Replace 100%";
+            // 
+            // waterFadeThresholdTextBox
+            // 
+            this.waterFadeThresholdTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.waterFadeThresholdTextBox.Location = new System.Drawing.Point(104, 468);
+            this.waterFadeThresholdTextBox.Name = "waterFadeThresholdTextBox";
+            this.waterFadeThresholdTextBox.Size = new System.Drawing.Size(42, 25);
+            this.waterFadeThresholdTextBox.TabIndex = 30;
+            this.waterFadeThresholdTextBox.Text = "0";
+            this.waterFadeThresholdTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(10, 471);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(59, 17);
+            this.label40.TabIndex = 29;
+            this.label40.Text = "Fade out";
+            // 
+            // waterReplaceThresholdSlider
+            // 
+            this.waterReplaceThresholdSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.waterReplaceThresholdSlider.LargeChange = 1;
+            this.waterReplaceThresholdSlider.Location = new System.Drawing.Point(152, 513);
+            this.waterReplaceThresholdSlider.Maximum = 16;
+            this.waterReplaceThresholdSlider.Name = "waterReplaceThresholdSlider";
+            this.waterReplaceThresholdSlider.Size = new System.Drawing.Size(513, 45);
+            this.waterReplaceThresholdSlider.TabIndex = 28;
+            this.waterReplaceThresholdSlider.Value = 5;
+            this.waterReplaceThresholdSlider.ValueChanged += new System.EventHandler(this.WaterReplaceThresholdSlider_ValueChanged);
+            // 
+            // waterFadeThresholdSlider
+            // 
+            this.waterFadeThresholdSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.waterFadeThresholdSlider.LargeChange = 1;
+            this.waterFadeThresholdSlider.Location = new System.Drawing.Point(152, 462);
+            this.waterFadeThresholdSlider.Maximum = 16;
+            this.waterFadeThresholdSlider.Name = "waterFadeThresholdSlider";
+            this.waterFadeThresholdSlider.Size = new System.Drawing.Size(513, 45);
+            this.waterFadeThresholdSlider.TabIndex = 27;
+            this.waterFadeThresholdSlider.Value = 2;
+            this.waterFadeThresholdSlider.ValueChanged += new System.EventHandler(this.WaterFadeThresholdSlider_ValueChanged);
+            // 
+            // WaterMaskingEnabledCheckBox
+            // 
+            this.WaterMaskingEnabledCheckBox.AutoSize = true;
+            this.WaterMaskingEnabledCheckBox.Location = new System.Drawing.Point(13, 426);
+            this.WaterMaskingEnabledCheckBox.Name = "WaterMaskingEnabledCheckBox";
+            this.WaterMaskingEnabledCheckBox.Size = new System.Drawing.Size(278, 21);
+            this.WaterMaskingEnabledCheckBox.TabIndex = 26;
+            this.WaterMaskingEnabledCheckBox.Text = "Einhanced water masking using OSM maps";
+            this.WaterMaskingEnabledCheckBox.UseVisualStyleBackColor = true;
+            this.WaterMaskingEnabledCheckBox.CheckedChanged += new System.EventHandler(this.WaterMaskingEnabledCheckBox_CheckedChanged);
             // 
             // imageProcessingHelpImage
             // 
@@ -1288,11 +1246,11 @@
             // imageRemoveAlphaChannelCheckBox
             // 
             this.imageRemoveAlphaChannelCheckBox.AutoSize = true;
-            this.imageRemoveAlphaChannelCheckBox.Location = new System.Drawing.Point(152, 418);
+            this.imageRemoveAlphaChannelCheckBox.Location = new System.Drawing.Point(411, 426);
             this.imageRemoveAlphaChannelCheckBox.Name = "imageRemoveAlphaChannelCheckBox";
-            this.imageRemoveAlphaChannelCheckBox.Size = new System.Drawing.Size(334, 21);
+            this.imageRemoveAlphaChannelCheckBox.Size = new System.Drawing.Size(254, 21);
             this.imageRemoveAlphaChannelCheckBox.TabIndex = 24;
-            this.imageRemoveAlphaChannelCheckBox.Text = "Remove alpha chanel by colorizing dark blue for sea\r\n";
+            this.imageRemoveAlphaChannelCheckBox.Text = "Replace alpha chanel (for Google only)";
             this.imageRemoveAlphaChannelCheckBox.UseVisualStyleBackColor = true;
             // 
             // resetButton
@@ -1303,7 +1261,7 @@
             this.resetButton.TabIndex = 23;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = true;
-            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            this.resetButton.Click += new System.EventHandler(this.ResetButton_Click);
             // 
             // imgProcBlueTextBox
             // 
@@ -1419,7 +1377,7 @@
             this.imgProcBlueSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcBlueSlider.TabIndex = 13;
             this.imgProcBlueSlider.TickFrequency = 5;
-            this.imgProcBlueSlider.ValueChanged += new System.EventHandler(this.imgProcBlueSlider_ValueChanged);
+            this.imgProcBlueSlider.ValueChanged += new System.EventHandler(this.ImgProcBlueSlider_ValueChanged);
             // 
             // label23
             // 
@@ -1440,7 +1398,7 @@
             this.imgProcGreenSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcGreenSlider.TabIndex = 11;
             this.imgProcGreenSlider.TickFrequency = 5;
-            this.imgProcGreenSlider.ValueChanged += new System.EventHandler(this.imgProcGreenSlider_ValueChanged);
+            this.imgProcGreenSlider.ValueChanged += new System.EventHandler(this.ImgProcGreenSlider_ValueChanged);
             // 
             // label22
             // 
@@ -1461,7 +1419,7 @@
             this.imgProcRedSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcRedSlider.TabIndex = 9;
             this.imgProcRedSlider.TickFrequency = 5;
-            this.imgProcRedSlider.ValueChanged += new System.EventHandler(this.imgProcRedSlider_ValueChanged);
+            this.imgProcRedSlider.ValueChanged += new System.EventHandler(this.ImgProcRedSlider_ValueChanged);
             // 
             // label21
             // 
@@ -1480,8 +1438,7 @@
             this.imgProcSharpnessSlider.Name = "imgProcSharpnessSlider";
             this.imgProcSharpnessSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcSharpnessSlider.TabIndex = 7;
-            this.imgProcSharpnessSlider.Scroll += new System.EventHandler(this.imgProcSharpnessSlider_Scroll);
-            this.imgProcSharpnessSlider.ValueChanged += new System.EventHandler(this.imgProcSharpnessSlider_ValueChanged);
+            this.imgProcSharpnessSlider.ValueChanged += new System.EventHandler(this.ImgProcSharpnessSlider_ValueChanged);
             // 
             // label20
             // 
@@ -1502,7 +1459,7 @@
             this.imgProcSaturationSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcSaturationSlider.TabIndex = 5;
             this.imgProcSaturationSlider.TickFrequency = 5;
-            this.imgProcSaturationSlider.ValueChanged += new System.EventHandler(this.imgProcSaturationSlider_ValueChanged);
+            this.imgProcSaturationSlider.ValueChanged += new System.EventHandler(this.ImgProcSaturationSliderValueChanged);
             // 
             // label19
             // 
@@ -1523,7 +1480,7 @@
             this.imgProcContrastSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcContrastSlider.TabIndex = 3;
             this.imgProcContrastSlider.TickFrequency = 5;
-            this.imgProcContrastSlider.ValueChanged += new System.EventHandler(this.imgProcContrastSlider_ValueChanged);
+            this.imgProcContrastSlider.ValueChanged += new System.EventHandler(this.ImgProcContrastSlider_ValueChanged);
             // 
             // label18
             // 
@@ -1544,7 +1501,7 @@
             this.imgProcBrightnessSlider.Size = new System.Drawing.Size(513, 45);
             this.imgProcBrightnessSlider.TabIndex = 1;
             this.imgProcBrightnessSlider.TickFrequency = 5;
-            this.imgProcBrightnessSlider.ValueChanged += new System.EventHandler(this.imgProcBrightnessSlider_ValueChanged);
+            this.imgProcBrightnessSlider.ValueChanged += new System.EventHandler(this.ImgProcBrightnessSlider_ValueChanged);
             // 
             // showPreviewWindowButton
             // 
@@ -1554,33 +1511,231 @@
             this.showPreviewWindowButton.TabIndex = 0;
             this.showPreviewWindowButton.Text = "Show Preview Window";
             this.showPreviewWindowButton.UseVisualStyleBackColor = true;
-            this.showPreviewWindowButton.Click += new System.EventHandler(this.showPreviewWindowButton_Click);
+            this.showPreviewWindowButton.Click += new System.EventHandler(this.ShowPreviewWindowButton_Click);
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.enableDownloadOSMDataBox);
-            this.tabPage5.Controls.Add(this.groupBox9);
-            this.tabPage5.Controls.Add(this.groupBox7);
-            this.tabPage5.Controls.Add(this.treesDetectionQuitCheckBox);
+            this.tabPage5.Controls.Add(this.groupBox15);
+            this.tabPage5.Controls.Add(this.groupBox13);
+            this.tabPage5.Controls.Add(this.groupBox10);
             this.tabPage5.Location = new System.Drawing.Point(4, 26);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(693, 576);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Trees Detection";
+            this.tabPage5.Size = new System.Drawing.Size(693, 574);
+            this.tabPage5.TabIndex = 5;
+            this.tabPage5.Text = "Elevation/OSM";
             this.tabPage5.UseVisualStyleBackColor = true;
-            this.tabPage5.Click += new System.EventHandler(this.tabPage5_Click);
             // 
-            // enableDownloadOSMDataBox
+            // groupBox15
             // 
-            this.enableDownloadOSMDataBox.AutoSize = true;
-            this.enableDownloadOSMDataBox.Location = new System.Drawing.Point(471, 480);
-            this.enableDownloadOSMDataBox.Name = "enableDownloadOSMDataBox";
-            this.enableDownloadOSMDataBox.Size = new System.Drawing.Size(193, 21);
-            this.enableDownloadOSMDataBox.TabIndex = 22;
-            this.enableDownloadOSMDataBox.Text = "Enable Download OSM Data";
-            this.enableDownloadOSMDataBox.UseVisualStyleBackColor = true;
-            this.enableDownloadOSMDataBox.CheckedChanged += new System.EventHandler(this.enableDownloadOSMDataBox_CheckedChanged);
+            this.groupBox15.Controls.Add(this.label54);
+            this.groupBox15.Controls.Add(this.enableDownloadOsmDataCheckBox);
+            this.groupBox15.Location = new System.Drawing.Point(18, 178);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(653, 69);
+            this.groupBox15.TabIndex = 22;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "OSM Data";
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.label54.Image = ((System.Drawing.Image)(resources.GetObject("label54.Image")));
+            this.label54.Location = new System.Drawing.Point(238, 24);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(16, 17);
+            this.label54.TabIndex = 42;
+            this.label54.Text = "  ";
+            // 
+            // enableDownloadOsmDataCheckBox
+            // 
+            this.enableDownloadOsmDataCheckBox.AutoSize = true;
+            this.enableDownloadOsmDataCheckBox.Location = new System.Drawing.Point(23, 24);
+            this.enableDownloadOsmDataCheckBox.Name = "enableDownloadOsmDataCheckBox";
+            this.enableDownloadOsmDataCheckBox.Size = new System.Drawing.Size(209, 21);
+            this.enableDownloadOsmDataCheckBox.TabIndex = 23;
+            this.enableDownloadOsmDataCheckBox.Text = "Enable Download of OSM Data";
+            this.enableDownloadOsmDataCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.label43);
+            this.groupBox13.Controls.Add(this.qgisFolderButton);
+            this.groupBox13.Controls.Add(this.qgisFolderTextBox);
+            this.groupBox13.Controls.Add(this.label39);
+            this.groupBox13.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.groupBox13.Location = new System.Drawing.Point(18, 271);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(653, 94);
+            this.groupBox13.TabIndex = 20;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "QGIS /GDAL";
+            this.groupBox13.Visible = false;
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.label43.Location = new System.Drawing.Point(20, 59);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(350, 17);
+            this.label43.TabIndex = 24;
+            this.label43.Text = "*) still required yet for the max. Trees Detection altitude check";
+            // 
+            // qgisFolderButton
+            // 
+            this.qgisFolderButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.qgisFolderButton.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.qgisFolderButton.Location = new System.Drawing.Point(600, 31);
+            this.qgisFolderButton.Name = "qgisFolderButton";
+            this.qgisFolderButton.Size = new System.Drawing.Size(33, 25);
+            this.qgisFolderButton.TabIndex = 28;
+            this.qgisFolderButton.Text = "...";
+            this.qgisFolderButton.UseVisualStyleBackColor = true;
+            this.qgisFolderButton.Click += new System.EventHandler(this.qgisFolderButton_Click);
+            // 
+            // qgisFolderTextBox
+            // 
+            this.qgisFolderTextBox.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.qgisFolderTextBox.Location = new System.Drawing.Point(209, 31);
+            this.qgisFolderTextBox.Name = "qgisFolderTextBox";
+            this.qgisFolderTextBox.Size = new System.Drawing.Size(381, 25);
+            this.qgisFolderTextBox.TabIndex = 27;
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label39.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.label39.Location = new System.Drawing.Point(20, 28);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(183, 17);
+            this.label39.TabIndex = 25;
+            this.label39.Text = "QGIS bin Folder (incl. GDAL) *)";
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.elevationMapHelpImage);
+            this.groupBox10.Controls.Add(this.linkLabel5);
+            this.groupBox10.Controls.Add(this.label37);
+            this.groupBox10.Controls.Add(this.label36);
+            this.groupBox10.Controls.Add(this.openTopographyDataSetTextBox);
+            this.groupBox10.Controls.Add(this.linkLabel3);
+            this.groupBox10.Controls.Add(this.openTopographyAPITextBox);
+            this.groupBox10.Controls.Add(this.label35);
+            this.groupBox10.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox10.Location = new System.Drawing.Point(18, 16);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(654, 144);
+            this.groupBox10.TabIndex = 19;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "OpenTopography (Elevation 30m)";
+            // 
+            // elevationMapHelpImage
+            // 
+            this.elevationMapHelpImage.AutoSize = true;
+            this.elevationMapHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("elevationMapHelpImage.Image")));
+            this.elevationMapHelpImage.Location = new System.Drawing.Point(104, 32);
+            this.elevationMapHelpImage.Name = "elevationMapHelpImage";
+            this.elevationMapHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.elevationMapHelpImage.TabIndex = 24;
+            this.elevationMapHelpImage.Text = "  ";
+            // 
+            // linkLabel5
+            // 
+            this.linkLabel5.AutoSize = true;
+            this.linkLabel5.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.linkLabel5.Location = new System.Drawing.Point(468, 80);
+            this.linkLabel5.Name = "linkLabel5";
+            this.linkLabel5.Size = new System.Drawing.Size(165, 17);
+            this.linkLabel5.TabIndex = 29;
+            this.linkLabel5.TabStop = true;
+            this.linkLabel5.Text = "Get GQIS (from OSGeo4W)";
+            this.linkLabel5.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel5_LinkClicked);
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(251, 107);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(382, 17);
+            this.label37.TabIndex = 23;
+            this.label37.Text = "QGIS App (incl. GDAL) can be very helpful for handling GeoTiff files";
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label36.Location = new System.Drawing.Point(20, 63);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(100, 17);
+            this.label36.TabIndex = 17;
+            this.label36.Text = "Global Datasets";
+            // 
+            // openTopographyDataSetTextBox
+            // 
+            this.openTopographyDataSetTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.openTopographyDataSetTextBox.FormattingEnabled = true;
+            this.openTopographyDataSetTextBox.Items.AddRange(new object[] {
+            "SRTMGL1 (SRTM GL1 30m)",
+            "AW3D30 (ALOS World 3D 30m)",
+            "COP30 (Copernicus Global DSM 30m)",
+            "NASADEM (NASADEM Global 30m)",
+            "EU_DTM (DTM 30m, Europe)",
+            "CA_MRDEM_DTM (DTM 30m, Canada)",
+            "USGS30m (3DEP 30m, USA)",
+            "USGS10m (3DEP 10m, USA)",
+            "SRTMGL3 (SRTM GL3 90m)",
+            "COP90 (Copernicus Global DSM 90m)"});
+            this.openTopographyDataSetTextBox.Location = new System.Drawing.Point(157, 60);
+            this.openTopographyDataSetTextBox.Name = "openTopographyDataSetTextBox";
+            this.openTopographyDataSetTextBox.Size = new System.Drawing.Size(262, 25);
+            this.openTopographyDataSetTextBox.TabIndex = 16;
+            this.openTopographyDataSetTextBox.Text = "SRTMGL1 (SRTM GL1 30m)";
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(440, 63);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(193, 17);
+            this.linkLabel3.TabIndex = 15;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "Get a OpenTopography API Key";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel3_LinkClicked);
+            // 
+            // openTopographyAPITextBox
+            // 
+            this.openTopographyAPITextBox.Location = new System.Drawing.Point(157, 29);
+            this.openTopographyAPITextBox.Name = "openTopographyAPITextBox";
+            this.openTopographyAPITextBox.Size = new System.Drawing.Size(459, 25);
+            this.openTopographyAPITextBox.TabIndex = 7;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Location = new System.Drawing.Point(20, 32);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(64, 17);
+            this.label35.TabIndex = 3;
+            this.label35.Text = "API Key *)";
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.groupBox9);
+            this.tabPage6.Controls.Add(this.groupBox7);
+            this.tabPage6.Controls.Add(this.treesDetectionQuitCheckBox);
+            this.tabPage6.Location = new System.Drawing.Point(4, 26);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(693, 574);
+            this.tabPage6.TabIndex = 4;
+            this.tabPage6.Text = "Trees Detection";
+            this.tabPage6.UseVisualStyleBackColor = true;
             // 
             // groupBox9
             // 
@@ -1606,13 +1761,12 @@
             this.groupBox9.Controls.Add(this.label48);
             this.groupBox9.Controls.Add(this.treesDetectionDensityTextBox);
             this.groupBox9.Controls.Add(this.label30);
-            this.groupBox9.Location = new System.Drawing.Point(14, 104);
+            this.groupBox9.Location = new System.Drawing.Point(14, 115);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(650, 370);
             this.groupBox9.TabIndex = 1;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Settings";
-            this.groupBox9.Enter += new System.EventHandler(this.groupBox9_Enter);
             // 
             // treesDetectionHighTreesCheckBox
             // 
@@ -1710,7 +1864,6 @@
             this.label49.Size = new System.Drawing.Size(86, 17);
             this.label49.TabIndex = 29;
             this.label49.Text = "Northern Alps";
-            this.label49.Click += new System.EventHandler(this.label49_Click);
             // 
             // label34
             // 
@@ -1742,7 +1895,6 @@
             this.label45.Size = new System.Drawing.Size(206, 17);
             this.label45.TabIndex = 27;
             this.label45.Text = "(using data from OpenTopography)";
-            this.label45.Click += new System.EventHandler(this.label45_Click);
             // 
             // treesDetectionResetButton
             // 
@@ -1752,7 +1904,7 @@
             this.treesDetectionResetButton.TabIndex = 24;
             this.treesDetectionResetButton.Text = "Reset";
             this.treesDetectionResetButton.UseVisualStyleBackColor = true;
-            this.treesDetectionResetButton.Click += new System.EventHandler(this.treesDetectionResetButton_Click);
+            this.treesDetectionResetButton.Click += new System.EventHandler(this.TreesDetectionResetButton_Click);
             // 
             // label47
             // 
@@ -1773,7 +1925,6 @@
             this.label31.Size = new System.Drawing.Size(40, 17);
             this.label31.TabIndex = 25;
             this.label31.Text = "Note:";
-            this.label31.Click += new System.EventHandler(this.label31_Click);
             // 
             // treesDetectionAltitudeSlider
             // 
@@ -1788,8 +1939,7 @@
             this.treesDetectionAltitudeSlider.TabIndex = 14;
             this.treesDetectionAltitudeSlider.TabStop = false;
             this.treesDetectionAltitudeSlider.Value = 7;
-            this.treesDetectionAltitudeSlider.Scroll += new System.EventHandler(this.treesDetectionAltitudeSlider_Scroll);
-            this.treesDetectionAltitudeSlider.ValueChanged += new System.EventHandler(this.treesDetectionAltitudeSlider_ValueChanged);
+            this.treesDetectionAltitudeSlider.ValueChanged += new System.EventHandler(this.TreesDetectionAltitudeSlider_ValueChanged);
             // 
             // label32
             // 
@@ -1797,10 +1947,9 @@
             this.label32.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label32.Location = new System.Drawing.Point(163, 173);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(40, 17);
+            this.label32.Size = new System.Drawing.Size(47, 17);
             this.label32.TabIndex = 26;
-            this.label32.Text = "higest";
-            this.label32.Click += new System.EventHandler(this.label32_Click);
+            this.label32.Text = "highest";
             // 
             // treesDetectionAltitudeTextBox
             // 
@@ -1825,8 +1974,7 @@
             this.treesDetectionDensitySlider.TabIndex = 14;
             this.treesDetectionDensitySlider.TabStop = false;
             this.treesDetectionDensitySlider.Value = 6;
-            this.treesDetectionDensitySlider.Scroll += new System.EventHandler(this.treesDetectionDensitySlider_Scroll);
-            this.treesDetectionDensitySlider.ValueChanged += new System.EventHandler(this.treesDetectionDensitySlider_ValueChanged);
+            this.treesDetectionDensitySlider.ValueChanged += new System.EventHandler(this.TreesDetectionDensitySlider_ValueChanged);
             // 
             // label48
             // 
@@ -1846,7 +1994,6 @@
             this.treesDetectionDensityTextBox.TabIndex = 20;
             this.treesDetectionDensityTextBox.Text = "6";
             this.treesDetectionDensityTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.treesDetectionDensityTextBox.TextChanged += new System.EventHandler(this.treesDetectionDensityTextBox_TextChanged);
             // 
             // label30
             // 
@@ -1863,13 +2010,13 @@
             this.groupBox7.Controls.Add(this.treesDetectionDirectoryButton);
             this.groupBox7.Controls.Add(this.treesDetectionFolderTextBox);
             this.groupBox7.Controls.Add(this.label29);
-            this.groupBox7.Location = new System.Drawing.Point(14, 9);
+            this.groupBox7.Enabled = false;
+            this.groupBox7.Location = new System.Drawing.Point(14, 18);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(650, 80);
             this.groupBox7.TabIndex = 0;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Folder";
-            this.groupBox7.Enter += new System.EventHandler(this.groupBox7_Enter);
             // 
             // treesDetectionHelpImage
             // 
@@ -1889,7 +2036,7 @@
             this.treesDetectionDirectoryButton.TabIndex = 7;
             this.treesDetectionDirectoryButton.Text = "...";
             this.treesDetectionDirectoryButton.UseVisualStyleBackColor = true;
-            this.treesDetectionDirectoryButton.Click += new System.EventHandler(this.treesDetectionDirectoryButton_Click);
+            this.treesDetectionDirectoryButton.Click += new System.EventHandler(this.TreesDetectionDirectoryButton_Click);
             // 
             // treesDetectionFolderTextBox
             // 
@@ -1897,7 +2044,6 @@
             this.treesDetectionFolderTextBox.Name = "treesDetectionFolderTextBox";
             this.treesDetectionFolderTextBox.Size = new System.Drawing.Size(381, 25);
             this.treesDetectionFolderTextBox.TabIndex = 2;
-            this.treesDetectionFolderTextBox.TextChanged += new System.EventHandler(this.treesDetectionDirectoryTextBox_TextChanged);
             // 
             // label29
             // 
@@ -1908,18 +2054,265 @@
             this.label29.Size = new System.Drawing.Size(135, 17);
             this.label29.TabIndex = 1;
             this.label29.Text = "TreesDetection Folder";
-            this.label29.Click += new System.EventHandler(this.label29_Click);
             // 
             // treesDetectionQuitCheckBox
             // 
             this.treesDetectionQuitCheckBox.AutoSize = true;
-            this.treesDetectionQuitCheckBox.Location = new System.Drawing.Point(35, 480);
+            this.treesDetectionQuitCheckBox.Location = new System.Drawing.Point(35, 491);
             this.treesDetectionQuitCheckBox.Name = "treesDetectionQuitCheckBox";
             this.treesDetectionQuitCheckBox.Size = new System.Drawing.Size(410, 21);
             this.treesDetectionQuitCheckBox.TabIndex = 21;
             this.treesDetectionQuitCheckBox.Text = "Quit the App and PowerShell PS1-Scripts without pressing any key";
             this.treesDetectionQuitCheckBox.UseVisualStyleBackColor = true;
-            this.treesDetectionQuitCheckBox.CheckedChanged += new System.EventHandler(this.treesDetectionQuitCheckBox_CheckedChanged);
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.groupBox17);
+            this.tabPage7.Controls.Add(this.groupBox16);
+            this.tabPage7.Location = new System.Drawing.Point(4, 26);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Size = new System.Drawing.Size(693, 574);
+            this.tabPage7.TabIndex = 6;
+            this.tabPage7.Text = "Moving Map";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.elevationQGISHelpImage);
+            this.groupBox17.Controls.Add(this.movingMapElevationEnable3DCaptureCheckBox);
+            this.groupBox17.Controls.Add(this.label63);
+            this.groupBox17.Controls.Add(this.label62);
+            this.groupBox17.Controls.Add(this.label61);
+            this.groupBox17.Controls.Add(this.label60);
+            this.groupBox17.Controls.Add(this.label59);
+            this.groupBox17.Controls.Add(this.movingMapElevationEnableDataCheckBox);
+            this.groupBox17.Controls.Add(this.movingMapElevationDataRenderingSlider);
+            this.groupBox17.Controls.Add(this.movingMapElevationDataRenderingTextBox);
+            this.groupBox17.Controls.Add(this.label58);
+            this.groupBox17.Controls.Add(this.movingMapElevationHelpImage);
+            this.groupBox17.Controls.Add(this.movingMapElevationFileNameSetBox);
+            this.groupBox17.Location = new System.Drawing.Point(21, 169);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(653, 235);
+            this.groupBox17.TabIndex = 1;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Moving Map (Elevation Data)";
+            // 
+            // elevationQGISHelpImage
+            // 
+            this.elevationQGISHelpImage.AutoSize = true;
+            this.elevationQGISHelpImage.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.elevationQGISHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("elevationQGISHelpImage.Image")));
+            this.elevationQGISHelpImage.Location = new System.Drawing.Point(210, 173);
+            this.elevationQGISHelpImage.Name = "elevationQGISHelpImage";
+            this.elevationQGISHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.elevationQGISHelpImage.TabIndex = 42;
+            this.elevationQGISHelpImage.Text = "  ";
+            // 
+            // movingMapElevationEnable3DCaptureCheckBox
+            // 
+            this.movingMapElevationEnable3DCaptureCheckBox.AutoSize = true;
+            this.movingMapElevationEnable3DCaptureCheckBox.Enabled = false;
+            this.movingMapElevationEnable3DCaptureCheckBox.Location = new System.Drawing.Point(16, 173);
+            this.movingMapElevationEnable3DCaptureCheckBox.Name = "movingMapElevationEnable3DCaptureCheckBox";
+            this.movingMapElevationEnable3DCaptureCheckBox.Size = new System.Drawing.Size(178, 21);
+            this.movingMapElevationEnable3DCaptureCheckBox.TabIndex = 54;
+            this.movingMapElevationEnable3DCaptureCheckBox.Text = "Enable 3D Model Capture";
+            this.movingMapElevationEnable3DCaptureCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label63
+            // 
+            this.label63.AutoSize = true;
+            this.label63.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label63.Location = new System.Drawing.Point(13, 136);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(110, 17);
+            this.label63.TabIndex = 53;
+            this.label63.Text = "(in hundred pixels)";
+            // 
+            // label62
+            // 
+            this.label62.AutoSize = true;
+            this.label62.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label62.Location = new System.Drawing.Point(577, 142);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(50, 17);
+            this.label62.TabIndex = 52;
+            this.label62.Text = "farthest";
+            // 
+            // label61
+            // 
+            this.label61.AutoSize = true;
+            this.label61.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label61.Location = new System.Drawing.Point(178, 142);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(48, 17);
+            this.label61.TabIndex = 51;
+            this.label61.Text = "nearest";
+            // 
+            // label60
+            // 
+            this.label60.AutoSize = true;
+            this.label60.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label60.Location = new System.Drawing.Point(14, 85);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(194, 17);
+            this.label60.TabIndex = 50;
+            this.label60.Text = "3D View Panel (capture distance):";
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(250, 40);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(142, 17);
+            this.label59.TabIndex = 49;
+            this.label59.Text = "Choose Elevation Data:";
+            // 
+            // movingMapElevationEnableDataCheckBox
+            // 
+            this.movingMapElevationEnableDataCheckBox.AutoSize = true;
+            this.movingMapElevationEnableDataCheckBox.Location = new System.Drawing.Point(16, 40);
+            this.movingMapElevationEnableDataCheckBox.Name = "movingMapElevationEnableDataCheckBox";
+            this.movingMapElevationEnableDataCheckBox.Size = new System.Drawing.Size(153, 21);
+            this.movingMapElevationEnableDataCheckBox.TabIndex = 48;
+            this.movingMapElevationEnableDataCheckBox.Text = "Enable Elevation Data";
+            this.movingMapElevationEnableDataCheckBox.UseVisualStyleBackColor = true;
+            this.movingMapElevationEnableDataCheckBox.CheckedChanged += new System.EventHandler(this.MovingMapElevationEnableDataBox_CheckedChanged);
+            // 
+            // movingMapElevationDataRenderingSlider
+            // 
+            this.movingMapElevationDataRenderingSlider.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.movingMapElevationDataRenderingSlider.LargeChange = 1;
+            this.movingMapElevationDataRenderingSlider.Location = new System.Drawing.Point(181, 114);
+            this.movingMapElevationDataRenderingSlider.Maximum = 12;
+            this.movingMapElevationDataRenderingSlider.Minimum = 1;
+            this.movingMapElevationDataRenderingSlider.Name = "movingMapElevationDataRenderingSlider";
+            this.movingMapElevationDataRenderingSlider.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.movingMapElevationDataRenderingSlider.Size = new System.Drawing.Size(446, 45);
+            this.movingMapElevationDataRenderingSlider.TabIndex = 46;
+            this.movingMapElevationDataRenderingSlider.TabStop = false;
+            this.movingMapElevationDataRenderingSlider.Value = 4;
+            this.movingMapElevationDataRenderingSlider.ValueChanged += new System.EventHandler(this.MovingMapElevationDataRenderingSlider_ValueChanged);
+            // 
+            // movingMapElevationDataRenderingTextBox
+            // 
+            this.movingMapElevationDataRenderingTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.movingMapElevationDataRenderingTextBox.Location = new System.Drawing.Point(133, 114);
+            this.movingMapElevationDataRenderingTextBox.Name = "movingMapElevationDataRenderingTextBox";
+            this.movingMapElevationDataRenderingTextBox.Size = new System.Drawing.Size(42, 25);
+            this.movingMapElevationDataRenderingTextBox.TabIndex = 47;
+            this.movingMapElevationDataRenderingTextBox.Text = "4";
+            this.movingMapElevationDataRenderingTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(13, 119);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(99, 17);
+            this.label58.TabIndex = 45;
+            this.label58.Text = "View Rendering";
+            // 
+            // movingMapElevationHelpImage
+            // 
+            this.movingMapElevationHelpImage.AutoSize = true;
+            this.movingMapElevationHelpImage.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.movingMapElevationHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("movingMapElevationHelpImage.Image")));
+            this.movingMapElevationHelpImage.Location = new System.Drawing.Point(175, 40);
+            this.movingMapElevationHelpImage.Name = "movingMapElevationHelpImage";
+            this.movingMapElevationHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.movingMapElevationHelpImage.TabIndex = 44;
+            this.movingMapElevationHelpImage.Text = "  ";
+            // 
+            // movingMapElevationFileNameSetBox
+            // 
+            this.movingMapElevationFileNameSetBox.BackColor = System.Drawing.SystemColors.Window;
+            this.movingMapElevationFileNameSetBox.FormattingEnabled = true;
+            this.movingMapElevationFileNameSetBox.Items.AddRange(new object[] {
+            "dem_ch_switzerland_90m",
+            "dem_ch_switzerland_30m",
+            "dem_area_90m",
+            "dem_area_30m"});
+            this.movingMapElevationFileNameSetBox.Location = new System.Drawing.Point(398, 41);
+            this.movingMapElevationFileNameSetBox.Name = "movingMapElevationFileNameSetBox";
+            this.movingMapElevationFileNameSetBox.Size = new System.Drawing.Size(229, 25);
+            this.movingMapElevationFileNameSetBox.TabIndex = 43;
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.movingMapShowAirSpeedCheckBox);
+            this.groupBox16.Controls.Add(this.movingMapShowTrueHeadingCheckBox);
+            this.groupBox16.Controls.Add(this.movingMapUseAeroflyBridgeCheckBox);
+            this.groupBox16.Controls.Add(this.label68);
+            this.groupBox16.Controls.Add(this.movingMapConnectionHelpImage);
+            this.groupBox16.Controls.Add(this.label66);
+            this.groupBox16.Enabled = false;
+            this.groupBox16.Location = new System.Drawing.Point(14, 30);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(661, 124);
+            this.groupBox16.TabIndex = 0;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Moving Map (Settings)";
+            // 
+            // movingMapShowAirSpeedCheckBox
+            // 
+            this.movingMapShowAirSpeedCheckBox.AutoSize = true;
+            this.movingMapShowAirSpeedCheckBox.Location = new System.Drawing.Point(284, 85);
+            this.movingMapShowAirSpeedCheckBox.Name = "movingMapShowAirSpeedCheckBox";
+            this.movingMapShowAirSpeedCheckBox.Size = new System.Drawing.Size(295, 21);
+            this.movingMapShowAirSpeedCheckBox.TabIndex = 58;
+            this.movingMapShowAirSpeedCheckBox.Text = "Indicated Airspeed (instead of Ground Speed)";
+            this.movingMapShowAirSpeedCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // movingMapShowTrueHeadingCheckBox
+            // 
+            this.movingMapShowTrueHeadingCheckBox.AutoSize = true;
+            this.movingMapShowTrueHeadingCheckBox.Location = new System.Drawing.Point(284, 62);
+            this.movingMapShowTrueHeadingCheckBox.Name = "movingMapShowTrueHeadingCheckBox";
+            this.movingMapShowTrueHeadingCheckBox.Size = new System.Drawing.Size(286, 21);
+            this.movingMapShowTrueHeadingCheckBox.TabIndex = 57;
+            this.movingMapShowTrueHeadingCheckBox.Text = "True Heading (instead of Magnetic Heading)";
+            this.movingMapShowTrueHeadingCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // movingMapUseAeroflyBridgeCheckBox
+            // 
+            this.movingMapUseAeroflyBridgeCheckBox.AutoSize = true;
+            this.movingMapUseAeroflyBridgeCheckBox.Location = new System.Drawing.Point(185, 35);
+            this.movingMapUseAeroflyBridgeCheckBox.Name = "movingMapUseAeroflyBridgeCheckBox";
+            this.movingMapUseAeroflyBridgeCheckBox.Size = new System.Drawing.Size(353, 21);
+            this.movingMapUseAeroflyBridgeCheckBox.TabIndex = 55;
+            this.movingMapUseAeroflyBridgeCheckBox.Text = "Use AerofyBridge with Shared Memory (instead of UDP)";
+            this.movingMapUseAeroflyBridgeCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // label68
+            // 
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(201, 62);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(53, 17);
+            this.label68.TabIndex = 56;
+            this.label68.Text = "Display:";
+            // 
+            // movingMapConnectionHelpImage
+            // 
+            this.movingMapConnectionHelpImage.AutoSize = true;
+            this.movingMapConnectionHelpImage.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.movingMapConnectionHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("movingMapConnectionHelpImage.Image")));
+            this.movingMapConnectionHelpImage.Location = new System.Drawing.Point(137, 36);
+            this.movingMapConnectionHelpImage.Name = "movingMapConnectionHelpImage";
+            this.movingMapConnectionHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.movingMapConnectionHelpImage.TabIndex = 55;
+            this.movingMapConnectionHelpImage.Text = "  ";
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.Location = new System.Drawing.Point(23, 36);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(107, 17);
+            this.label66.TabIndex = 0;
+            this.label66.Text = "Data Connection:";
             // 
             // SettingsForm
             // 
@@ -1940,7 +2333,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.Shown += new System.EventHandler(this.SettingsForm_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -1960,14 +2352,14 @@
             this.tabPage3.ResumeLayout(false);
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.waterReplaceThresholdSlider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.waterFadeThresholdSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcBlueSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcGreenSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcRedSlider)).EndInit();
@@ -1976,13 +2368,26 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgProcContrastSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcBrightnessSlider)).EndInit();
             this.tabPage5.ResumeLayout(false);
-            this.tabPage5.PerformLayout();
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.treesDetectionAltitudeSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.treesDetectionDensitySlider)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.movingMapElevationDataRenderingSlider)).EndInit();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -2061,7 +2466,7 @@
         private System.Windows.Forms.TextBox imgProcContrastTextBox;
         private System.Windows.Forms.TextBox imgProcBrightnessTextBox;
         private System.Windows.Forms.Button resetButton;
-        private System.Windows.Forms.CheckBox useGeoConvertWrapperCheckbox;
+        private System.Windows.Forms.CheckBox useGeoConvertWrapperCheckBox;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.LinkLabel linkLabel1;
@@ -2069,7 +2474,7 @@
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.CheckBox multipleConcurrentSquaresWarningCheckBox;
         private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.LinkLabel linkLabel2;
@@ -2090,25 +2495,12 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.Label label33;
         public System.Windows.Forms.ComboBox simultaneousDownloadsComboBox;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private System.Windows.Forms.LinkLabel linkLabel3;
-        private System.Windows.Forms.TextBox openTopographyAPITextBox;
-        private System.Windows.Forms.Label label35;
-        public System.Windows.Forms.ComboBox openTopographyDataSetTextBox;
-        private System.Windows.Forms.Label label36;
-        private System.Windows.Forms.Label label37;
         private System.Windows.Forms.GroupBox groupBox11;
         private System.Windows.Forms.LinkLabel linkLabel4;
         private System.Windows.Forms.TextBox herewegoKeyTextBox;
         private System.Windows.Forms.Label label38;
-        private System.Windows.Forms.Button qgisFolderButton;
-        private System.Windows.Forms.TextBox qgisFolderTextBox;
-        private System.Windows.Forms.Label label40;
-        private System.Windows.Forms.Label label39;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.Label label43;
-        private System.Windows.Forms.LinkLabel linkLabel5;
         private System.Windows.Forms.Label label44;
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.Label label47;
@@ -2125,20 +2517,67 @@
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.Label label53;
         private System.Windows.Forms.Label label55;
-        private System.Windows.Forms.Label label54;
         private System.Windows.Forms.ComboBox treesDetectionPresetComboBox;
         private System.Windows.Forms.Label label56;
         private System.Windows.Forms.CheckBox treesDetectionHighTreesCheckBox;
         private System.Windows.Forms.CheckBox treesDetectionBigShrubsCheckBox;
-        private System.Windows.Forms.CheckBox enableDownloadOSMDataBox;
         private System.Windows.Forms.CheckBox imageRemoveAlphaChannelCheckBox;
         private System.Windows.Forms.TextBox afsSceneryFolderTextBox;
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Label conversionForMobileHelpImage;
         private System.Windows.Forms.Label treesDetectionHelpImage;
-        private System.Windows.Forms.Label elevationMapHelpImage;
-        private System.Windows.Forms.Label sdkCeoConvertHelpImage;
-        private System.Windows.Forms.Label elevationQGISHelpImage;
+        private System.Windows.Forms.Label sdkGeoConvertHelpImage;
         private System.Windows.Forms.Label imageProcessingHelpImage;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.Label elevationMapHelpImage;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label36;
+        public System.Windows.Forms.ComboBox openTopographyDataSetTextBox;
+        private System.Windows.Forms.LinkLabel linkLabel3;
+        private System.Windows.Forms.TextBox openTopographyAPITextBox;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.LinkLabel linkLabel5;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.Button qgisFolderButton;
+        private System.Windows.Forms.TextBox qgisFolderTextBox;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.CheckBox enableDownloadOsmDataCheckBox;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.TrackBar waterFadeThresholdSlider;
+        private System.Windows.Forms.CheckBox WaterMaskingEnabledCheckBox;
+        private System.Windows.Forms.TextBox waterReplaceThresholdTextBox;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.TextBox waterFadeThresholdTextBox;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.TrackBar waterReplaceThresholdSlider;
+        private System.Windows.Forms.Label label65;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.Label elevationQGISHelpImage;
+        private System.Windows.Forms.CheckBox movingMapElevationEnable3DCaptureCheckBox;
+        private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Label label62;
+        private System.Windows.Forms.Label label61;
+        private System.Windows.Forms.Label label60;
+        private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.CheckBox movingMapElevationEnableDataCheckBox;
+        private System.Windows.Forms.TrackBar movingMapElevationDataRenderingSlider;
+        private System.Windows.Forms.TextBox movingMapElevationDataRenderingTextBox;
+        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.Label movingMapElevationHelpImage;
+        public System.Windows.Forms.ComboBox movingMapElevationFileNameSetBox;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.Label label66;
+        private System.Windows.Forms.CheckBox movingMapUseAeroflyBridgeCheckBox;
+        private System.Windows.Forms.Label label68;
+        private System.Windows.Forms.Label movingMapConnectionHelpImage;
+        private System.Windows.Forms.CheckBox movingMapShowAirSpeedCheckBox;
+        private System.Windows.Forms.CheckBox movingMapShowTrueHeadingCheckBox;
+        private System.Windows.Forms.Label label67;
+        private System.Windows.Forms.Label label69;
+        private System.Windows.Forms.CheckBox AllowShiftCorrectionEnabledCheckBox;
     }
 }

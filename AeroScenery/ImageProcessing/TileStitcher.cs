@@ -1,6 +1,7 @@
 ﻿using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.OrthoPhotoSources;
+using GMap.NET.MapProviders;
 using log4net;
 using Microsoft.VisualBasic.Devices;
 using System;
@@ -28,11 +29,20 @@ namespace AeroScenery.ImageProcessing
 
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
 
-        //#MOD_h
+        //#MOD
         //public async Task StitchImageTilesAsync(string tileDownloadDirectory, string stitchedTilesDirectory, bool deleteOriginals, IProgress<TileStitcherProgress> progress)
-        public async Task StitchImageTilesAsync(string tileDownloadDirectory, string stitchedTilesDirectory, bool deleteOriginals, OrthophotoSource orthophotSource, IProgress<TileStitcherProgress> progress)
+        public async Task StitchImageTilesAsync(string tileDownloadDirectory, string stitchedTilesDirectory, string stitchedMaskTilesDirectory, bool deleteOriginals, OrthophotoSource orthophotSource, IProgress<TileStitcherProgress> progress)
         {
-            // TODO This method really needs refactoring
+            // TODO This method really needs refactoring, ev. adding interception of errors/ exceptions
+            /*
+            {
+                await Task.Run(() => ...);
+            }
+            catch (Exception ex)
+            {
+                new Exception("...", ex);
+            }
+            */
 
             await Task.Run(() =>
             {
@@ -262,13 +272,11 @@ namespace AeroScenery.ImageProcessing
 
                                 var settings = AeroSceneryManager.Instance.Settings;
 
-                                //#MOD_b
+                                //#MOD
                                 //if (settings.EnableImageProcessing.Value)
-                                //#MOD_h
-                                //if ((settings.EnableImageProcessing.Value) && (settings.OrthophotoSource!=OrthophotoSource.GoogleMaps) && (settings.OrthophotoSource != OrthophotoSource.GoogleRoads) && (settings.OrthophotoSource != OrthophotoSource.OSMMaps) && (settings.OrthophotoSource != OrthophotoSource.CartoDBLight))
                                 if ((settings.EnableImageProcessing.Value) && (orthophotSource != OrthophotoSource.GoogleMaps) && (orthophotSource != OrthophotoSource.GoogleRoads) && (orthophotSource != OrthophotoSource.OSMMaps) && (orthophotSource != OrthophotoSource.CartoDBLight))
                                 {
-                                    //#MOD_i
+                                    //#MOD
                                     log.InfoFormat("Starting Image processing on stitched image {0}", stitchFilename);
 
                                     var imageProcessingSettings = new ImageProcessingSettings();
@@ -282,25 +290,134 @@ namespace AeroScenery.ImageProcessing
 
                                     this.imageProcessingFilters.ApplyFilters(imageProcessingSettings, bitmap);
 
-                                    if (settings.RemoveAlphaChannelAdjustment.Value) 
+
+                                    if ((settings.RemoveAlphaChannelAdjustment.Value) || (settings.WaterMaskingEnable.Value)) // add new CheckBox in Settings and replace (1==1) for testing purposes
                                     {
-                                        int x, y;
-                                        for (x = 0; x < stitchedImage.Width; x++)
+                                        var stitchMaskFilename = String.Format("{0}_{1}_stitch_{2}_{3}.png", "c-mask", zoomLevel, stitchedImagesXIx + 1, stitchedImagesYIx + 1);
+
+                                        Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+                                        BitmapData bmpData = bitmap.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
+                                        unsafe
                                         {
-                                            for (y = 0; y < stitchedImage.Height; y++) 
+                                            byte* ptr = (byte*)bmpData.Scan0;
+
+                                            int height = bitmap.Height;
+                                            int width = bitmap.Width;
+                                            int stride = bmpData.Stride;
+
+                                            if (settings.RemoveAlphaChannelAdjustment.Value)
                                             {
-                                                //Color mapPixelColor = bitmap.GetPixel(x,y);
-                                                if (bitmap.GetPixel(x, y).A == 0)
+                                                for (int y = 0; y < stitchedImage.Height; y++)
                                                 {
-                                                        bitmap.SetPixel(x, y, Color.FromArgb(255, 10, 20, 30));
+                                                    byte* row = ptr + (y * stride);
+                                                    for (int x = 0; x < stitchedImage.Width; x++)
+                                                    {
+                                                        byte* pixel = row + x * 4; // ARGB => 4 bytes
+                                                        if (pixel[3] == 0) // A = 0 (letztes Byte in Little Endian)
+                                                        {
+                                                            pixel[0] = 30;  // B
+                                                            pixel[1] = 20;  // G
+                                                            pixel[2] = 10;  // R
+                                                            pixel[3] = 255; // A
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            //#DEVL_k
+                                            // ...
+                                            if (settings.WaterMaskingProcessing.Value) 
+                                            {
+                                                //#DEVL_k: 
+                                                var osmStichedImageFilePath = stitchedMaskTilesDirectory + stitchMaskFilename;
+
+                                                if (File.Exists(osmStichedImageFilePath)) 
+                                                {
+
+                                                    var detector = new OsmFeatureDetector();
+                                                    var matrix = detector.DetectFeatures(osmStichedImageFilePath);
+
+                                                    var coastDistanceBuilder = new WaterDistanceMatrixBuilder();
+                                                    var distanceMatrix = coastDistanceBuilder.BuildWaterDistanceMatrix(matrix);
+
+                                                    //#DEVL_k
+                                                    log.InfoFormat("Applying water masking to stitched image {0} (Input folder: {1})", stitchFilename, tileDownloadDirectory);
+                                                    int zoomFactor = (int)Math.Pow(2, zoomLevel - 12); // e.g. zoom level 15 = zoom level 8
+                                                    int fadeThreshold = (int)(Math.Pow(settings.WaterFadeThresholdDistance.Value, 2)) * zoomFactor;
+                                                    int replaceThreshold = (int)(Math.Pow(settings.WaterReplaceThresholdDistance.Value, 2)) * zoomFactor;
+
+                                                    var waterMasker = new WaterMaskingEngine(fadeThreshold: fadeThreshold, hardThreshold: replaceThreshold);
+                                                    waterMasker.ApplyWaterMask(ptr, stitchedImage.Width, stitchedImage.Height, stride, matrix, distanceMatrix);
+
+
+                                                    //Testing code for OSM-Masking (visualization of OSM-Features)
+                                                    /*
+                                                    for (int y = 0; y < stitchedImage.Height; y++)
+                                                    {
+                                                        byte* row = ptr + (y * stride);
+                                                        for (int x = 0; x < stitchedImage.Width; x++)
+                                                        {
+                                                            //#DEVL_k: Set pixel RGB 10/20/30 value based on OSM-Masking (just for first testing purposes!)
+                                                            if (matrix.GetFeature(x, y) == OsmFeatureType.Water1 || matrix.GetFeature(x, y) == OsmFeatureType.Water2 || matrix.GetFeature(x, y) == OsmFeatureType.Water3)
+                                                            {
+                                                                // Water-Handling: blue for testing
+                                                                byte* pixel = row + x * 4;//ARGB => 4 bytes
+                                                                byte b = 255;
+                                                                byte g = 0;
+                                                                byte r = 0;
+                                                            }
+
+                                                            if (matrix.GetFeature(x, y) == OsmFeatureType.Building1 || matrix.GetFeature(x, y) == OsmFeatureType.Building2)
+                                                            {
+                                                                // Building-Handling: yellow for testing
+                                                                byte* pixel = row + x * 4; //ARGB => 4 bytes
+                                                                pixel[0] = 57;  // B
+                                                                pixel[1] = 230;  // G
+                                                                pixel[2] = 232;  // R
+                                                            }
+                                                            if (matrix.GetFeature(x, y) == OsmFeatureType.Road1)
+                                                            {
+                                                                // Road-Handling: red for testing
+                                                                byte* pixel = row + x * 4; //ARGB => 4 bytes
+                                                                pixel[0] = 0;  // B
+                                                                pixel[1] = 0;  // G
+                                                                pixel[2] = 255;  // R
+                                                            }
+                                                            if (matrix.GetFeature(x, y) == OsmFeatureType.Forest)
+                                                            {
+                                                                // Forest-Handling: green for testing
+                                                                byte* pixel = row + x * 4; //ARGB => 4 bytes
+                                                                pixel[0] = 32;  // B
+                                                                pixel[1] = 63;  // G
+                                                                pixel[2] = 7;  // R
+                                                            }
+                                                            if (matrix.GetFeature(x, y) == OsmFeatureType.Runway)
+                                                            {
+                                                                // Runway-Handling: pink for testing
+                                                                byte* pixel = row + x * 4; //ARGB => 4 bytes
+                                                                pixel[0] = 127;  // B
+                                                                pixel[1] = 13;  // G
+                                                                pixel[2] = 140;  // R
+                                                            }
+
+                                                        }
+                                                    }
+                                                    */
+                                                }
+                                                else 
+                                                {
+                                                    //throw new FileNotFoundException("OSM file not found: " + osmStichedImageFilePath);
+                                                    log.InfoFormat("OSM file not found for water masking: {0} (Input folder: {1})", stitchFilename, tileDownloadDirectory);
                                                 }
 
                                             }
+
                                         }
+
+                                        bitmap.UnlockBits(bmpData);
                                     }
-
                                 }
-
 
                                 // Have we drawn an image to the maximum number of rows and columns for this image?
                                 if (columnsUsed == maxTilesPerStitchedImageX && rowsUsed == maxTilesPerStitchedImageY)
@@ -491,5 +608,6 @@ namespace AeroScenery.ImageProcessing
             }
             return null;
         }
+
     }
 }

@@ -44,6 +44,21 @@ namespace AeroScenery.Data
                 gridSquare.GridSquareId = con.Query<long>(query, gridSquare).First();
             }
         }
+        //#DEVL_k
+        public void CreateDataSquare(GridSquare gridSquare)
+        {
+            gridSquare.Fixed = 0;
+
+            using (var con = DbConnection())
+            {
+                var query = @"INSERT INTO GridSquares (Name, NorthLatitude, EastLongitude, WestLongitude, SouthLatitude, Level, Fixed) VALUES 
+                            (@Name, @NorthLatitude, @EastLongitude, @WestLongitude, @SouthLatitude, @Level, @Fixed);
+                            SELECT last_insert_rowid();";
+
+                con.Open();
+                gridSquare.GridSquareId = con.Query<long>(query, gridSquare).First();
+            }
+        }
 
         public void UpdateGridSquare(GridSquare gridSquare)
         {

@@ -12,6 +12,7 @@ using System.IO;
 using System.Globalization;
 using AeroScenery.ImageProcessing;
 using AeroScenery.Controls;
+using System.Windows;
 
 namespace AeroScenery.UI
 {
@@ -22,7 +23,7 @@ namespace AeroScenery.UI
         private ImageProcessingPreviewForm imageProcessingPreviewForm;
 
         private bool updateImagePreview;
-        //#MOD_g
+        //#MOD
         private bool showMessageStartAppAgain = false;
 
         public SettingsForm()
@@ -30,11 +31,11 @@ namespace AeroScenery.UI
             InitializeComponent();
             this.updateImagePreview = true;
 
-            //#MOD_i
+            //#MOD
             ToolTip toolTip1 = new ToolTip();
             toolTip1.IsBalloon = true;
             toolTip1.InitialDelay = 500;
-            toolTip1.SetToolTip(this.sdkCeoConvertHelpImage, "Aerofly FS2 GeoConvert as part of the Aerofly FS2 SDK is needed for conversion of images (there is a link under 'Get Aerofly FS2 SDK').\nAfter downloading it set the path to the root folder of the SDK containing the subfolder '...\\aerofly_fs2_geoconvert\\'.");
+            toolTip1.SetToolTip(this.sdkGeoConvertHelpImage, "Aerofly FS2 GeoConvert as part of the Aerofly FS2 SDK is needed for conversion of images (there is a link under 'Get Aerofly FS2 SDK').\nAfter downloading it set the path to the root folder of the SDK containing the subfolder '...\\aerofly_fs2_geoconvert\\'.");
 
             ToolTip toolTip2 = new ToolTip();
             toolTip2.IsBalloon = true;
@@ -54,12 +55,23 @@ namespace AeroScenery.UI
             ToolTip toolTip5 = new ToolTip();
             toolTip5.IsBalloon = true;
             toolTip5.InitialDelay = 500;
-            toolTip5.SetToolTip(this.elevationQGISHelpImage, "Free QGIS App (incl. GDAL) is needed for editing of elevation data and also fix peaks at the coast line after downloading elevation data running the PowerShell PS1 script.");
+            toolTip5.SetToolTip(this.elevationQGISHelpImage, "...\n...");
 
             ToolTip toolTip6 = new ToolTip();
             toolTip6.IsBalloon = true;
             toolTip6.InitialDelay = 500;
             toolTip6.SetToolTip(this.imageProcessingHelpImage, "This option allows you to adjust images before GeoConvert process.\nAfter changing the parameters just run the single step 'Stitch Image Tiles' again to aply the changes.\nThe option 'Remove alpha chanel' replaces the alpha chanel of the sea with a default dark blue color (only works with masked Google images).");
+
+            ToolTip toolTip7 = new ToolTip();
+            toolTip6.IsBalloon = true;
+            toolTip6.InitialDelay = 500;
+            toolTip6.SetToolTip(this.movingMapElevationHelpImage, "...\n...\n...");
+
+            ToolTip toolTip8 = new ToolTip();
+            toolTip6.IsBalloon = true;
+            toolTip6.InitialDelay = 500;
+            toolTip6.SetToolTip(this.movingMapConnectionHelpImage, "...\n...\n...");
+
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -75,11 +87,14 @@ namespace AeroScenery.UI
             settings.AeroSceneryDBDirectory = pathWithTrailingDirectorySeparatorChar(this.aeroSceneryDatabaseFolderTextBox.Text);
             settings.AFS2SDKDirectory = pathWithTrailingDirectorySeparatorChar(this.afsSDKFolderTextBox.Text);
             settings.AFS2UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs2UserFolderTextBox.Text);
-            //#MOD_i 
+            //#MOD
             //settings.AFS4UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs4UserFolderTextBox.Text);
             settings.QGISDirectory = pathWithTrailingDirectorySeparatorChar(this.qgisFolderTextBox.Text);
 
-            //#MOD_i
+            //#MOD_k
+            settings.GeoTiffElevationMapFilename = this.movingMapElevationFileNameSetBox.Text;
+
+            //#MOD
             settings.AFSSceneryFolder = pathWithTrailingDirectorySeparatorChar(this.afsSceneryFolderTextBox.Text);
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace(" ", "");
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace("#", "");
@@ -116,7 +131,7 @@ namespace AeroScenery.UI
                 settings.DownloadWaitRandomMs = int.Parse(this.downloadWaitRandomTextBox.Text);
             }
 
-            //#MOD_g
+            //#MOD
             if (Convert.ToInt32(this.simultaneousDownloadsComboBox.Text) != settings.SimultaneousDownloads)
             {
                 showMessageStartAppAgain = true;
@@ -161,7 +176,7 @@ namespace AeroScenery.UI
                 settings.GeoConvertWriteRawFiles = false;
             }
 
-            settings.GeoConvertUseWrapper = useGeoConvertWrapperCheckbox.Checked;
+            settings.GeoConvertUseWrapper = useGeoConvertWrapperCheckBox.Checked;
             settings.ShowMultipleConcurrentSquaresWarning = multipleConcurrentSquaresWarningCheckBox.Checked;
 
             //if (this.gcDoMultipleSmallerRunsComboBox.SelectedIndex == 0)
@@ -176,27 +191,24 @@ namespace AeroScenery.UI
             settings.USGSPassword = this.usgsPasswordTextBox.Text.Trim();
             settings.USGSUsername = this.usgsUsernameTextBox.Text.Trim();
             settings.LinzApiKey = this.linzKeyTextBox.Text.Trim();
-            //#MOD_e
+            //#MOD
             settings.MapboxApiKey = this.mapboxKeyTextBox.Text.Trim();
 
-            //#MOD_h
+            //#MOD
             settings.OpenTopographyApiKey = this.openTopographyAPITextBox.Text.Trim();
             settings.OpenTopographyDataSet = this.openTopographyDataSetTextBox.Text;
-            //#DOD_h
             settings.HereWeGoApiKey = this.herewegoKeyTextBox.Text.Trim();
 
-            //#MOD_g
+            //#MOD
             settings.TreesDetectionDirectory = pathWithTrailingDirectorySeparatorChar(this.treesDetectionFolderTextBox.Text);
             settings.TreesDetectionDensity = this.treesDetectionDensitySlider.Value;
             settings.TreesDetectionQuit = treesDetectionQuitCheckBox.Checked;
-
-            //#DEVL_h
             settings.TreesDetectionAltitudeMax = this.treesDetectionAltitudeSlider.Value;
             settings.TreesDetectionAltitudeCheck = this.treesDetectionAltitudeCheckBox.Checked;
 
-            //#MOD_i
+            //#MOD
             settings.CreateAddForMobile = createAddForMobileCheckBox.Checked;
-            settings.DownloadOSMDataEnable = enableDownloadOSMDataBox.Checked;
+            settings.DownloadOSMDataEnable = enableDownloadOsmDataCheckBox.Checked;
             if (settings.DownloadOSMDataEnable == false)
             {
                 settings.DownloadOsmData = false;
@@ -206,6 +218,17 @@ namespace AeroScenery.UI
             settings.TreesPresetHighTrees = treesDetectionHighTreesCheckBox.Checked;
             settings.TreesPresetBigShrubs = treesDetectionBigShrubsCheckBox.Checked;
 
+
+            //#MOD_k
+            settings.MovingMapElevationDataEnable = movingMapElevationEnableDataCheckBox.Checked;
+            if (settings.MovingMapElevationDataEnable == false)
+            {
+                settings.MovingMapElevationData = false;
+                settings.MovingMapElevationEnable3DCapture = false;
+            }
+            settings.MovingMapElevationFileName = movingMapElevationFileNameSetBox.Text;
+            settings.MovingMapElevationDataRendering = movingMapElevationDataRenderingSlider.Value;;
+            settings.MovingMapElevationEnable3DCapture = movingMapElevationEnable3DCaptureCheckBox.Checked;
 
             settings.ShrinkTMCGridSquareCoords = double.Parse(this.shrinkTMCGridSquaresTextBox.Text, NumberStyles.Any, CultureInfo.InvariantCulture);
 
@@ -218,14 +241,32 @@ namespace AeroScenery.UI
             settings.RedAdjustment = this.imgProcRedSlider.Value;
             settings.GreenAdjustment = this.imgProcGreenSlider.Value;
             settings.BlueAdjustment = this.imgProcBlueSlider.Value;
-            //#MOD_i
+            //#MOD
             settings.RemoveAlphaChannelAdjustment = this.imageRemoveAlphaChannelCheckBox.Checked;
+
+            //#DEVL_k ### to be checked
+            //settings.WaterMaskingProcessing = this.WaterMaskingEnabledCheckBox.Checked;
+            settings.WaterMaskingEnable = this.WaterMaskingEnabledCheckBox.Checked;
+            if (this.WaterMaskingEnabledCheckBox.Checked == false)
+            {
+                settings.WaterMaskingProcessing = false;
+            }
+            settings.WaterFadeThresholdDistance = this.waterFadeThresholdSlider.Value;
+            settings.WaterReplaceThresholdDistance = this.waterReplaceThresholdSlider.Value;
+
+            //#DEVL_k ###to be checked
+            settings.AllowShiftCorrectionEnable = this.AllowShiftCorrectionEnabledCheckBox.Checked;
+            if (this.AllowShiftCorrectionEnabledCheckBox.Checked == false) 
+            { 
+                settings.AllowShiftCorrectionProcessing = false;
+                settings.AllowShiftCorrectionLevel = 0;
+            } 
 
             AeroSceneryManager.Instance.SaveSettings();
             this.Hide();
             log.Info("Settings saved");
 
-            //#MOD_g
+            //#MOD
             if (showMessageStartAppAgain) 
             {
                 var messageBox = new CustomMessageBox("Please restart the App to make the changes effective.",
@@ -245,33 +286,17 @@ namespace AeroScenery.UI
             this.aeroSceneryDatabaseFolderTextBox.Text = settings.AeroSceneryDBDirectory;
             this.afsSDKFolderTextBox.Text = settings.AFS2SDKDirectory;
             this.afs2UserFolderTextBox.Text = settings.AFS2UserDirectory;
-            //#MOD_h
-            //this.afs4UserFolderTextBox.Text = settings.AFS4UserDirectory;
+            //#MOD
             this.qgisFolderTextBox.Text = settings.QGISDirectory;
-
-            //#MOD_i
+            this.movingMapElevationFileNameSetBox.Text = settings.GeoTiffElevationMapFilename;
             this.afsSceneryFolderTextBox.Text = settings.AFSSceneryFolder;
 
             this.userAgentTextBox.Text = settings.UserAgent;
             this.downloadWaitTextBox.Text = settings.DownloadWaitMs.ToString();
             this.downloadWaitRandomTextBox.Text = settings.DownloadWaitRandomMs.ToString();
 
-            //#MOD_g
+            //#MOD
             this.simultaneousDownloadsComboBox.Text = Convert.ToString(settings.SimultaneousDownloads);
-            /*
-            switch (settings.SimultaneousDownloads)
-            {
-                case 4:
-                    this.simultaneousDownloadsComboBox.SelectedIndex = 0;
-                    break;
-                case 6:
-                    this.simultaneousDownloadsComboBox.SelectedIndex = 1;
-                    break;
-                case 8:
-                    this.simultaneousDownloadsComboBox.SelectedIndex = 2;
-                    break;
-            }
-            */
 
             this.maxTilesPerStitchedImageTextBox.Text = settings.MaximumStitchedImageSize.ToString();
 
@@ -302,39 +327,44 @@ namespace AeroScenery.UI
                 this.gcWriteRawFilesComboBox.SelectedIndex = 1;
             }
 
-            useGeoConvertWrapperCheckbox.Checked = settings.GeoConvertUseWrapper.Value;
+            useGeoConvertWrapperCheckBox.Checked = settings.GeoConvertUseWrapper.Value;
             multipleConcurrentSquaresWarningCheckBox.Checked = settings.ShowMultipleConcurrentSquaresWarning.Value;
 
             this.usgsUsernameTextBox.Text = settings.USGSUsername;
             this.usgsPasswordTextBox.Text = settings.USGSPassword;
             this.linzKeyTextBox.Text = settings.LinzApiKey;
-            //#MOD_e
+            //#MOD
             this.mapboxKeyTextBox.Text = settings.MapboxApiKey;
-
-            //#MOD_h
             this.openTopographyAPITextBox.Text = settings.OpenTopographyApiKey;
             this.openTopographyDataSetTextBox.Text = settings.OpenTopographyDataSet;
-            //#MOD_h
             this.herewegoKeyTextBox.Text = settings.HereWeGoApiKey;
 
-            //#MOD_g
+            //#MOD
             this.treesDetectionFolderTextBox.Text = settings.TreesDetectionDirectory;
             this.treesDetectionDensitySlider.Value = settings.TreesDetectionDensity.Value;
             this.treesDetectionDensityTextBox.Text = settings.TreesDetectionDensity.Value.ToString();
             this.treesDetectionQuitCheckBox.Checked = settings.TreesDetectionQuit.Value;
 
-            //DEVL_h
             this.treesDetectionAltitudeSlider.Value = settings.TreesDetectionAltitudeMax.Value;
             this.treesDetectionAltitudeTextBox.Text = settings.TreesDetectionAltitudeMax.Value.ToString();
             this.treesDetectionAltitudeCheckBox.Checked = settings.TreesDetectionAltitudeCheck.Value;
 
-            //#MOD_i
+            //#MOD
             this.createAddForMobileCheckBox.Checked = settings.CreateAddForMobile.Value;
-            this.enableDownloadOSMDataBox.Checked = settings.DownloadOSMDataEnable.Value;
+            this.enableDownloadOsmDataCheckBox.Checked = settings.DownloadOSMDataEnable.Value;
 
             this.treesDetectionPresetComboBox.SelectedIndex = settings.TreesPresetIndex.Value;
             this.treesDetectionHighTreesCheckBox.Checked = settings.TreesPresetHighTrees.Value;
             this.treesDetectionBigShrubsCheckBox.Checked = settings.TreesPresetBigShrubs.Value;
+
+            //#DEVL_k
+            this.movingMapElevationEnableDataCheckBox.Checked = settings.MovingMapElevationDataEnable.Value;
+            this.movingMapElevationFileNameSetBox.Text = settings.MovingMapElevationFileName;
+            this.movingMapElevationDataRenderingSlider.Value = settings.MovingMapElevationDataRendering.Value;
+            this.movingMapElevationDataRenderingTextBox.Text = settings.MovingMapElevationDataRendering.Value.ToString();
+            this.movingMapElevationEnable3DCaptureCheckBox.Checked = settings.MovingMapElevationEnable3DCapture.Value;
+            if (movingMapElevationEnableDataCheckBox.Checked) 
+                movingMapElevationEnable3DCaptureCheckBox.Enabled = true;
 
             this.shrinkTMCGridSquaresTextBox.Text = Convert.ToString(settings.ShrinkTMCGridSquareCoords, CultureInfo.InvariantCulture);
 
@@ -360,8 +390,21 @@ namespace AeroScenery.UI
             this.imgProcBlueSlider.Value = settings.BlueAdjustment.Value;
             this.imgProcBlueTextBox.Text = settings.BlueAdjustment.Value.ToString();
 
-            //#MOD_i
+            //#MOD
             this.imageRemoveAlphaChannelCheckBox.Checked = settings.RemoveAlphaChannelAdjustment.Value;
+
+            //#DEVL_k ### to be checked
+            //this.WaterMaskingEnabledCheckBox.Checked = settings.WaterMaskingProcessing.Value;
+            this.WaterMaskingEnabledCheckBox.Checked = settings.WaterMaskingEnable.Value;
+
+            this.waterFadeThresholdSlider.Value = settings.WaterFadeThresholdDistance.Value;
+            this.waterFadeThresholdTextBox.Text = settings.WaterFadeThresholdDistance.Value.ToString();
+            this.waterReplaceThresholdSlider.Value = settings.WaterReplaceThresholdDistance.Value;
+            this.waterReplaceThresholdTextBox.Text = settings.WaterReplaceThresholdDistance.Value.ToString();
+
+            //#DEVL_k
+            this.AllowShiftCorrectionEnabledCheckBox.Checked = settings.AllowShiftCorrectionEnable.Value;
+
 
             // Enable or disable sliders depending on whether image processing is enabled
             if (this.imageProcessingEnabledCheckBox.Checked)
@@ -372,6 +415,26 @@ namespace AeroScenery.UI
             {
                 this.ToggleImageProcessingControlsEnabled(false);
             }
+
+            //#DEVL_k
+            if (this.WaterMaskingEnabledCheckBox.Checked)
+            {
+                this.ToggleImageWaterMaskingControlsEnabled(true);
+            }
+            else
+            {
+                this.ToggleImageWaterMaskingControlsEnabled(false);
+            }
+            //#DEVL_k ###probaby not needed
+            if (this.AllowShiftCorrectionEnabledCheckBox.Checked)
+            {
+                //this.ToggleImageWaterMaskingControlsEnabled(true);
+            }
+            else
+            {
+                //this.ToggleImageWaterMaskingControlsEnabled(false);
+            }
+
 
         }
 
@@ -395,6 +458,15 @@ namespace AeroScenery.UI
             this.imgProcGreenTextBox.Enabled = enabled;
             this.imgProcBlueSlider.Enabled = enabled;
             this.imgProcBlueTextBox.Enabled = enabled;
+        }
+
+        private void ToggleImageWaterMaskingControlsEnabled(bool enabled)
+        {
+            this.waterFadeThresholdSlider.Enabled = enabled;
+            this.waterFadeThresholdTextBox.Enabled = enabled;
+
+            this.waterReplaceThresholdSlider.Enabled = enabled;
+            this.waterReplaceThresholdTextBox.Enabled = enabled;
         }
 
         private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
@@ -466,11 +538,10 @@ namespace AeroScenery.UI
             }
         }
 
-        //#MOD_h
+        //#MOD
         private void qgisFolderButton_Click(object sender, EventArgs e)
         {
             var settings = AeroSceneryManager.Instance.Settings;
-            //MOD_i
             this.folderBrowserDialog1.SelectedPath = this.qgisFolderTextBox.Text;
 
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
@@ -627,7 +698,7 @@ namespace AeroScenery.UI
         }
 
 
-        private void imgProcBrightnessSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcBrightnessSlider_ValueChanged(object sender, EventArgs e)
         {
             if (imgProcBrightnessTextBox.Text != imgProcBrightnessSlider.Value.ToString())
             {
@@ -638,7 +709,7 @@ namespace AeroScenery.UI
         }
 
 
-        private void imgProcContrastSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcContrastSlider_ValueChanged(object sender, EventArgs e)
         {
             if (imgProcContrastTextBox.Text != imgProcContrastSlider.Value.ToString())
             {
@@ -648,7 +719,7 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void imgProcSaturationSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcSaturationSliderValueChanged(object sender, EventArgs e)
         {
             if (imgProcSaturationTextBox.Text != imgProcSaturationSlider.Value.ToString())
             {
@@ -658,7 +729,7 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void imgProcSharpnessSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcSharpnessSlider_ValueChanged(object sender, EventArgs e)
         {
             if (imgProcSharpnessTextBox.Text != imgProcSharpnessSlider.Value.ToString())
             {
@@ -668,7 +739,7 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void imgProcRedSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcRedSlider_ValueChanged(object sender, EventArgs e)
         {
             if (imgProcRedTextBox.Text != imgProcRedSlider.Value.ToString())
             {
@@ -678,7 +749,7 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void imgProcGreenSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcGreenSlider_ValueChanged(object sender, EventArgs e)
         {
             if (imgProcGreenTextBox.Text != imgProcGreenSlider.Value.ToString())
             {
@@ -688,7 +759,7 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void imgProcBlueSlider_ValueChanged(object sender, EventArgs e)
+        private void ImgProcBlueSlider_ValueChanged(object sender, EventArgs e)
         {
             if (imgProcBlueTextBox.Text != imgProcBlueSlider.Value.ToString())
             {
@@ -811,12 +882,14 @@ namespace AeroScenery.UI
             else
             {
                 this.ToggleImageProcessingControlsEnabled(false);
-                //#MOD_i
+                //#MOD
                 this.imageRemoveAlphaChannelCheckBox.Checked = false;
+                //#DEVL_k #TEMP
+
             }
         }
 
-        private void showPreviewWindowButton_Click(object sender, EventArgs e)
+        private void ShowPreviewWindowButton_Click(object sender, EventArgs e)
         {
             if (this.imageProcessingPreviewForm != null)
             {
@@ -845,7 +918,7 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void resetButton_Click(object sender, EventArgs e)
+        private void ResetButton_Click(object sender, EventArgs e)
         {
             this.updateImagePreview = false;
             this.imgProcBrightnessSlider.Value = 0;
@@ -860,65 +933,25 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
  
-        private void linkLabel1_Click(object sender, EventArgs e)
+        private void LinkLabel1_Click(object sender, EventArgs e)
         {
-            //#MOD_h
+            //#MOD
             //System.Diagnostics.Process.Start("https://www.linz.govt.nz/data/linz-data-service/guides-and-documentation/creating-an-api-key");
             System.Diagnostics.Process.Start("https://basemaps.linz.govt.nz/?i=nz-satellite-2021-2022-10m#@-41.3768088,172.9687500,z5.2493");
         }
  
 
 
-
-        private void tabPage5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox8_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox6_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linzKeyTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://account.mapbox.com/auth/signup/");
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        private void afsSDKFolderTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox7_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label29_Click(object sender, EventArgs e)
-        {
-
-        }
-        //#MOD_g
-        private void treesDetectionDirectoryButton_Click(object sender, EventArgs e)
+        //#MOD
+        private void TreesDetectionDirectoryButton_Click(object sender, EventArgs e)
         {
             var settings = AeroSceneryManager.Instance.Settings;
-            //MOD_i
             this.folderBrowserDialog1.SelectedPath = this.treesDetectionFolderTextBox.Text;
 
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
@@ -927,7 +960,6 @@ namespace AeroScenery.UI
             {
                 this.treesDetectionFolderTextBox.Text = folderBrowserDialog1.SelectedPath;
 
-                //#MOD_g
                 if ((settings.TreesDetectionDirectory == "") && (this.treesDetectionFolderTextBox.Text != "")) 
                 {
                     showMessageStartAppAgain = true;
@@ -935,14 +967,8 @@ namespace AeroScenery.UI
 
             }
         }
-        //#MOD_g
-        private void treesDetectionDirectoryTextBox_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
-        //#MOD_g
-        private void treesDetectionDensitySlider_ValueChanged(object sender, EventArgs e)
+        private void TreesDetectionDensitySlider_ValueChanged(object sender, EventArgs e)
         {
             if (treesDetectionDensityTextBox.Text != treesDetectionDensitySlider.Value.ToString())
             {
@@ -952,150 +978,34 @@ namespace AeroScenery.UI
             this.UpdateImagePreview();
         }
 
-        private void tabPage4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void imgProcSharpnessSlider_Scroll(object sender, EventArgs e)
-        {
-
-        }
-        //#MOD_g
-        private void treesDetectionResetButton_Click(object sender, EventArgs e)
+        //#MOD
+        private void TreesDetectionResetButton_Click(object sender, EventArgs e)
         {
             this.treesDetectionDensitySlider.Value = 6;
-
-            //#MOD_h
             this.treesDetectionAltitudeSlider.Value = 7;
             this.treesDetectionAltitudeCheckBox.Checked = false;
 
             this.UpdateImagePreview();
         }
-
-        private void treesDetectionDensityTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label32_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label31_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void workingFolderTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SettingsForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox9_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void simultaneousDownloadsComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox10_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label36_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        //#MOD
+        private void LinkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://portal.opentopography.org/login");
         }
-
-        private void openTopographyAPITextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label38_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        //#MOD
+        private void LinkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://platform.here.com/");
         }
 
-        private void tabPage3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void herewegoKeyTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void afs2UserFolderTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void qgisFolderTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label40_Click(object sender, EventArgs e)
-        {
-
-        }
-        //#MOD_h
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        //#MOD
+        private void LinkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://trac.osgeo.org/osgeo4w/");
         }
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
 
-        }
-
-        private void treesDetectionQuitCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void treesDetectionDensitySlider_Scroll(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox12_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label45_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void treesDetectionAltitudeSlider_ValueChanged(object sender, EventArgs e)
+        //#MOD
+        private void TreesDetectionAltitudeSlider_ValueChanged(object sender, EventArgs e)
         {
             if (treesDetectionAltitudeTextBox.Text != treesDetectionAltitudeSlider.Value.ToString())
             {
@@ -1104,52 +1014,79 @@ namespace AeroScenery.UI
 
             this.UpdateImagePreview();
         }
-        private void treesDetectionAltitudeSlider_Scroll(object sender, EventArgs e)
+
+        //#MOD
+        private void AfsSceneryFolderTextBox_TextChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void label49_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void groupBox4_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void createAddAndroidCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label42_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void afs4UserFolderTextBox_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void enableDownloadOSMDataBox_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void afsSceneryFolderTextBox_TextChanged(object sender, EventArgs e)
-        {
-            //#MOD_i
             this.afsSceneryFolderTextBox.Text = pathWithTrailingDirectorySeparatorChar(this.afsSceneryFolderTextBox.Text);
             this.afsSceneryFolderTextBox.Text = this.afsSceneryFolderTextBox.Text.ToLower();
             this.afsSceneryFolderTextBox.Text = this.afsSceneryFolderTextBox.Text.Replace("aerofly_fs_2_geoconvert", "");
             this.afsSceneryFolderTextBox.Text = this.afsSceneryFolderTextBox.Text.Replace("\\\\", "\\");
         }
 
-        private void sdkCeoConvertHelpImage_Click(object sender, EventArgs e)
+        //#DEVL_k
+        private void WaterMaskingEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            if (this.WaterMaskingEnabledCheckBox.Checked)
+            {
+                this.ToggleImageWaterMaskingControlsEnabled(true);
+            }
+            else
+            {
+                this.ToggleImageWaterMaskingControlsEnabled(false);
+            }
+        }
+
+        private void WaterFadeThresholdSlider_ValueChanged(object sender, EventArgs e)
+        {
+            if (waterFadeThresholdTextBox.Text != waterFadeThresholdSlider.Value.ToString())
+            {
+                waterFadeThresholdTextBox.Text = waterFadeThresholdSlider.Value.ToString();
+            }
+
+            if (waterReplaceThresholdSlider.Value < waterFadeThresholdSlider.Value)
+            {
+                waterReplaceThresholdSlider.Value = waterFadeThresholdSlider.Value;
+                waterReplaceThresholdTextBox.Text = waterFadeThresholdSlider.Value.ToString();
+            }
+
+            this.UpdateImagePreview();
+        }
+        private void WaterReplaceThresholdSlider_ValueChanged(object sender, EventArgs e)
+        {
+            if (waterReplaceThresholdTextBox.Text != waterReplaceThresholdSlider.Value.ToString())
+            {
+                waterReplaceThresholdTextBox.Text = waterReplaceThresholdSlider.Value.ToString();
+            }
+
+            if (waterFadeThresholdSlider.Value > waterReplaceThresholdSlider.Value) 
+            {
+                waterFadeThresholdSlider.Value = waterReplaceThresholdSlider.Value;
+                waterFadeThresholdTextBox.Text = waterReplaceThresholdSlider.Value.ToString();
+            }
+
+            this.UpdateImagePreview();
+        }
+
+        //#DEVL_k
+        private void MovingMapElevationDataRenderingSlider_ValueChanged(object sender, EventArgs e)
+        {
+            if (movingMapElevationDataRenderingTextBox.Text != movingMapElevationDataRenderingSlider.Value.ToString())
+            {
+                movingMapElevationDataRenderingTextBox.Text = movingMapElevationDataRenderingSlider.Value.ToString();
+            }
+
+            this.UpdateImagePreview();
+        }
+        //#DEVL_k
+        private void MovingMapElevationEnableDataBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!movingMapElevationEnableDataCheckBox.Checked)
+            {
+                movingMapElevationEnable3DCaptureCheckBox.Checked = false;
+                movingMapElevationEnable3DCaptureCheckBox.Enabled = false;
+            }
+            else movingMapElevationEnable3DCaptureCheckBox.Enabled = true;
 
         }
     }

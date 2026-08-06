@@ -1,4 +1,4 @@
-﻿//#MOD_g
+﻿//#MOD
 // InputBox static method that simulates InputBox method known from VB and VB.NET used from https://www.csharp-examples.net/inputbox/
 using System;
 using System.Windows.Forms;

@@ -5,6 +5,8 @@ using AeroScenery.Data;
 using AeroScenery.Data.Mappers;
 using AeroScenery.Data.Models;
 using AeroScenery.Download;
+using AeroScenery.FlightPathVisualizer.Models;
+using AeroScenery.FlightPathVisualizer.Services;
 using AeroScenery.FSCloudPort;
 using AeroScenery.ImageProcessing;
 using AeroScenery.OrthophotoSources;
@@ -17,17 +19,23 @@ using AeroScenery.OrthophotoSources.Switzerland;
 using AeroScenery.OrthophotoSources.UnitedStates;
 using AeroScenery.OrthoPhotoSources;
 using AeroScenery.UI;
+using HelixToolkit.Wpf;
 using log4net;
+using MaxRev.Gdal.Core;
+using OSGeo.GDAL;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
+//#MOD_k
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
-//#MOD_f
-using System.Globalization;
 
 namespace AeroScenery
 {
@@ -49,9 +57,8 @@ namespace AeroScenery
         private HittaOrthophotoSource hittaOrthophotoSource;
         private HereWeGoOrthophotoSource hereWeGoOrthophotoSource;
         private GuleSiderOrthophotoSource guleSiderOrthophotoSource;
-        //#MOD_e
+        //#MOD
         private MapboxOrthophotoSource mapboxOrthophotoSource;
-        //#MOD_b 
         private GoogleOrthomapSource googleOrthomapSource;
         private GoogleOrthoroadmapSource googleOrthoroadmapSource;
         private OSMMapsOrthomapSource osmMapsOrthomapSource;
@@ -60,6 +67,8 @@ namespace AeroScenery
         private DownloadManager downloadManager;
 
         private GeoConvertManager geoConvertManager;
+        //#MOD_k
+        private TerrainData _terrainData;
 
         //private DownloadFailedForm downloadFailedForm;
 
@@ -96,7 +105,7 @@ namespace AeroScenery
             dataRepository = new SqlLiteDataRepository();
 
             imageTiles = null;
-            version = "1.1.3 MOD j by @chrispriv"; //#MOD_j
+            version = "1.1.3 MOD k DEVL by @chrispriv"; //#DEVL_k
             incrementalVersion = 13;
         }
 
@@ -164,9 +173,8 @@ namespace AeroScenery
             hittaOrthophotoSource = new HittaOrthophotoSource();
             hereWeGoOrthophotoSource = new HereWeGoOrthophotoSource();
             guleSiderOrthophotoSource = new GuleSiderOrthophotoSource();
-            //#MOD_e
+            //#MOD
             mapboxOrthophotoSource = new MapboxOrthophotoSource();
-            //#MOD_b
             googleOrthomapSource = new GoogleOrthomapSource(); 
             googleOrthoroadmapSource = new GoogleOrthoroadmapSource(); 
             osmMapsOrthomapSource = new OSMMapsOrthomapSource();
@@ -175,13 +183,13 @@ namespace AeroScenery
             this.mainForm = new MainForm();
             this.mainForm.StartStopClicked += async (sender, eventArgs) =>
             {
-                //#MOD_g
+                //#MOD
                 // Bug fix: Adding a delay for Start & Stops reduces the occurrence of an unhandled error when stopping the download (bug appears since the number of download threads has been increased from 4 to 8)
                 await Task.Delay(600);
 
                 if (this.mainForm.ActionsRunning)
                 {
-                    //#MOD_g
+                    //#MOD
                     // Bug fix: Sometimes it's still occured, than even mainForm.ActionRunning value is false download will starts instead of stops!?! Handle this critical exception to to avoid an abort of the app (is there a nother approach?)  
                     try
                     {
@@ -258,11 +266,10 @@ namespace AeroScenery
                 case OrthophotoSource.NO_GuleSider:
                     tileDownloadDirectory += String.Format("\\{0}\\", OrthophotoSourceDirectoryName.NO_GuleSider);
                     break;
-                //#MOD_e
+                //#MOD
                 case OrthophotoSource.Mapbox:
                     tileDownloadDirectory += String.Format("\\{0}\\", OrthophotoSourceDirectoryName.Mapbox);
                     break;
-                //#MOD_b
                 case OrthophotoSource.GoogleMaps:
                     tileDownloadDirectory += String.Format("\\{0}\\", OrthophotoSourceDirectoryName.GoogleMaps);
                     break;
@@ -313,45 +320,123 @@ namespace AeroScenery
         {
             try
             {
-                //#MOD_h
+                // Set settings on orthophoto sources
+                this.linzOrthophotoSource.ApiKey = settings.LinzApiKey;
+                //#MOD
+                this.mapboxOrthophotoSource.ApiKey = settings.MapboxApiKey;
+                this.hereWeGoOrthophotoSource.ApiKey = settings.HereWeGoApiKey;
+
                 double selectedTilesEastLongitude = -180;
                 double selectedTilesWestLongitude = 180;
                 double selectedTilesNorthLatitude = -90;
                 double selectedTilesSouthLatitude = 90;
-
-                // Set settings on orthophoto sources
-                this.linzOrthophotoSource.ApiKey = settings.LinzApiKey;
-                //#MOD_e
-                this.mapboxOrthophotoSource.ApiKey = settings.MapboxApiKey;
-                //#MOD_h
-                this.hereWeGoOrthophotoSource.ApiKey = settings.HereWeGoApiKey;
 
                 int i = 0;
                 foreach (AFS2GridSquare afs2GridSquare in this.mainForm.SelectedAFS2GridSquares.Values.Select(x => x.AFS2GridSquare))
                 {
                     var currentGrideSquareMessage = String.Format("Working on AFS Grid Square {0} of {1}", i + 1, this.mainForm.SelectedAFS2GridSquares.Count());
                     this.mainForm.UpdateParentTaskLabel(currentGrideSquareMessage);
+                    //#TRY_k    
+                    await Task.Delay(50);
                     log.Info(currentGrideSquareMessage);
 
-                    //#MOD_h
-                    // Determine maximum coverage of all selected tiles for manual download of GeoTiff-images provided from OpenTopography
+                    //#MOD
+                    // Determine maximum coverage of all selected tiles/area (actually not needed anymore)
                     if (selectedTilesEastLongitude < afs2GridSquare.EastLongitude) { selectedTilesEastLongitude = afs2GridSquare.EastLongitude; }
                     if (selectedTilesWestLongitude > afs2GridSquare.WestLongitude) { selectedTilesWestLongitude = afs2GridSquare.WestLongitude; }
                     if (selectedTilesNorthLatitude < afs2GridSquare.NorthLatitude) { selectedTilesNorthLatitude = afs2GridSquare.NorthLatitude; }
                     if (selectedTilesSouthLatitude > afs2GridSquare.SouthLatitude) { selectedTilesSouthLatitude = afs2GridSquare.SouthLatitude; }
 
-                    //#MOD_h
+                    //#MOD
                     // If Action Running Check at the level of tiles check and create the working folders and subfolders (not done if only "Downlaod Elevation Data (30m) for selected area" selected) 
                     var afsGridSquareDirectory = this.settings.WorkingDirectory + afs2GridSquare.Name;
 
                     var tileDownloadDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"\";
                     var stitchedTilesDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-stitched\";
 
+                    //#MOD_k (var declaration for optional masking shifted)
+                    var afsGridSquareDirectoryMask = this.settings.WorkingDirectory + afs2GridSquare.Name;
+
+                    var tileDownloadDirectoryMask = afsGridSquareDirectoryMask + @"\c-mask\" + this.settings.ZoomLevel + @"\";
+                    var stitchedTilesDirectoryMask = afsGridSquareDirectoryMask + @"\c-mask\" + +this.settings.ZoomLevel + @"-stitched\";
+
+
+                    //#DEVL_k
+                    // 1.
+                    // Download of the masking images for Trees Detection if Mask Image or Water Masking on stiched images is selected (both optional) by overriding the image tiles of the orthophoto source
+                    // (do this new as first step, so that the images are available for optional water masking after stiching)
+                    if (((this.Settings.RunTreesDetectionMask.Value && this.Settings.RunTreesDetection.Value) || this.Settings.WaterMaskingProcessing.Value) && this.mainForm.ActionsRunning)
+                    {
+                        // Do we have a directory for the afs grid square and this orthophoto source
+                        if (!Directory.Exists(tileDownloadDirectoryMask))
+                        {
+                            Directory.CreateDirectory(tileDownloadDirectoryMask);
+                        }
+                        // Orthoimages are only downloaded once (directory must be deleted to force a new download)
+                        if (!Directory.Exists(stitchedTilesDirectoryMask))
+                        {
+                            Directory.CreateDirectory(stitchedTilesDirectoryMask);
+
+                            this.mainForm.UpdateChildTaskLabel($"Calculating Masking Image Tiles To Download");
+                            log.Info("Calculating Masking Image Tiles To Download");
+
+                            GenericOrthophotoSource orthophotoSourceInstance = null;
+
+                            imageTiles = cartoDBLightOrthomapSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
+                            orthophotoSourceInstance = cartoDBLightOrthomapSource;
+
+                            this.mainForm.UpdateChildTaskLabel($"Downloading Masking Image Tiles");
+                            log.Info("Downloading Masking Image Tiles");
+
+                            // Capture the progress of each thread
+                            var downloadThreadProgress = new Progress<DownloadThreadProgress>();
+                            downloadThreadProgress.ProgressChanged += DownloadThreadProgress_ProgressChanged;
+
+                            // Send the masking image tiles to the download manager
+                            await downloadManager.DownloadImageTiles(OrthophotoSource.CartoDBLight, imageTiles, downloadThreadProgress, tileDownloadDirectoryMask, orthophotoSourceInstance, Convert.ToInt16(settings.SimultaneousDownloads));
+
+                            // Check & Fix missing Masking Image Tiles using a PS1 PowerShell-Script
+                            log.Info("Check & Fix missing Masking Image Tiles using a PS1 PowerShell-Script");
+                            var proc = new Process
+                            {
+                                StartInfo = new ProcessStartInfo
+                                {
+                                    FileName = @"powershell.exe",
+                                    Arguments = $@"-NoProfile -ExecutionPolicy ByPass -File ""{tileDownloadDirectoryMask}\_imagetiles_download_catalog.ps1""",
+                                    UseShellExecute = false,
+                                    RedirectStandardOutput = false,
+                                    RedirectStandardError = false,
+                                    CreateNoWindow = false,
+                                    WorkingDirectory = $@"{tileDownloadDirectoryMask}\"
+                                }
+                            };
+
+                            proc.Start();
+                            // Wait for termination of tile fix, before go on with stiching image, if Stich Image is selected as next step (else going on without waiting)
+                            proc.WaitForExit();
+                            await Task.Delay(100);
+
+                            // Stitch Masking Image Tiles
+                            this.mainForm.UpdateChildTaskLabel($"Stitching Masking Image Tiles");
+                            log.Info("Stitching Masking Image Tiles");
+
+                            // Capture the progress of the tile stitcher
+                            var tileStitcherProgress = new Progress<TileStitcherProgress>();
+                            tileStitcherProgress.ProgressChanged += TileStitcherProgress_ProgressChanged;
+
+                            //#DEVL_k
+                            //await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectoryMask, stitchedTilesDirectoryMask, true, OrthophotoSource.CartoDBLight, tileStitcherProgress);
+                            await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectoryMask, stitchedTilesDirectoryMask, "", true, OrthophotoSource.CartoDBLight, tileStitcherProgress);
+
+                        }
+
+                    }
+
+                    // 2.Download of the image tiles
+                    // Download of the image tiles for the orthophoto source selected in the settings
                     if ((this.Settings.DownloadImageTiles.Value || (this.Settings.DownloadImageTiles.Value || (this.Settings.FixMissingTiles.Value) || (this.Settings.StitchImageTiles.Value) || (this.Settings.GenerateAIDAndTMCFiles.Value) || (this.Settings.RunGeoConvert.Value) || (this.Settings.RunTreesDetection.Value)) && this.mainForm.ActionsRunning)) 
                     {
                         // Do we have a directory for this afs grid square in our working directory?
-                        //var afsGridSquareDirectory = this.settings.WorkingDirectory + afs2GridSquare.Name;
-
                         if (!Directory.Exists(this.settings.WorkingDirectory + afs2GridSquare.Name))
                         {
                             Directory.CreateDirectory(this.settings.WorkingDirectory + afs2GridSquare.Name);
@@ -368,10 +453,10 @@ namespace AeroScenery
                         }
                     }
 
-                    // Download Imamge Tiles
+                    // Download Image Tiles
                     if (this.Settings.DownloadImageTiles.Value && this.mainForm.ActionsRunning)
                     {
-                        this.mainForm.UpdateChildTaskLabel("Calculating Image Tiles To Download");
+                        this.mainForm.UpdateChildTaskLabel($"Calculating Image Tiles To Download");
                         log.Info("Calculating Image Tiles To Download");
 
                         GenericOrthophotoSource orthophotoSourceInstance = null;
@@ -437,12 +522,11 @@ namespace AeroScenery
                                     imageTiles = guleSiderOrthophotoSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
                                     orthophotoSourceInstance = guleSiderOrthophotoSource;
                                     break;
-                                //#MOD_e
+                                //#MOD
                                 case OrthophotoSource.Mapbox:
                                     imageTiles = mapboxOrthophotoSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
                                     orthophotoSourceInstance = mapboxOrthophotoSource;
                                     break;
-                                //#MOD_b
                                 case OrthophotoSource.GoogleMaps:
                                     imageTiles = googleOrthomapSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
                                     orthophotoSourceInstance = googleOrthomapSource;
@@ -464,7 +548,7 @@ namespace AeroScenery
 
                         await imageTilesTask;
 
-                        this.mainForm.UpdateChildTaskLabel("Downloading Image Tiles");
+                        this.mainForm.UpdateChildTaskLabel($"Downloading Image Tiles");
                         log.Info("Downloading Image Tiles");
 
                         // Capture the progress of each thread
@@ -472,8 +556,7 @@ namespace AeroScenery
                         downloadThreadProgress.ProgressChanged += DownloadThreadProgress_ProgressChanged;
 
                         // Send the image tiles to the download manager
-                        //#MOD_g
-                        //await downloadManager.DownloadImageTiles(settings.OrthophotoSource.Value, imageTiles, downloadThreadProgress, tileDownloadDirectory, orthophotoSourceInstance);
+                        //#MOD (max. number of simultaneous downloads can be set in settings)
                         await downloadManager.DownloadImageTiles(settings.OrthophotoSource.Value, imageTiles, downloadThreadProgress, tileDownloadDirectory, orthophotoSourceInstance, Convert.ToInt16(settings.SimultaneousDownloads));
 
                         // Only finalise if we weren't cancelled
@@ -486,12 +569,17 @@ namespace AeroScenery
                                 this.dataRepository.CreateGridSquare(this.gridSquareMapper.ToModel(afs2GridSquare));
                                 this.mainForm.AddDownloadedGridSquare(afs2GridSquare);
                             }
+                            //DEVL_k
+                            else if (existingGridSquare.Fixed == 0)
+                            {
+                                existingGridSquare.Fixed = 1;
+                                dataRepository.UpdateGridSquare(existingGridSquare);
+                            }
                         }
-
 
                     }
 
-                    //#MOD_h
+                    //#MOD
                     // Check & Fix missing Image Tiles using a PS1 PowerShell-Script (PowerSell-Script has been written before, as a part of DownloadMagaer-Process)
                     if (this.Settings.FixMissingTiles.Value && this.mainForm.ActionsRunning) 
                     {
@@ -516,29 +604,28 @@ namespace AeroScenery
                         {
                             proc.WaitForExit();
                         }
-                        //#MOD_h
                         await Task.Delay(100);
                     }
 
-                    // Stitch Image Tiles
+                    // 3. Stitching Tiles to Images incl. optinal colorisation and water masking 
                     if (this.Settings.StitchImageTiles.Value && this.mainForm.ActionsRunning)
                     {
-                        this.mainForm.UpdateChildTaskLabel("Stitching Image Tiles");
+                        this.mainForm.UpdateChildTaskLabel($"Stitching Image Tiles");
                         log.Info("Stitching Image Tiles");
 
                         // Capture the progress of the tile stitcher
                         var tileStitcherProgress = new Progress<TileStitcherProgress>();
                         tileStitcherProgress.ProgressChanged += TileStitcherProgress_ProgressChanged;
 
-                        //#MOD_h
-                        //await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectory, stitchedTilesDirectory, true, tileStitcherProgress);
-                        await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectory, stitchedTilesDirectory, true, settings.OrthophotoSource.Value, tileStitcherProgress);
+                        //#DEVL_k (settings.OrthophotoSource.Value and tileDownloadDirectoryMask added)
+                        await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectory, stitchedTilesDirectory, stitchedTilesDirectoryMask, true, settings.OrthophotoSource.Value, tileStitcherProgress);
                     }
 
+                    // 4. Generate AFS Metadata Files (incl. optional working structure for convertion for mobile devices)
                     // Generate AID and TMC Files
                     if (this.Settings.GenerateAIDAndTMCFiles.Value && this.mainForm.ActionsRunning)
                     {
-                        this.mainForm.UpdateChildTaskLabel("Generating AFS Metadata Files");
+                        this.mainForm.UpdateChildTaskLabel($"Generating AFS Metadata Files");
                         log.Info("Generating AFS Metadata Files");
 
                         // Capture the progress of the tile stitcher
@@ -547,72 +634,34 @@ namespace AeroScenery
 
 
                         // Generate AID files for the image tiles
+                        
                         await afsFileGenerator.GenerateAFSFilesAsync(afs2GridSquare, stitchedTilesDirectory, GetTileDownloadDirectory(afsGridSquareDirectory), afsFileGeneratorProgress);
 
                     }
 
-
-                    //#MOD_i
+                    //#MOD
                     // Create additional Working Folder incl. tmc & bat file for conversion of images to ttc for mobile (to be run manually after GeoConvert process)
                     if (this.Settings.GenerateAIDAndTMCFiles.Value && this.settings.CreateAddForMobile.Value && this.mainForm.ActionsRunning)
                     {
-                        var afsAddForMobileWorkingDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + @"\\" + this.settings.ZoomLevel + "-geoconvert-ttc-mobile";
-
+                        var afsAddForMobileWorkingDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + @"\" + this.settings.ZoomLevel + "-geoconvert-ttc-mobile";
+     
                         if (!Directory.Exists(afsAddForMobileWorkingDirectory))
                         {
                             Directory.CreateDirectory(afsAddForMobileWorkingDirectory);
 
-                            if (!Directory.Exists(afsAddForMobileWorkingDirectory + @"\\images"))
-                            {
-                                Directory.CreateDirectory(afsAddForMobileWorkingDirectory + @"\\images");
-                            }
+                            //#DEVL_k
+                            string inputFolderImages = $"./{this.settings.ZoomLevel}-geoconvert-raw/";
+                            string outputFolderTTC = $"./{this.settings.ZoomLevel}-geoconvert-ttc-mobile/";
 
-                            using (StreamWriter text = new StreamWriter($@"{afsAddForMobileWorkingDirectory}\content_converter_config_mobile.bat"))
-                            {
-                                text.WriteLine("start content_converter_config_mobile.tmc");
-                            }
-                            using (StreamWriter text = new StreamWriter($@"{afsAddForMobileWorkingDirectory}\content_converter_config_mobile.tmc"))
-                            {
-                                text.WriteLine("<[file][][]");
-                                text.WriteLine("    <[tm_config][][]");
-                                text.WriteLine();
-                                text.WriteLine("        <[string8][base_output_folder][./]>");
-                                text.WriteLine("        <[string8][texture_base_type][ttc_etc2]>");
-                                text.WriteLine();
-                                text.WriteLine("        <[list_tm_config_folderpair][folder_pairs][]");
-                                text.WriteLine("            <[tm_config_folderpair][element][1]");
-                                text.WriteLine($"                <[string8][input_folder][../{this.settings.ZoomLevel}-geoconvert-raw/]>");
-                                text.WriteLine("                <[string8][output_folder][./images/]>");
-                                text.WriteLine("                <[string8][type][place]>");
-                                text.WriteLine("                <[uint32][recurse_level][0]>");
-                                text.WriteLine("                <[list_string8][file_types][tsc tgi jpg bmp tif png toc]>");
-                                text.WriteLine("                <[list_tm_texture_settings][texture_settings][]");
-                                text.WriteLine("                    <[tm_config_folderpair][element][0]");
-                                text.WriteLine("                        <[list_string8][regex][.*]>");
-                                text.WriteLine("                        <[bool][compressed][true]>");
-                                text.WriteLine("                        <[bool][compress_file][true]>");
-                                text.WriteLine("                        <[bool][flip_vertical][true]>");
-                                text.WriteLine("                        <[bool][mipmaps][true]>");
-                                text.WriteLine("                        <[uint][max_size][2048]>");
-                                text.WriteLine("                        <[bool][make_square][true]>");
-                                text.WriteLine("                    >");
-                                text.WriteLine("                >");
-                                text.WriteLine("                <[tm_config_geometry_settings][geometry_settings][]");
-                                text.WriteLine("                    <[float32][collision_mesh_quality][0]>");
-                                text.WriteLine("                >");
-                                text.WriteLine("            >");
-                                text.WriteLine("        >");
-                                text.WriteLine("    >");
-                                text.WriteLine(">");
+                            var textTMCImages = new TMCImagesFile(inputFolderImages, outputFolderTTC);
+                            string outputFilePath = $@"{GetTileDownloadDirectory(afsGridSquareDirectory)}\content_converter_config_mobile.tmc";
+                            File.WriteAllText(outputFilePath, textTMCImages.GeneratedContent);
 
-                            }
                         }
                     }
 
-                    //#MOD_f
-                    // Writes a PS1 PowerShell Script for manual download of OSM data of the selected gridsquare, this even if no other action is selected
-                    //#MOD_h
-                    //if (this.mainForm.ActionsRunning)
+                    //#MOD_k
+                    // 5. Download OSM Data from opemstreetmap.org
                     if (this.settings.DownloadOsmData.Value && this.mainForm.ActionsRunning)
                     {
                         // Create subdirectory for osm data, if it not allready existing
@@ -620,9 +669,9 @@ namespace AeroScenery
                         {
                             Directory.CreateDirectory(afsGridSquareDirectory + "/osm");
                         }
-                        log.InfoFormat($"Writing in addition a PowerShell Script for manual download of OSM data for the tile {afs2GridSquare.Name}");
 
-                        var osmOverpassUrl = "https://overpass-api.de/api/map?bbox=";
+                        this.mainForm.UpdateChildTaskLabel($"Downloading OSM Data");
+                        log.Info($"Downloading OSM Data for the tile {afs2GridSquare.Name}");
 
                         var boarderCorr = 0.0005; // Correction of the boarder box to avoid flickering houses (actually fix value)
                         var eastLngCorr = afs2GridSquare.EastLongitude - boarderCorr;
@@ -630,138 +679,242 @@ namespace AeroScenery
                         var northLatCorr = afs2GridSquare.NorthLatitude - boarderCorr;
                         var southLatCorr = afs2GridSquare.SouthLatitude + boarderCorr;
 
-                        string eastLng = eastLngCorr.ToString("#.####", CultureInfo.InvariantCulture);
-                        string westLng = westLngCorr.ToString("#.####", CultureInfo.InvariantCulture);
-                        string northLat = northLatCorr.ToString("#.####", CultureInfo.InvariantCulture);
-                        string southLat = southLatCorr.ToString("#.####", CultureInfo.InvariantCulture);
+                        string eastLngText = eastLngCorr.ToString("#.####", CultureInfo.InvariantCulture);
+                        string westLngText = westLngCorr.ToString("#.####", CultureInfo.InvariantCulture);
+                        string northLatText = northLatCorr.ToString("#.####", CultureInfo.InvariantCulture);
+                        string southLatText = southLatCorr.ToString("#.####", CultureInfo.InvariantCulture);
 
-                        string bbox = $@"{westLng},{southLat},{eastLng},{northLat}";
+                        string boundingBox = $@"{westLngText},{southLatText},{eastLngText},{northLatText}";
 
-                        using (StreamWriter text = new StreamWriter($@"{afsGridSquareDirectory}\osm\_download_osm_map.ps1"))
+                        string overpassApiUrl = "https://overpass-api.de/api/map"; 
+                        string outputDirectory = $@"{afsGridSquareDirectory}\osm\";  
+                        string tileName = $@"{afs2GridSquare.Name}"; 
+
+                        var downloader = new OSMDataDownloader(overpassApiUrl, outputDirectory, tileName, boundingBox);
+
+                        try
                         {
-                            text.WriteLine("Set-ExecutionPolicy Bypass -scope Process -Force");
-                            text.WriteLine();
-                            text.WriteLine("$client = new-object System.Net.WebClient");
-                            text.WriteLine();
-                            text.WriteLine($@"Write-Host 'Proceeding download of the OSM Data from OpenStreetMap (Overpass API):'");
-                            text.WriteLine($@"Write-Host 'Download of the file ""{afs2GridSquare.Name}.osm"" for the selected tile'");
-                            text.WriteLine($@"Write-Host ''");
-                            text.WriteLine($@"Write-Host 'Please wait ...'");
-                            text.WriteLine(($@"$client.DownloadFile('{osmOverpassUrl}{bbox}','{afsGridSquareDirectory}\osm\{afs2GridSquare.Name}.osm')"));
-                            text.WriteLine();
-                            text.WriteLine($@"Write-Host ''");
-                            text.WriteLine($@"Write-Host 'Download finsihed and saved in ""{afsGridSquareDirectory}\osm\...""'");
+                            // Start task to perform asynchronous download
+                            await Task.Run(() => downloader.DownloadOSMData());
+                            this.mainForm.UpdateChildTaskLabel($"Downloading OSM Data completed");
+                            log.Info("Downloading OSM Data completed");
 
-                            if (this.settings.TreesDetectionQuit == false) 
+                            if ((this.settings.DownloadElevationData == false) && (this.mainForm.ActionsRunning)) 
                             {
-                                text.WriteLine($@"Write-Host ''");
-                                text.WriteLine($@"Read-Host -Prompt 'Press ENTER to quit'");
+                                var downloadActionProgressPercentage = this.mainForm.CurrentActionProgressPercentage;
+                                int downloadOSMDataProgressPercentage = (i + 1) * 100 / this.mainForm.SelectedAFS2GridSquares.Count();
+
+                                if (downloadOSMDataProgressPercentage > downloadActionProgressPercentage)
+                                {
+                                    this.mainForm.CurrentActionProgressPercentage = downloadOSMDataProgressPercentage;
+                                }
+
+                                var existingGridSquare = this.dataRepository.FindGridSquare(afs2GridSquare.Name);
+
+                                if (existingGridSquare == null)
+                                {
+                                    this.dataRepository.CreateGridSquare(this.gridSquareMapper.ToModel(afs2GridSquare));
+                                    this.mainForm.AddDownloadedGridSquare(afs2GridSquare);
+                                }
                             }
                         }
-
-                        //#MOD_h
-                        var proc = new Process
+                        catch (Exception ex)
                         {
-                            StartInfo = new ProcessStartInfo
-                            {
-                                FileName = @"powershell.exe",
-                                Arguments = $@"-NoProfile -ExecutionPolicy ByPass -File ""{afsGridSquareDirectory}\osm\_download_osm_map.ps1""",
-                                UseShellExecute = false,
-                                RedirectStandardOutput = false,
-                                RedirectStandardError = false,
-                                CreateNoWindow = false,
-                                WorkingDirectory = $@"{afsGridSquareDirectory}\osm\"
-                            }
-                        };
-
-                        proc.Start();
-                        //proc.WaitForExit();
+                            // Error handling
+                            this.mainForm.UpdateChildTaskLabel($"Error while downloading OSM Data (refer to Log)");
+                            log.Info($"Error while downloading OSM data for the tile {afs2GridSquare.Name} : {ex.Message}");
+                        }
 
                     }
 
-                    //#MOD_h
-                    // DOwnload of the masking images for TreesDetection if "Mask image (optional)" is selected
-                    if (this.Settings.RunTreesDetectionMask.Value && this.Settings.RunTreesDetection.Value && this.mainForm.ActionsRunning) 
+                    //#MOD_k
+                    // 5. Download Elevation Data
+                    // ...
+                    if ((settings.OpenTopographyApiKey == "") && (this.settings.DownloadElevationData == true) && (this.mainForm.ActionsRunning))
                     {
-                        var afsGridSquareDirectoryMask = this.settings.WorkingDirectory + afs2GridSquare.Name;
+                        var messageBox = new CustomMessageBox("API Key need to be add in Settings to access OpenTopography for the download of elevation data of the selected area).\r\r Abort download ...",
+                        "AeroScenery",
+                        MessageBoxIcon.Warning);
 
-                        var tileDownloadDirectoryMask = afsGridSquareDirectoryMask + @"\c-mask\" + this.settings.ZoomLevel + @"\";
-                        var stitchedTilesDirectoryMask = afsGridSquareDirectoryMask + @"\c-mask\" + +this.settings.ZoomLevel + @"-stitched\";
-
-                        // Do we have a directory for the afs grid square and this orthophoto source
-                        if (!Directory.Exists(tileDownloadDirectoryMask))
+                        messageBox.ShowDialog();
+                    }
+                    //else if ((this.settings.DownloadElevationData == true) && (this.mainForm.ActionsRunning) && ((this.mainForm.SelectedAFS2GridSquares.Count() != 2) || (i != 1)))
+                    else if ((this.settings.DownloadElevationData == true) && (this.mainForm.ActionsRunning))
                         {
-                            Directory.CreateDirectory(tileDownloadDirectoryMask);
+                        GdalBase.ConfigureAll();
+                        Gdal.AllRegister();
+
+                        this.mainForm.UpdateChildTaskLabel($"Downloading Elevation Data");
+                        log.Info($"Downloading Elevation Data for the tile {afs2GridSquare.Name}");
+
+                        //
+                        //string meshResolution = settings.OpenTopographyDataSet.Split(' ')[0];
+                        string meshResolution = Regex.Match(settings.OpenTopographyDataSet, @"\b\d{2,3}m\b").Value.TrimEnd('m');
+                        string gridSquareLevel = afs2GridSquare.Name.Split('_')[1];
+
+                        string openTopographyAPIUrl = "https://portal.opentopography.org/API/globaldem?demtype=";
+                        if (settings.OpenTopographyDataSet.Substring(0, 4) == "USGS")
+                        {
+                            openTopographyAPIUrl = "https://portal.opentopography.org/API/usgsdem?datasetName=";
+                        }
+                        //string openTopographyDemType = settings.OpenTopographyDataSet.Substring(0, settings.OpenTopographyDataSet.IndexOf(" "));
+                        string openTopographyDemType = settings.OpenTopographyDataSet.Split(' ')[0];
+
+                        //
+                        string elevationDirectory = afsGridSquareDirectory + "/elevation-" + openTopographyDemType;
+                        // Create subdirectory for elevation data, if it not allready existing
+                        if (!Directory.Exists(elevationDirectory))
+                        {
+                            Directory.CreateDirectory(elevationDirectory);
+                        }
+                        if (!Directory.Exists(elevationDirectory + "/geoconvert-tth"))
+                        {
+                            Directory.CreateDirectory(elevationDirectory + "/geoconvert-tth");
+                        }
+                        var outputDirectory = elevationDirectory + "/input_aerial_images";
+                        if (!Directory.Exists(outputDirectory))
+                        {
+                            Directory.CreateDirectory(outputDirectory);
                         }
 
-                        if (!Directory.Exists(stitchedTilesDirectoryMask))
+                        //...
+                        if (String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
                         {
-                            Directory.CreateDirectory(stitchedTilesDirectoryMask);
+                            var messageBox = new CustomMessageBox("Please set the location of the Aerofly SDK in Settings to be able to use Geoconvert for converting Meshes",
+                                "AeroScenery",
+                                MessageBoxIcon.Warning);
+
+                            messageBox.ShowDialog();
                         }
-
-                        this.mainForm.UpdateChildTaskLabel("Calculating Masking Image Tiles To Download");
-                        log.Info("Calculating Masking Image Tiles To Download");
-
-                        GenericOrthophotoSource orthophotoSourceInstance = null;
-
-                        imageTiles = cartoDBLightOrthomapSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
-                        orthophotoSourceInstance = cartoDBLightOrthomapSource;
-
-
-                        this.mainForm.UpdateChildTaskLabel("Downloading Masking Image Tiles");
-                        log.Info("Downloading Masking Image Tiles");
-
-                        // Capture the progress of each thread
-                        var downloadThreadProgress = new Progress<DownloadThreadProgress>();
-                        downloadThreadProgress.ProgressChanged += DownloadThreadProgress_ProgressChanged;
-
-                        // Send the masking image tiles to the download manager
-                        await downloadManager.DownloadImageTiles(OrthophotoSource.CartoDBLight, imageTiles, downloadThreadProgress, tileDownloadDirectoryMask, orthophotoSourceInstance, Convert.ToInt16(settings.SimultaneousDownloads));
-
-                        // Check & Fix missing Masking Image Tiles using a PS1 PowerShell-Script
-                        log.Info("Check & Fix missing Masking Image Tiles using a PS1 PowerShell-Script");
-                        var proc = new Process
+                        else
                         {
-                            StartInfo = new ProcessStartInfo
+                            // Creates and Copy subfolders 'shader_dx11\' & 'texures\' from the GeoConvert, else GeoCDonvert wil not work outside of the installation-path 
+                            if (!Directory.Exists(elevationDirectory + "/shader_dx11"))
                             {
-                                FileName = @"powershell.exe",
-                                Arguments = $@"-NoProfile -ExecutionPolicy ByPass -File ""{tileDownloadDirectoryMask}\_imagetiles_download_catalog.ps1""",
-                                UseShellExecute = false,
-                                RedirectStandardOutput = false,
-                                RedirectStandardError = false,
-                                CreateNoWindow = false,
-                                WorkingDirectory = $@"{tileDownloadDirectoryMask}\"
+                                Directory.CreateDirectory(elevationDirectory + "/shader_dx11");
+                                foreach (string newPath in Directory.GetFiles(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/shader_dx11", "*.*", SearchOption.AllDirectories))
+                                {
+                                    File.Copy(newPath, newPath.Replace(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/shader_dx11", elevationDirectory + "/shader_dx11"), true);
+                                }
                             }
-                        };
+                            if (!Directory.Exists(outputDirectory + "/texture"))
+                            {
+                                Directory.CreateDirectory(elevationDirectory + "/texture");
+                                foreach (string newPath in Directory.GetFiles(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/texture", "*.*", SearchOption.AllDirectories))
+                                {
+                                    File.Copy(newPath, newPath.Replace(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/texture", elevationDirectory + "/texture"), true);
+                                }
+                            }
+                        }
 
-                        proc.Start();
-                            // Wait for termination of tile fix, before go on with stiching image, if Stich Image is selected as next step (else going on without waiting)
-                        proc.WaitForExit();
-                        //#MOD_h
-                        await Task.Delay(100);
-
+                        //
+                        double boarderCorr = 0.0010 * (15 - Convert.ToInt16(gridSquareLevel)); // Enlarging of the boarder box for a small overlapping of the GeoTiff-images to avoid bugs at the boarder depending of the ZoomLevel
+                        // double eastLng, westLng, northLat, southLat;
+                        //if ((this.mainForm.SelectedAFS2GridSquares.Count() != 2) || (i == 0)) //..
+                        //{
+                            double eastLng = afs2GridSquare.EastLongitude;
+                            double westLng = afs2GridSquare.WestLongitude;
+                            double northLat = afs2GridSquare.NorthLatitude;
+                            double southLat = afs2GridSquare.SouthLatitude;
+                        //}
+                        //else //..
+                        //{
+                        //    eastLng = selectedTilesEastLongitude;
+                        //    westLng = selectedTilesWestLongitude;
+                        //    northLat = selectedTilesNorthLatitude;
+                        //    southLat = selectedTilesSouthLatitude;
                         //}
 
-                        // Stitch Masking Image Tiles
-                        this.mainForm.UpdateChildTaskLabel("Stitching Masking Image Tiles");
-                        log.Info("Stitching Masking Image Tiles");
+                        string eastLngText = eastLng.ToString("#.#######", CultureInfo.InvariantCulture);
+                        string westLngText = westLng.ToString("#.#######", CultureInfo.InvariantCulture);
+                        string northLatText = northLat.ToString("#.#######", CultureInfo.InvariantCulture);
+                        string southLatText = southLat.ToString("#.#######", CultureInfo.InvariantCulture);
 
-                        // Capture the progress of the tile stitcher
-                        var tileStitcherProgress = new Progress<TileStitcherProgress>();
-                        tileStitcherProgress.ProgressChanged += TileStitcherProgress_ProgressChanged;
+                        string afsBoundingBox = $@"south={southLatText}&north={northLatText}&west={westLngText}&east={eastLngText}";
 
-                        //#MOD_h
-                        //await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectoryMask, stitchedTilesDirectoryMask, true, tileStitcherProgress);
-                        await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectoryMask, stitchedTilesDirectoryMask, true, OrthophotoSource.CartoDBLight, tileStitcherProgress);
+                        eastLng = eastLng + boarderCorr;
+                        westLng = westLng - boarderCorr;
+                        northLat = northLat + boarderCorr;
+                        southLat = southLat - boarderCorr;
 
+                        eastLngText = eastLng.ToString("#.######", CultureInfo.InvariantCulture);
+                        westLngText = westLng.ToString("#.######", CultureInfo.InvariantCulture);
+                        northLatText = northLat.ToString("#.######", CultureInfo.InvariantCulture);
+                        southLatText = southLat.ToString("#.######", CultureInfo.InvariantCulture);
+
+                        string demBoundingBox = $@"south={southLatText}&north={northLatText}&west={westLngText}&east={eastLngText}";
+
+                        string tileName = $@"dem_area_{meshResolution}m";
+                        string demPath = Path.Combine(outputDirectory, tileName + ".tif");
+                        string demPathTemp = Path.Combine(outputDirectory,tileName + "_temp.tif");
+
+                        // Creates *.bat File for starting GeoConvert-Process (elevation data processing)
+                        using (StreamWriter textBatConvert = new StreamWriter($@"{elevationDirectory}/mesh_conv.bat"))
+                        {
+                            //text.WriteLine($@"start /D {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\ aerofly_fs_2_geoconvert.exe {Settings.WorkingDirectory}map_00_area_data/mesh_conv.tmc");
+                            textBatConvert.WriteLine($@"start {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\aerofly_fs_2_geoconvert.exe mesh_conv.tmc");
+                        }
+
+                        // Creates *.tmc File needed for the GeoConvert-Process (depending of meshresolution and gridSquareLevel)
+                        string inputFolderImages = $"./input_aerial_images/";
+                        string outputFolderTTC = $"./geoconvert-tth/";
+                        var textTMCImages = new TMCElevationFile(inputFolderImages, outputFolderTTC, afsBoundingBox, meshResolution, gridSquareLevel); // this.settings.ZoomLevel
+                        string outputFilePath = $@"{elevationDirectory}\mesh_conv.tmc";
+                        File.WriteAllText(outputFilePath, textTMCImages.GeneratedContent);
+
+                        //
+                        var downloader = new ElevationDataDownloader(openTopographyAPIUrl, outputDirectory, tileName + "_temp", openTopographyDemType, demBoundingBox, settings.OpenTopographyApiKey);
+                        try
+                        {
+                            // Task starten, um den Download asynchron durchzuführen
+                            await Task.Run(() =>
+                            {
+                                downloader.DownloadElevationData();
+                                var loader = new GeoTiffLoader();
+                                _terrainData = loader.Load(demPathTemp);
+                                GeoTiffExporter.SaveCutoutAsGeoTiff(_terrainData.HeightMap, _terrainData, _terrainData.OriginLongitude, _terrainData.OriginLatitude, demPath);
+                                File.Delete(demPathTemp );
+
+                            });
+
+                            // Creates *.aid-File for running GeoConvert-Process (elevation data processing)
+                            outputFilePath = $@"{outputDirectory}\dem_area_{meshResolution}m.aid";
+                            var textAIDElevation = new AIDElevationFile(_terrainData.OriginLongitude, _terrainData.OriginLatitude, _terrainData.PixelSizeX, _terrainData.PixelSizeY, meshResolution);
+                            File.WriteAllText(outputFilePath, textAIDElevation.GeneratedContent);
+
+                            this.mainForm.UpdateChildTaskLabel($"Download of Elevation Data completed");
+                            log.Info("Downloading and fixing of Elevation Data completed");
+
+                            var downloadActionProgressPercentage = this.mainForm.CurrentActionProgressPercentage;
+                            int downloadElevationDataProgressPercentage = (i + 1) * 100 / this.mainForm.SelectedAFS2GridSquares.Count();
+
+                            if (downloadElevationDataProgressPercentage > downloadActionProgressPercentage)
+                            {
+                                this.mainForm.CurrentActionProgressPercentage = downloadElevationDataProgressPercentage;
+                            }
+
+                            var existingGridSquare = this.dataRepository.FindGridSquare(afs2GridSquare.Name);
+
+                            if (existingGridSquare == null)
+                            {
+                                this.dataRepository.CreateDataSquare(this.gridSquareMapper.ToModel(afs2GridSquare));
+                                this.mainForm.AddDataGridSquare(afs2GridSquare);
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            // Fehlerbehandlung
+                            this.mainForm.UpdateChildTaskLabel($"Error while downloading Elevation Data (refer to Log)");
+                            log.Info($"Error while downloading and transforming Elevation Data for the tile {afs2GridSquare.Name} : {ex.Message}");
+                        }
                     }
 
                     i++;
 
                 }
 
-                //#MOD_h (End of)
-
+                // 6. Run Geoconvert Process
                 // If required Move on to running Geoconvert for each tile (Image-Processing)
                 if (this.settings.RunGeoConvert.Value && this.mainForm.ActionsRunning)
                 {
@@ -769,40 +922,18 @@ namespace AeroScenery
                 }
 
 
-
-
-
-                //#MOD_g
-                // Adding Treesdetection from chrispriv (C) at this place 
+                //#MOD
+                // 7. Run Trees Detection 
+                // Running external App for TreesDetection by chrispriv (C) with optional OSM based masking of the images 
                 if (this.Settings.RunTreesDetection.Value && this.mainForm.ActionsRunning)
                 {
+                    this.mainForm.UpdateChildTaskLabel($"Running Trees Detection");
+                    log.Info($"Running Trees Detection");
+                    //#TRY_k   
+                    await Task.Delay(50);
                     this.StartTreesDetectionProcess();
                 }
 
-                //#MOD_h
-                // Writes in addition a PS1 PowerShell Script for manual download of GeoTiff-images provided from OpenTopography (30m) for the selected area (API Key needed to be add in Settings), this even if no other action is selected
-                if ((settings.OpenTopographyApiKey == "") && (this.settings.DownloadElevationData == true) && (this.mainForm.ActionsRunning))
-                {
-                    var messageBox = new CustomMessageBox("API Key need to be add in Settings to access OpenTopography for the download of elevation data of the selected area).\r\r Abort download ...",
-                    "AeroScenery",
-                    MessageBoxIcon.Warning);
-
-                    messageBox.ShowDialog();
-                }
-                else if ((this.settings.DownloadElevationData == true) && (this.mainForm.ActionsRunning))
-                {
-                    //#MOD_h
-                    if (this.settings.QGISDirectory == "") 
-                    {
-                        var messageBox = new CustomMessageBox("Path to 'QGIS-bin Folder (incl. GDLA)' has to be set in Settings (usually 'C:\\OSGeo4W\\bin\\'). \rThan the GeoTIFF images are automatically decompressed and the peaks near the coast are removed.\r\r Continue anyway with manual handling using QGIS ...",
-                        "AeroScenery",
-                        MessageBoxIcon.Warning);
-
-                        messageBox.ShowDialog();
-                    }
-                                        
-                    RunDownloadElevationDataProcess(selectedTilesEastLongitude, selectedTilesWestLongitude, selectedTilesNorthLatitude, selectedTilesSouthLatitude);
-                }
 
                 //#Nickohod (not implemented)
                 // Delete Stitched Immage Tiles
@@ -825,6 +956,11 @@ namespace AeroScenery
                 //    this.mainForm.UpdateChildTaskLabel("Prompting To Install Scenery");
 
                 //}
+
+                //#TRY_k
+                //this.mainForm.UpdateChildTaskLabel($"Actions Completed");
+
+
 
                 this.ActionsComplete();
 
@@ -955,7 +1091,7 @@ namespace AeroScenery
             }
         }
 
-        //#MOD_g
+        //#MOD
         public void StartTreesDetectionProcess()
         {
             if (this.mainForm.ActionsRunning)
@@ -968,7 +1104,6 @@ namespace AeroScenery
 
                     messageBox.ShowDialog();
                 }
-
                 else if ((this.settings.ZoomLevel != 16) && (this.settings.ZoomLevel != 15))
                 {
                     var messageBox = new CustomMessageBox("The Image Source does not have the Zoom Level 16 or 15: \r Please download the images with Zoom Level 16 2.389 meters/pixel or 15 4.777m",
@@ -985,17 +1120,6 @@ namespace AeroScenery
 
                     messageBox.ShowDialog();
                 }
-                //#MOD_h
-                /*
-                else if (settings.AFSLevelsToGenerate.Count == 0)
-                {
-                    var messageBox = new CustomMessageBox("Please choose one or more AFS levels to generate before running TreesDetection",
-                        "AeroScenery",
-                        MessageBoxIcon.Warning);
-
-                    messageBox.ShowDialog();
-                }
-                */
                 else if (settings.MaximumStitchedImageSize > 80) 
                 {
                     var messageBox = new CustomMessageBox("TreesDetection supports only 'max. tiles per stiched images' up to 80 (20'480 x 20'480 px) in Settings",
@@ -1004,17 +1128,6 @@ namespace AeroScenery
 
                     messageBox.ShowDialog();
                 }
-                //#MOD_h -not needed anymore
-                /*
-                else if (settings.OrthophotoSource == OrthophotoSource.CartoDBLight)
-                {
-                    var messageBox = new CustomMessageBox("TreesDetection has to be run on the satelite images and not on the maps used for masking",
-                        "AeroScenery",
-                        MessageBoxIcon.Warning);
-
-                    messageBox.ShowDialog();
-                }
-                */
                 else
                 {
                     if (this.mainForm.SelectedAFS2GridSquares.Count > 4)
@@ -1025,19 +1138,7 @@ namespace AeroScenery
 
                         messageBox.ShowDialog();
                     }
-                    /*
-                    if (this.settings.ZoomLevel == 15)
-                    {
-                        var messageBox = new CustomMessageBox("You are operating TreesDetection with Zoom Level 15. For better results use Level 16.\r\r Continue anyway ...",
-                            //#MOD_h
-                            //"The selected Density Level in Settings will automatically be adapted. \r\r Continue anyway ...",
-                            "AeroScenery",
-                            MessageBoxIcon.Information);
 
-                        messageBox.ShowDialog();
-                    }
-                    */
-                    //#MOD_h
                     if ((settings.TreesDetectionAltitudeCheck.Value) && (settings.OpenTopographyApiKey == "")) 
                     {
                         var messageBox = new CustomMessageBox("For altitude check of TreesDetection an API Key need to be add in Settings to access OpenTopography).\r\r Continue anyway ...",
@@ -1052,7 +1153,7 @@ namespace AeroScenery
             }
         }
 
-        //#MOD_g
+        //#MOD
         public void RunTreesDetectionProcess()
         {
 
@@ -1067,14 +1168,18 @@ namespace AeroScenery
                 {
                     var currentGrideSquareMessage = String.Format("Working on AFS Grid Square {0} of {1}", i + 1, this.mainForm.SelectedAFS2GridSquares.Count());
                     this.mainForm.UpdateParentTaskLabel(currentGrideSquareMessage);
+                    //TRY_k
+                    Application.DoEvents(); // UI wird sofort aktualisiert
                     log.Info(currentGrideSquareMessage);
 
                     // Do we have a directory for this afs grid square in our working directory?
                     var afsGridSquareDirectory = this.settings.WorkingDirectory + afs2GridSquare.Name;
 
-                    //#MOD_h
+                    //#MOD
                     // Writes in addition a PS1 PowerShell Script for download of GeoTiff-images provided from OpenTopography of the selected gridsquare for Altitude Check (API Key needed to be add in Settings)
-                    if ((this.mainForm.ActionsRunning) && (settings.OpenTopographyApiKey != "") && ((settings.TreesDetectionAltitudeCheck.Value)))
+
+                    //if ((this.mainForm.ActionsRunning) && (settings.OpenTopographyApiKey != "") && ((settings.TreesDetectionAltitudeCheck.Value)))
+                    if ((settings.OpenTopographyApiKey != "") && ((settings.TreesDetectionAltitudeCheck.Value)))
                     {
                         // Create subdirectory '\qgis' for elevation data, if it not allready existing
                         var treesElevationDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-trees-elevation\";
@@ -1145,7 +1250,11 @@ namespace AeroScenery
                             };
 
                             proc.Start();
-                            proc.WaitForExit();
+                            //#MOD_k
+                            if (this.settings.RunTreesDetectionDetection == true) 
+                            {
+                                proc.WaitForExit();
+                            }
                         }
                     }
 
@@ -1156,13 +1265,43 @@ namespace AeroScenery
                         var maskedImagesDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-trees-masked\";
                         var treesDetectedDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-trees\";
 
+                        //#TRY_k
+                        var downloadActionProgressPercentage = this.mainForm.CurrentActionProgressPercentage;
+                        int downloadElevationDataProgressPercentage = (i + 1) * 100 / this.mainForm.SelectedAFS2GridSquares.Count();
+
+                        if (downloadElevationDataProgressPercentage > downloadActionProgressPercentage)
+                        {
+                            this.mainForm.CurrentActionProgressPercentage = downloadElevationDataProgressPercentage;
+                        }
+
+                        //#DEVL_k
+                        // Masks all png images within the stitchedImage directory using the masked images and saves them under maskedImages directory.
+                        if (this.settings.RunTreesDetectionMask == true)
+                        {
+                            log.Info("Masking of Image Tiles");
+                            //#WORKING_k
+                            //int maskingRange = Math.Max((this.settings.ZoomLevel ?? 0) - 15,0);
+                            //maskingRange = (int)Math.Pow(2, maskingRange);
+                            int maskingRange = 1;
+                            OsmMaskingBatchProcessor.RunMaskingBatch(stitchedImageDirectory, maskingImagesDirectory, maskedImagesDirectory, maskingRange);
+                        }
+
+                        // Skip running external TreesDetection if "Generate TSC/TOC Files" not selected (means masking images only)
+                        if (this.settings.RunTreesDetectionDetection == false) 
+                        {
+                            continue;
+                        }
+
+                        // First build the chain of arguments (command line) for running external TreesDetection 
                         string argTreesDetection;
+
                         // Assign parameter for Installation Path for FS2TreesDetection containing the FS2TreesDetection.config-file
                         string argTreesDetectionConfig = "/p:" + this.settings.TreesDetectionDirectory + " ";
 
                         // Assign parameter Inputpath containing the aerial images for detection, depending if masked images are available (just check if folder exists)
                         string argTreesDetectionInput = "/i:";
-                        if (Directory.Exists(maskedImagesDirectory) && (this.settings.RunTreesDetectionMask == false)) 
+                        //if (Directory.Exists(maskedImagesDirectory) && (this.settings.RunTreesDetectionMask == false)) 
+                        if (Directory.Exists(maskedImagesDirectory))
                         {
                             argTreesDetectionInput = argTreesDetectionInput + maskedImagesDirectory + " ";
                         }
@@ -1171,6 +1310,8 @@ namespace AeroScenery
                             argTreesDetectionInput = argTreesDetectionInput + stitchedImageDirectory + " ";
                         }
 
+                        /* 
+                        // Not used anymore, because masking is done before running TreesDetection
                         // Assign parameters containing the map images as a base for masking the aerial images and the path for saving the masked images (without ':' will not generate masked images) 
                         string argTreesDetectionMap = "/m ";
                         string argTreesDetectionMasked = "/s ";
@@ -1184,11 +1325,16 @@ namespace AeroScenery
                                     Directory.CreateDirectory(maskedImagesDirectory);
                                 }
 
+                                //#WORKING_k
+                                //new OsmBasedAlphaMasking()
+                                //.OsmAlphaImageMasking("baseImagePfad.png", "osmImagePfad.png")
+                                //.Save("maskedImagePfad.png", ImageFormat.Png);
 
                                 argTreesDetectionMap = "/m:" + maskingImagesDirectory + " ";
                                 argTreesDetectionMasked = "/s:" + maskedImagesDirectory + " ";
                             }
                         }
+                        */
 
                         // Assign parameter for saving the detected trees in *.toc file with corresponding *.tsc file 
                         string argTreesDetectionOutput = "/o ";
@@ -1202,17 +1348,14 @@ namespace AeroScenery
                             argTreesDetectionOutput = "/o:" + GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-trees\ "; ;
                         }
 
-                        //#MOD_i
+                        //#MOD
                         // Assign parameter concerning the density 
-                        //double treesDetectionDensity = Convert.ToDouble(this.settings.TreesDetectionDensity);
-                        //string argTreesDetectionDensity = "/d:" + Convert.ToString(treesDetectionDensity + " ");
                         string argTreesDetectionDensity = "/d:" + this.settings.TreesDetectionDensity.ToString() + " ";
 
-                        //#MOD_h
+                        //#MOD
                         string argGridSquareBoundaryBox = "/b:" + afs2GridSquare.WestLongitude.ToString("#.#######", CultureInfo.InvariantCulture) + "," + afs2GridSquare.NorthLatitude.ToString("#.#######", CultureInfo.InvariantCulture) + ",";
                         argGridSquareBoundaryBox = argGridSquareBoundaryBox + afs2GridSquare.EastLongitude.ToString("#.#######", CultureInfo.InvariantCulture) + "," + afs2GridSquare.SouthLatitude.ToString("#.#######", CultureInfo.InvariantCulture) + " ";
 
-                        //#MOD_h
                         string argTreesDetectionAltitudeCheck = "";
                         string argTreesDetectionAltitudeDirectory = "";
                         if ((this.settings.RunTreesDetectionDetection == true) && (this.settings.TreesDetectionAltitudeCheck == true))
@@ -1221,7 +1364,7 @@ namespace AeroScenery
                             argTreesDetectionAltitudeDirectory = "/e:" + GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-trees-elevation\ "; 
                         }
 
-                        //#MOD_i
+                        //#MOD
                         string argTreesPresetIndex = "";
                         if (this.settings.TreesPresetIndex != null) 
                         {
@@ -1248,11 +1391,9 @@ namespace AeroScenery
                             argTreesDetectionQuit = "/q";
                         }
 
-                        // Assemble all paramters into the Comman Line
-                        //#MOD_h
-                        //argTreesDetection = argTreesDetectionConfig + argTreesDetectionInput + argTreesDetectionOutput + argTreesDetectionMap + argTreesDetectionMasked + argTreesDetectionDensity + argGridSquareBoundaryBox + argTreesDetectionAltitudeCheck + argTreesDetectionAltitudeDirectory + argTreesDetectionQuit;
-                        //#MOD_i
-                        argTreesDetection = argTreesDetectionConfig + argTreesDetectionInput + argTreesDetectionOutput + argTreesDetectionMap + argTreesDetectionMasked + argTreesDetectionDensity + argGridSquareBoundaryBox + argTreesDetectionAltitudeCheck + argTreesDetectionAltitudeDirectory + argTreesPresetIndex + argTreesDetectionQuit;
+                        //#MOD_k
+                        // Assemble all paramters into the command line
+                        argTreesDetection = argTreesDetectionConfig + argTreesDetectionInput + argTreesDetectionOutput + argTreesDetectionDensity + argGridSquareBoundaryBox + argTreesDetectionAltitudeCheck + argTreesDetectionAltitudeDirectory + argTreesPresetIndex + argTreesDetectionQuit;
 
                         // Assign attributes to ProcessStartInfo
                         ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -1280,298 +1421,11 @@ namespace AeroScenery
                             messageBox.ShowDialog();
                         }
                     }
-                    else
-                    {
-                        // Working directory does not exist
-                    }
 
                     i++;
                 }
             }
-        }
 
-
-
-
-
-        //#MOD_h
-        public void RunDownloadElevationDataProcess(double selectedTilesEastLongitude, double selectedTilesWestLongitude, double selectedTilesNorthLatitude, double selectedTilesSouthLatitude)
-        {
-            // Writes in addition a PS1 PowerShell Script for manual download of GeoTiff-images provided from OpenTopography (30m) for the selected area (API Key needed to be add in Settings), this even if no other action is selected
-
-            var openTopographyAPIUrl = "https://portal.opentopography.org/API/globaldem?demtype=";
-            //#MOD_i
-            var meshResolution = "30m";
-            if (settings.OpenTopographyDataSet.Substring(0, 4) == "USGS")
-            {
-                openTopographyAPIUrl = "https://portal.opentopography.org/API/usgsdem?datasetName=";
-                if (settings.OpenTopographyDataSet.Substring(0, 7) == "USGS10m")
-                {
-                    meshResolution = "10m";
-                }
-            }
-
-            var openTopographyDemType = settings.OpenTopographyDataSet.Substring(0, settings.OpenTopographyDataSet.IndexOf(" "));
-
-            var workingAreaDataFolder = "map_00_elevation";
-            workingAreaDataFolder = workingAreaDataFolder + "_" + DateTime.Now.ToString("yyyMMdd_HHmm") + "\\";
-
-            // Create subdirecties for elevation data, if it not allready existing
-            if (!Directory.Exists(Settings.WorkingDirectory + workingAreaDataFolder))
-            {
-                Directory.CreateDirectory(Settings.WorkingDirectory + workingAreaDataFolder);
-            }
-            if (!Directory.Exists(Settings.WorkingDirectory + workingAreaDataFolder + "input_aerial_images"))
-            {
-                Directory.CreateDirectory(Settings.WorkingDirectory + workingAreaDataFolder + "input_aerial_images");
-            }
-            if (!Directory.Exists(Settings.WorkingDirectory + workingAreaDataFolder + "output_elevation"))
-            {
-                Directory.CreateDirectory(Settings.WorkingDirectory + workingAreaDataFolder + "output_elevation");
-            }
-
-            log.InfoFormat($"Writing and running a PowerShell Script for download of GeoTiff image from OpenTopography for the selected area");
-
-            // Convert coordinates of area-extention to Text (incl. enlarging for the downlaod of the GeoTiff-image) and creates text for the boundary box
-            var eastLngText = selectedTilesEastLongitude.ToString("#.#########", CultureInfo.InvariantCulture);
-            var westLngText = selectedTilesWestLongitude.ToString("#.#########", CultureInfo.InvariantCulture);
-            var northLatText = selectedTilesNorthLatitude.ToString("#.#########", CultureInfo.InvariantCulture);
-            var southLatText = selectedTilesSouthLatitude.ToString("#.#########", CultureInfo.InvariantCulture);
-
-            //#MOD_i: 0.02 instead od 0.01 due to larger tile levels (7 & 8 supported now)
-            var boarderCorr = 0.02; // Enlarging of the boarder box for a small overlapping of the GeoTiff-images to avoid bugs at the boarder (actually fix value that seams to work fine; there is also a mismatch with the real downloaded image)
-            var eastLngCorr = selectedTilesEastLongitude + boarderCorr;
-            var westLngCorr = selectedTilesWestLongitude - boarderCorr;
-            var northLatCorr = selectedTilesNorthLatitude + boarderCorr;
-            var southLatCorr = selectedTilesSouthLatitude - boarderCorr;
-
-            var eastLngCorrText = eastLngCorr.ToString("#.#####", CultureInfo.InvariantCulture);
-            var westLngCorrText = westLngCorr.ToString("#.#####", CultureInfo.InvariantCulture);
-            var northLatCorrText = northLatCorr.ToString("#.#####", CultureInfo.InvariantCulture);
-            var southLatCorrText = southLatCorr.ToString("#.#####", CultureInfo.InvariantCulture);
-
-            var bbox = $@"&south={southLatCorrText}&north={northLatCorrText}&west={westLngCorrText}&east={eastLngCorrText}";
-
-            // Creates PowerShell-Sricpt for manual dowload of the GeoTiff-Image: Downlaoded image has to be imported and exported using QGIS, will else not work (not compatible for immediate convertion)
-            using (StreamWriter text = new StreamWriter($@"{Settings.WorkingDirectory}{workingAreaDataFolder}_download_elevation_geotiff.ps1"))
-            {
-                text.WriteLine("Set-ExecutionPolicy Bypass -scope Process -Force");
-                text.WriteLine();
-                text.WriteLine("$client = new-object System.Net.WebClient");
-                text.WriteLine();
-                text.WriteLine($@"Write-Host 'Proceeding download of the GeoTiff-Image from OpenTopography (Dataset {settings.OpenTopographyDataSet}):'");
-                text.WriteLine("Write-Host ''");
-                //#MOD_i
-                text.WriteLine($@"Write-Host 'Download of the file ""dem_area_{meshResolution}.tif"" for the selected area '");
-                text.WriteLine("Write-Host ''");
-                text.WriteLine("Write-Host 'Please wait ...'");
-                //#MOD_i
-                text.WriteLine(($@"$client.DownloadFile('{openTopographyAPIUrl}{openTopographyDemType}{bbox}&outputFormat=GTiff&API_Key={settings.OpenTopographyApiKey}','input_aerial_images\dem_area_{meshResolution}_bak.tif')"));
-                text.WriteLine("Write-Host ''");
-                text.WriteLine($@"Write-Host 'Download finsihed and saved in ""{Settings.WorkingDirectory}{workingAreaDataFolder}input_aerial_images\...""'");
-                text.WriteLine("Write-Host ''");
-
-                if (settings.QGISDirectory == "")
-                {
-                    //#MOD_i
-                    text.WriteLine($@"Copy '{Settings.WorkingDirectory}{workingAreaDataFolder}input_aerial_images\dem_area_{meshResolution}'_bak.tif' '{Settings.WorkingDirectory}{workingAreaDataFolder}input_aerial_images\dem_area_{meshResolution}.tif'");
-                }
-                else
-                {
-                    text.WriteLine();
-                    text.WriteLine("Write-Host ''");
-                    text.WriteLine("Write-Host '-------------------------------------------------------------------------------------------------------------------'");
-                    text.WriteLine("Write-Host ''");
-                    text.WriteLine($@"Write-Host 'Fix peaks near coastline (set negative elevations to zero)'");
-                    text.WriteLine("Write-Host ''");
-                    text.WriteLine("Write-Host 'Please wait ...'");
-                    //#MOD_i
-                    text.WriteLine($@"{settings.QGISDirectory}qgis_process-qgis run qgis:rastercalculator --LAYERS=""{Settings.WorkingDirectory}{workingAreaDataFolder}\input_aerial_images\dem_area_{meshResolution}_bak.tif"" --OUTPUT=""{Settings.WorkingDirectory}{workingAreaDataFolder}\input_aerial_images\dem_area_{meshResolution}.tif"" --EXPRESSION=""('dem_area_{meshResolution}_bak@1' >= 0) * 'dem_area_{meshResolution}_bak@1'""  --CRS=EPSG:4326 --distance_units=meters --area_units=m2 --ellipsoid=EPSG:4326");
-                    //Decompress of GeoTiff (not needed if peak fix is allready done) 
-                    //text.WriteLine($@"{settings.QGISDirectory}gdal_translate {Settings.WorkingDirectory}{workingAreaDataFolder}input_aerial_images\dem_area_30m_fixed.tif {Settings.WorkingDirectory}{workingAreaDataFolder}input_aerial_images\dem_area_30m_uncompressed.tif -co COMPRESS=NONE");
-                }
-                if (this.settings.TreesDetectionQuit == false)
-                {
-                    text.WriteLine("Write-Host ''");
-                    text.WriteLine($@"Read-Host -Prompt 'Press ENTER to quit'");
-                }
-
-            }
-            // Creates *.aid-File for GeoConvert-Process as a draft: Values have to be checked and addapted if necessary using GQIS
-            using (StreamWriter text = new StreamWriter($@"{Settings.WorkingDirectory}{workingAreaDataFolder}input_aerial_images/dem_area_30m.aid"))
-            {
-                text.WriteLine("<[file][][]");
-                text.WriteLine("    <[tm_aerial_image_definition][][]");
-                //#MOD_i
-                text.WriteLine($@"        <[string8][image][dem_area_{meshResolution}.tif]>");
-                text.WriteLine("        <[string8][mask][]>");
-                //#MOD_i
-                if (meshResolution == "30m") // Default 30m
-                {
-                    text.WriteLine("        <[vector2_float64][steps_per_pixel][0.000277778 -0.000277778]> // [<Horizontal> -<Vertical(minus!)>] ");
-                }
-                else  // HighRes 10m for USGS10m
-                {
-                    text.WriteLine("        <[vector2_float64][steps_per_pixel][0.0000925926 -0.0000925926]> // [<Horizontal> -<Vertical(minus!)>] ");
-                }
-                text.WriteLine($@"        <[vector2_float64][top_left][{westLngCorrText} {northLatCorrText}]> // [<West> <Nord>]");
-                text.WriteLine("        <[string8][coordinate_system][lonlat]>");
-                text.WriteLine("        <[bool][flip_vertical][false]>");
-                text.WriteLine("    >");
-                text.WriteLine(">");
-            }
-
-            //#MOD_h
-            var proc = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = @"powershell.exe",
-                    Arguments = $@"-NoProfile -ExecutionPolicy ByPass -File ""{Settings.WorkingDirectory}{workingAreaDataFolder}_download_elevation_geotiff.ps1""",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = false,
-                    RedirectStandardError = false,
-                    CreateNoWindow = false,
-                    WorkingDirectory = $@"{Settings.WorkingDirectory}{workingAreaDataFolder}\"
-                }
-            };
-
-            proc.Start();
-            //proc.WaitForExit();
-
-            if (String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
-            {
-                var messageBox = new CustomMessageBox("Please set the location of the Aerofly SDK in Settings to be able to use Geoconvert for converting Meshes",
-                    "AeroScenery",
-                    MessageBoxIcon.Warning);
-
-                messageBox.ShowDialog();
-            }
-            else
-            {
-                // Creates and Copy subfolders 'shader_dx11\' & 'texures\' from the GeoConvert, else GeoCDonvert wil not work outside of the installation-path 
-                if (!Directory.Exists(Settings.WorkingDirectory + workingAreaDataFolder + "shader_dx11"))
-                {
-                    Directory.CreateDirectory(Settings.WorkingDirectory + workingAreaDataFolder + "shader_dx11");
-                    foreach (string newPath in Directory.GetFiles(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/shader_dx11", "*.*", SearchOption.AllDirectories))
-                    {
-                        File.Copy(newPath, newPath.Replace(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/shader_dx11", Settings.WorkingDirectory + workingAreaDataFolder + "shader_dx11"), true);
-                    }
-                }
-                if (!Directory.Exists(Settings.WorkingDirectory + workingAreaDataFolder + "texture"))
-                {
-                    Directory.CreateDirectory(Settings.WorkingDirectory + workingAreaDataFolder + "texture");
-                    foreach (string newPath in Directory.GetFiles(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/texture", "*.*", SearchOption.AllDirectories))
-                    {
-                        File.Copy(newPath, newPath.Replace(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/texture", Settings.WorkingDirectory + workingAreaDataFolder + "texture"), true);
-                    }
-                }
-
-                // Creates *.bat File for starting GeoConvert-Process (Elevation-Processing)
-                using (StreamWriter text = new StreamWriter($@"{Settings.WorkingDirectory}{workingAreaDataFolder}mesh_conv.bat"))
-                {
-                    //text.WriteLine($@"start /D {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\ aerofly_fs_2_geoconvert.exe {Settings.WorkingDirectory}map_00_area_data/mesh_conv.tmc");
-                    text.WriteLine($@"start {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\aerofly_fs_2_geoconvert.exe mesh_conv.tmc");
-                }
-
-                // Creates *.tmc File needed for the GeoConvert-Process (for 30m-Meshes up to level 10 resp. up to level 11 for 10m-Meshes)
-                using (StreamWriter text = new StreamWriter($@"{Settings.WorkingDirectory}{workingAreaDataFolder}mesh_conv.tmc"))
-                {
-                    text.WriteLine("<[file][][]");
-                    text.WriteLine("    <[tmcolormap_regions][][]");
-                    text.WriteLine("        <[string] [folder_source_files][input_aerial_images/]>");
-                    text.WriteLine("        <[bool]   [write_images_with_mask][false]>");
-                    text.WriteLine("        <[bool]   [write_ttc_files][false]>");
-                    text.WriteLine("        <[bool]   [do_heightmaps][true]>");
-                    //text.WriteLine("        <[string8][folder_destination_ttc][./scenery/images/]>");
-                    text.WriteLine("        <[string8][folder_destination_heightmaps][output_elevation/]>");
-                    text.WriteLine("        <[bool]   [always_overwrite][true]>");
-                    text.WriteLine("");
-                    text.WriteLine("        <[list][region_list][]");
-                    text.WriteLine("");
-
-                    text.WriteLine("			<[tmheightmap_region][element][0]");
-                    text.WriteLine("                <[uint32]              [level]  [8]>");
-                    text.WriteLine($@"			    <[vector2_float64]     [lonlat_min]   [{westLngText} {southLatText}]>// [<West> <Süd>]");
-                    text.WriteLine($@"			    <[vector2_float64]     [lonlat_max]   [{eastLngText} {northLatText}]>// [<Ost> <Nord>]");
-                    text.WriteLine("			    <[bool]                [write_images_with_mask][false]>");
-                    text.WriteLine("            >");
-                    text.WriteLine("");
-                    text.WriteLine("			<[tmheightmap_region][element][1]");
-                    text.WriteLine("                <[uint32]              [level]  [9]>");
-                    text.WriteLine($@"			    <[vector2_float64]     [lonlat_min]   [{westLngText} {southLatText}]>// [<West> <Süd>]");
-                    text.WriteLine($@"			    <[vector2_float64]     [lonlat_max]   [{eastLngText} {northLatText}]>// [<Ost> <Nord>]");
-                    text.WriteLine("			    <[bool]                [write_images_with_mask][false]>");
-                    text.WriteLine("            >");
-                    text.WriteLine("");
-                    text.WriteLine("			<[tmheightmap_region][element][2]");
-                    text.WriteLine("                <[uint32]              [level]  [10]>");
-                    text.WriteLine($@"			    <[vector2_float64]     [lonlat_min]   [{westLngText} {southLatText}]>// [<West> <Süd>]");
-                    text.WriteLine($@"			    <[vector2_float64]     [lonlat_max]   [{eastLngText} {northLatText}]>// [<Ost> <Nord>]");
-                    text.WriteLine("			    <[bool]                [write_images_with_mask][false]>");
-                    text.WriteLine("            >");
-                    //#MOD_i
-                    if (meshResolution == "10m") 
-                    {
-                        text.WriteLine("			<[tmheightmap_region][element][2]");
-                        text.WriteLine("                <[uint32]              [level]  [11]>");
-                        text.WriteLine($@"			    <[vector2_float64]     [lonlat_min]   [{westLngText} {southLatText}]>// [<West> <Süd>]");
-                        text.WriteLine($@"			    <[vector2_float64]     [lonlat_max]   [{eastLngText} {northLatText}]>// [<Ost> <Nord>]");
-                        text.WriteLine("			    <[bool]                [write_images_with_mask][false]>");
-                        text.WriteLine("            >");
-                    }
-
-                    text.WriteLine("        >");
-                    text.WriteLine("    >");
-                    text.WriteLine(">");
-                }
-
-                //#MOD_i
-                // CReates addition bat- & tmc-file for mobiles on Android
-                if (Settings.CreateAddForMobile == true) 
-                {
-                    // Creates additional *.bat File for starting GeoConvert-Process (Elevation-Processing) on Android
-                    using (StreamWriter text = new StreamWriter($@"{Settings.WorkingDirectory}{workingAreaDataFolder}mesh_conv_for_mobile.bat"))
-                    {
-                        text.WriteLine($@"start {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\aerofly_fs_2_geoconvert.exe mesh_conv_for_mobile.tmc");
-                    }
-
-                    // Creates additional *.tmc File needed for the GeoConvert-Process (for 30m-Meshes up to level 10) on Android
-                    using (StreamWriter text = new StreamWriter($@"{Settings.WorkingDirectory}{workingAreaDataFolder}mesh_conv_for_mobile.tmc"))
-                    {
-                        text.WriteLine("<[file][][]");
-                        text.WriteLine("    <[tmcolormap_regions][][]");
-                        text.WriteLine("        <[string] [folder_source_files][input_aerial_images/]>");
-                        text.WriteLine("        <[bool]   [write_images_with_mask][false]>");
-                        text.WriteLine("        <[bool]   [write_ttc_files][false]>");
-                        text.WriteLine("        <[bool]   [do_heightmaps][true]>");
-                        //text.WriteLine("        <[string8][folder_destination_ttc][./scenery/images/]>");
-                        text.WriteLine("        <[string8][folder_destination_heightmaps][output_elevation/]>");
-                        text.WriteLine("        <[bool]   [always_overwrite][true]>");
-                        text.WriteLine("");
-                        text.WriteLine("        <[list][region_list][]");
-                        text.WriteLine("");
-
-                        text.WriteLine("			<[tmheightmap_region][element][0]");
-                        text.WriteLine("                <[uint32]              [level]  [7]>");
-                        text.WriteLine($@"			    <[vector2_float64]     [lonlat_min]   [{westLngText} {southLatText}]>// [<West> <Süd>]");
-                        text.WriteLine($@"			    <[vector2_float64]     [lonlat_max]   [{eastLngText} {northLatText}]>// [<Ost> <Nord>]");
-                        text.WriteLine("			    <[bool]                [write_images_with_mask][false]>");
-                        text.WriteLine("            >");
-                        text.WriteLine("");
-                        text.WriteLine("			<[tmheightmap_region][element][1]");
-                        text.WriteLine("                <[uint32]              [level]  [10]>");
-                        text.WriteLine($@"			    <[vector2_float64]     [lonlat_min]   [{westLngText} {southLatText}]>// [<West> <Süd>]");
-                        text.WriteLine($@"			    <[vector2_float64]     [lonlat_max]   [{eastLngText} {northLatText}]>// [<Ost> <Nord>]");
-                        text.WriteLine("			    <[bool]                [write_images_with_mask][false]>");
-                        text.WriteLine("            >");
-
-                        text.WriteLine("        >");
-                        text.WriteLine("    >");
-                        text.WriteLine(">");
-                    }
-                }
-            }
         }
 
 
@@ -1656,13 +1510,18 @@ namespace AeroScenery
         {
             this.settingsService.SaveSettings(this.settings);
         }
-
+        
         public string ApplicationPath
         {
             get
             {
-                var applicationUri = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-                var applicationLocalPath = new Uri(Path.GetDirectoryName(applicationUri)).LocalPath;
+                //#DEVL_k
+                //Approach doesn't work when debugging in Visual Studio; but works when running as an executable --> looking for better solution 
+                //var applicationUri = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+                //var applicationLocalPath = new Uri(Path.GetDirectoryName(applicationUri)).LocalPath;
+
+                string applicationLocalPath = AppContext.BaseDirectory;
+
                 return applicationLocalPath;
 
             }

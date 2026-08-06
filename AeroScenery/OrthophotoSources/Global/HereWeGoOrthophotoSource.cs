@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AeroScenery.OrthophotoSources
 {
-    public class HereWeGoOrthophotoSource : GenericOrthophotoSource
+    public class HereWeGoOrthophotoSource : GenericOrthophotoSource //#MOD
     {
         //public static string DefaultUrlTemplate = "https://1.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{zoom}/{x}/{y}/256/jpg?apiKey=RBx63mkCvx-pB_w9dWzVj2tnCTDTozT3C-O14S_H2Ls";
         public static string DefaultUrlTemplate = "https://1.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{zoom}/{x}/{y}/256/jpg?apiKey={apikey}";
@@ -57,7 +57,6 @@ namespace AeroScenery.OrthophotoSources
             this.imageExtension = "jpg";
             this.source = OrthophotoSourceDirectoryName.HereWeGo;
             this.tiledWebMapType = TiledWebMapType.Google;
-            //#MOD_h
             this.AdditionalUrlParams = new Dictionary<string, string>();
         }
 

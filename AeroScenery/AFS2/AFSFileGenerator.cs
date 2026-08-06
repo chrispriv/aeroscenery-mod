@@ -27,6 +27,43 @@ namespace AeroScenery.AFS2
             this.xmlSerializer = new XmlSerializer(typeof(StitchedImage));
         }
 
+        // ...
+        private double CalculateLatitudeShift(
+            double latitude,
+            int tileLevel,
+            int userShiftLevel,
+            bool reverseMode)
+        {
+            if (userShiftLevel == 0)
+                return 0.0;
+
+            const double baseShift = 0.00001;
+
+            double shiftCurrent = 0;
+
+            if (tileLevel <= 12) 
+            {
+                shiftCurrent = userShiftLevel * baseShift * Math.Pow(2, 12 - tileLevel);
+            } 
+
+            double shift;
+
+            if (reverseMode)
+            {
+                // Reference = Level 9
+                double shiftLevel9 = userShiftLevel * baseShift * Math.Pow(2, 12 - 9);
+
+                shift = shiftCurrent - shiftLevel9;
+            }
+            else
+            {
+                shift = shiftCurrent;
+            }
+
+            return shift;
+        }
+
+        //#DEVL_k
         public async Task GenerateAFSFilesAsync(AFS2GridSquare afs2GridSquare, string stitchedTilesDirectory, string afsGridSquareDirectory, IProgress<AFSFileGeneratorProgress> progress)
         {
             await Task.Run(() =>
@@ -63,6 +100,23 @@ namespace AeroScenery.AFS2
                             double stepsPerPixelX = Math.Abs((stitchedImageAeroFile.WestLongitude - stitchedImageAeroFile.EastLongitude) / stitchedImageAeroFile.Width);
                             double stepsPerPixelY = -Math.Abs((stitchedImageAeroFile.NorthLatitude - stitchedImageAeroFile.SouthLatitude) / stitchedImageAeroFile.Height);
 
+                            //#DEVL_k: SHIFT AND ZOOM CORRECTION ###################################
+                            //int userShiftLevel =6; // TODO: aus UI übergeben (0 - 6, minus für umgekehrte Richtung)
+                            int userShiftLevel = 0;
+                            bool reverseMode = false; // TODO: aus UI übergeben
+                            if (AeroSceneryManager.Instance.Settings.AllowShiftCorrectionProcessing == true)
+                            {
+                                userShiftLevel = AeroSceneryManager.Instance.Settings.AllowShiftCorrectionLevel.Value;
+                            }
+
+                            double latShift = CalculateLatitudeShift(stitchedImageAeroFile.NorthLatitude, afs2GridSquare.Level,userShiftLevel, reverseMode);
+                            double shiftInPixels = -latShift / stepsPerPixelY;
+
+                            if (AeroSceneryManager.Instance.Settings.AllowShiftCorrectionProcessing == true)
+                            {
+                                log.Info($"AFSLevel={afs2GridSquare.Level}, ShiftLevel={userShiftLevel}, Shift={latShift}, ShiftPixels={shiftInPixels}, ReverseMode={reverseMode}");
+                            }
+
                             var aidFile = new AIDFile();
 
                             aidFile.ImageFile = stitchedImageAeroFile.FileName + "." + stitchedImageAeroFile.ImageExtension;
@@ -70,7 +124,7 @@ namespace AeroScenery.AFS2
                             aidFile.StepsPerPixelX = stepsPerPixelX;
                             aidFile.StepsPerPixelY = stepsPerPixelY;
                             aidFile.X = stitchedImageAeroFile.WestLongitude;
-                            aidFile.Y = stitchedImageAeroFile.NorthLatitude;
+                            aidFile.Y = stitchedImageAeroFile.NorthLatitude + latShift; 
 
                             var aidFileStr = aidFile.ToString();
 

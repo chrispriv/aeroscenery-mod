@@ -10,7 +10,7 @@ namespace AeroScenery.OrthophotoSources
 {
     public class GoogleOrthophotoSource : GenericOrthophotoSource
     {
-        //#MOD_h
+        //#MOD
         public static string DefaultUrlTemplate = "https://www.google.com/maps/vt?lyrs=s@189&gl=cn&x={0}&y={1}&z={2}";
 
         // try out google khm server (doesn't work)

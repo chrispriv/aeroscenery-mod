@@ -28,7 +28,7 @@ namespace AeroScenery.Common
                 if (Directory.Exists(afsUserDirectoryPath))
                 {
                     // If no scenery sub-directory exists, create one
-                    //#MOD_i
+                    //#MOD
                     //string afsUserDirectorySceneryPath = afsUserDirectoryPath + @"scenery\";
                     string afsUserDirectorySceneryPath = afsUserDirectoryPath + settings.AFSSceneryFolder;
 
