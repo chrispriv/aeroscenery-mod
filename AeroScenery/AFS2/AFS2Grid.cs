@@ -1,9 +1,5 @@
 ﻿using GMap.NET;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AeroScenery.AFS2
 {
@@ -108,7 +104,7 @@ namespace AeroScenery.AFS2
             return afs2GridSquare;
         }
 
-        //#MOD_g
+        //#MOD
         // Allows to search a specific tile in the map by FS2 grid coordinates (e.g. "8500_a500"), calculates the Lon & Lat position and gets resp. returns the AFS Gridsquare 
         public AFS2GridSquare GetGridSquareName(string tile, int level)
         {

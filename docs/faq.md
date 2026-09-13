@@ -28,8 +28,9 @@ Some features may behave differently depending on simulator version.
 
 ## Why is there no installer?
 
-The original MSI installer is deprecated.
-The Community Mod is distributed as a ZIP package.
+Mod k is portable. The original MSI project was removed.
+The Community Mod is distributed as a ZIP (or Visual Studio build output).
+A new community MSI is planned for a later 2.0.0 release, not this TEST line.
 
 ---
 

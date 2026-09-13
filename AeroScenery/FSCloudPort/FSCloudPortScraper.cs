@@ -3,14 +3,11 @@ using AeroScenery.Data.Models;
 using CsQuery;
 using log4net;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace AeroScenery.FSCloudPort
 {
@@ -23,7 +20,7 @@ namespace AeroScenery.FSCloudPort
         public async Task<IList<FSCloudPortAirport>> ScrapeAirportsAsync()
         {
 
-            //#MOD_a
+            //#MOD
             //var urlTemplate = "http://www.fscloudport.com/phdi/p1.nsf/aeroscenery?OpenView&Start={0}&Count={1}";
             var urlTemplate = "https://www.fscloudport.com/atk/fscp.nsf/aeroscenery?OpenView&Start={0}&Count={1}"; 
 

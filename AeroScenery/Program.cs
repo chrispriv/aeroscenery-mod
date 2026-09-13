@@ -1,12 +1,8 @@
-﻿using AeroScenery.Common;
-using AeroScenery.Controls;
+﻿using AeroScenery.Controls;
 using log4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AeroScenery

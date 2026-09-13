@@ -5,6 +5,17 @@ Based on AeroScenery 1.1.3-beta
 
 ---
 
+## v1.1.3-mod.k (TEST)
+- Portable app (no MSI required)
+- Sequential GeoConvert built into AeroScenery (GeoConvert Wrapper removed)
+- Install Scenery for all selected tiles (waits for GeoConvert)
+- Carto / OSM water masking
+- Optional GeoConvert N/S shift correction
+- Aerofly FS4 Bridge moving-map support
+- TreesDetection removed (use Mod j if still needed)
+
+---
+
 ## v1.1.3-mod.j
 - Moving map functionality for Aerofly FS2 / FS4 (UDP)
 - Map modes: fixed map, flight tracing, hide working tiles

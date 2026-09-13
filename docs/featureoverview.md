@@ -10,7 +10,7 @@ AeroScenery Community Mod.
 
 ## Feature Overview
 
-| Feature | Original 1.1.3-beta | Community Mod j |
+| Feature | Original 1.1.3-beta | Community Mod k |
 |------|---------------------|-----------------|
 | Photo scenery creation | ✅ | ✅ |
 | Multiple map sources | ✅ | ✅ (extended & fixed) |
@@ -20,12 +20,15 @@ AeroScenery Community Mod.
 | Improved workflows & UI tweaks | ❌ | ✅ |
 | Bug fixes & stability improvements | ❌ | ✅ |
 | Extended configuration options | ❌ | ✅ |
-| Consolidated binaries & dependencies | ❌ | ✅ |
+| Portable (no MSI) | ❌ | ✅ |
+| Sequential GeoConvert | Wrapper EXE | Built into AeroScenery |
+| Install Scenery for all selected tiles | ❌ | ✅ |
+| Carto / OSM water masking | ❌ | ✅ |
 | Elevation data download | ❌ | ✅ |
 | OSM data download | ❌ | ✅ |
-| TreesDetection integration | ❌ | ✅ |
+| TreesDetection integration | ❌ | Removed (use Mod j) |
 | PowerShell scripts support| ❌ | ✅ |
-| Moving map (UDP) with flight tracing | ❌ | ✅ |
+| Moving map (UDP + FS4 Bridge) | ❌ | ✅ |
 
 ------
 

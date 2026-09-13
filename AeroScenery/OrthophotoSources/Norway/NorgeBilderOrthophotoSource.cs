@@ -1,14 +1,4 @@
-﻿using AeroScenery.AFS2;
-using AeroScenery.Common;
-using AeroScenery.OrthoPhotoSources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using AeroScenery.OrthoPhotoSources;
 
 namespace AeroScenery.OrthophotoSources.Norway
 {

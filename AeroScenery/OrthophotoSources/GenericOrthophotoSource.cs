@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AeroScenery.AFS2;
 using AeroScenery.Common;
 using DotSpatial.Projections;

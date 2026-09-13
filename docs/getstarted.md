@@ -15,7 +15,7 @@ scenery for Aerofly FS 2 / FS 4** using **AeroScenery Community Mod**.
 
 Before starting, make sure that:
 
-- AeroScenery Community Mod is installed
+- AeroScenery Community Mod k is extracted and can start (portable ZIP / local build)
 - GeoConvert.exe is available
 - Aerofly FS 2 or FS 4 is installed
 

@@ -1,7 +1,6 @@
 ﻿using AeroScenery.AFS2;
 using AeroScenery.Common;
 using AeroScenery.Controls;
-using AeroScenery.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,12 +15,78 @@ namespace AeroScenery.FileManagement
     {
         private AFS2Grid afsGrid;
 
-
+        //#MOD_k
         public SceneryInstaller()
         {
             this.afsGrid = new AFS2Grid();
         }
+        /// <summary>
+        /// Checks that there is somewhere to install to, and asks the user to confirm unless the
+        /// caller has already taken that as read.
+        /// </summary>
+        public DialogResult ConfirmSceneryInstallation(AFS2GridSquare afs2GridSquare, bool promptUser)
+        {
+            var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + afs2GridSquare.Name;
 
+            DialogResult result = DialogResult.No;
+
+            // Does this grid square exist
+            if (Directory.Exists(gridSquareDirectory))
+            {
+                // Do we have an Aerofly folder to install into?
+                string afsSceneryInstallDirectory = DirectoryHelper.FindAFSSceneryInstallDirectory(AeroSceneryManager.Instance.Settings);
+
+                if (afsSceneryInstallDirectory != null)
+                {
+                    if (!promptUser)
+                    {
+                        return DialogResult.Yes;
+                    }
+
+                    // Confirm that the user does want to install scenery
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.AppendLine("Are you sure you want to install all scenery for this grid square?");
+                    sb.AppendLine("Any existing files in the same destination folder will be overwritten.");
+                    sb.AppendLine("");
+                    sb.AppendLine(String.Format("Destination: {0}", afsSceneryInstallDirectory));
+
+                    var messageBox = new CustomMessageBox(sb.ToString(),
+                        "AeroScenery",
+                        MessageBoxIcon.Question);
+
+                    messageBox.SetButtons(
+                        new string[] { "Yes", "No" },
+                        new DialogResult[] { DialogResult.Yes, DialogResult.No });
+
+                    result = messageBox.ShowDialog();
+                }
+                else
+                {
+                    // Can't find anywhere to install
+                    StringBuilder sb = new StringBuilder();
+
+                    sb.AppendLine("Could not find a location to install to.");
+                    sb.AppendLine("");
+                    sb.AppendLine("AeroScenery looks for 'Aerofly FS 4' and then 'Aerofly FS 2' in your Documents folder.");
+                    sb.AppendLine("If your Aerofly user folder is somewhere else, set it as the AFS User Folder in Settings.");
+
+                    var messageBox = new CustomMessageBox(sb.ToString(),
+                        "AeroScenery",
+                        MessageBoxIcon.Error);
+
+                    result = messageBox.ShowDialog();
+                }
+            }
+            else
+            {
+
+            }
+
+            return result;
+        }
+
+        /*
         public DialogResult ConfirmSceneryInstallation(AFS2GridSquare afs2GridSquare)
         {
             var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + afs2GridSquare.Name;
@@ -76,6 +141,7 @@ namespace AeroScenery.FileManagement
 
             return result;
         }
+        */
 
         public DialogResult? CheckForDuplicateTTCFiles(AFS2GridSquare afs2GridSquare, out List<string> ttcFiles)
         {

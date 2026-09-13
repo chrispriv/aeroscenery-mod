@@ -1,10 +1,6 @@
 ﻿using AeroScenery.Common;
 using AeroScenery.Data.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AeroScenery.Data
 {
@@ -33,6 +29,13 @@ namespace AeroScenery.Data
         /// </summary>
         /// <param name="gridSquare"></param>
         void CreateGridSquare(GridSquare gridSquare);
+
+        //#MOD_k
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gridSquare"></param>
+        void CreateDataSquare(GridSquare gridSquare);
 
         /// <summary>
         /// 

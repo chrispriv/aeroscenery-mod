@@ -1,15 +1,10 @@
 ﻿using AeroScenery.Common;
-using AeroScenery.Controls;
 using AeroScenery.OrthoPhotoSources;
 using log4net;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace AeroScenery.Data
 {
@@ -135,7 +130,6 @@ namespace AeroScenery.Data
                 settings.StitchImageTiles = key.GetValueAsBoolean("StitchImageTiles", false);
                 settings.GenerateAIDAndTMCFiles = key.GetValueAsBoolean("GenerateAIDAndTMCFiles", false);
                 settings.RunGeoConvert = key.GetValueAsBoolean("RunGeoConvert", false);
-                settings.DeleteStitchedImageTiles = key.GetValueAsBoolean("DeleteStitchedImageTiles", false);
                 settings.InstallScenery = key.GetValueAsBoolean("InstallScenery", false);
                 settings.ActionSet = key.GetValueAsEnum<ActionSet>("ActionSet", ActionSet.Default);
 
@@ -184,25 +178,6 @@ namespace AeroScenery.Data
                 // Settings verison 4
                 settings.USGSUsername = key.GetValueAsString("USGSUsername");
                 settings.USGSPassword = key.GetValueAsString("USGSPassword");
-                settings.ElevationSettings.DownloadElevationData = key.GetValueAsBoolean("Elevation.DownloadElevationData", true);
-                settings.ElevationSettings.RunGeoConvert = key.GetValueAsBoolean("Elevation.RunGeoConvert", false);
-                settings.ElevationSettings.GenerateAIDAndTMCFiles = key.GetValueAsBoolean("Elevation.GenerateAIDAndTMCFiles", false);
-                //settings.ElevationSettings.ActionSet = (ActionSet)Enum.Parse(typeof(ActionSet), key.GetValueAsString("Elevation.ActionSet"));
-                settings.ElevationSettings.ActionSet = key.GetValueAsEnum<ActionSet>("Elevation.ActionSet", ActionSet.Default);
-                settings.ElevationSettings.InstallElevationData = key.GetValueAsBoolean("Elevation.InstallElevationData", false);
-
-                string afsElevationLevelsCsv = key.GetValueAsString("Elevation.AFSLevelsToGenerate");
-                if (string.IsNullOrEmpty(afsElevationLevelsCsv))
-                {
-                    settings.ElevationSettings.AFSLevelsToGenerate = new List<int>();
-                }
-                else
-                {
-                    List<int> afsElevationLevels = afsElevationLevelsCsv.Split(',').Select(int.Parse).ToList();
-                    settings.ElevationSettings.AFSLevelsToGenerate = afsElevationLevels;
-                }
-
-                // --
 
                 // Settings version 5
                 var mapControlLastZoomLevelStr = key.GetValueAsString("MapControlLastZoomLevel");

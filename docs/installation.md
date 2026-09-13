@@ -1,22 +1,30 @@
 ﻿# Installation Guide
 
 This document describes the installation and initial configuration of
-**AeroScenery Community Mod**.
+**AeroScenery Community Mod k** (portable TEST snapshot).
 
 ---
 
 > ⚠️ **Work in progress**  
-> This guide will be extended with screenshots and additional troubleshooting
-> information.
+> Mod k is functionally stable. Screenshots and a later MSI installer
+> (planned for 2.0.0) are not part of this snapshot.
 
 ---
 
-## Base Installation
+## Portable installation (Mod k)
 
-1. Install the original AeroScenery base version using the MSI installer.
-2. Download the AeroScenery Community Mod ZIP from GitHub Releases.
-3. Extract and copy all files into the AeroScenery installation directory.
-4. Overwrite existing files if prompted.
+The original AeroScenery **1.0.1 MSI is not required**.
+
+1. Download the Community Mod ZIP from GitHub Releases, or build the
+   `AeroScenery` project in Visual Studio 2022 (.NET Framework 4.8).
+2. Extract (or copy) the output folder anywhere you can write to.
+3. Keep all files next to `AeroScenery.exe`. Several libraries live under
+   `bin\Debug` (or your Release output) and are **not** fully restored by
+   NuGet alone.
+4. Start `AeroScenery.exe`.
+
+Do not mix this tree with an old `GeoConvertWrapper.exe` install. Sequential
+GeoConvert is built into the main application.
 
 ---
 
@@ -26,13 +34,13 @@ AeroScenery requires `GeoConvert.exe` from the Aerofly FS 2 SDK.
 
 - Download the SDK from:  
   https://www.aerofly-sim.de/aerofly_fs_2_sdk
-- Extract `GeoConvert.exe` to a suitable location
+- Point Settings at the SDK root that contains `aerofly_fs_2_geoconvert`
 
 ---
 
 ## AeroScenery Settings
 
-Open **Settings** in AeroScenery and configure the following paths:
+Open **Settings** and configure:
 
 ### Working Directory
 - Temporary files and processing data
@@ -40,27 +48,26 @@ Open **Settings** in AeroScenery and configure the following paths:
 ### Database Directory
 - Internal AeroScenery database files
 
-### Installation Directory
-- Output directory for generated scenery
+### Aerofly user / scenery folder
+- Target for **Install Scenery** / **Install Tile**
 
 ### Aerofly FS SDK Path
-- Path to the directory containing `GeoConvert.exe`
+- Directory that contains GeoConvert  
 - This setting is **mandatory**
-
-*(Screenshot placeholder)*
 
 ---
 
 ## Verify the Installation
 
 - Start AeroScenery
-- Check that GeoConvert is detected
-- Run a small test scenery
+- Confirm GeoConvert is found
+- Run a small test tile, then **Install Tile** or enable
+  **Install Scenery (waiting for GeoConvert)** under Actions
 
 ---
 
 ## Common Issues
 
-- GeoConvert not found
-- Permission issues
-- Invalid directory paths
+- GeoConvert not found — check the SDK path
+- App starts but libraries fail — copy the full `bin` output, not the EXE alone
+- Permission issues if you still place files under Program Files

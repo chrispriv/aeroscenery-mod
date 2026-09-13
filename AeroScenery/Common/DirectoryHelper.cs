@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Configuration;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AeroScenery.Common
 {
@@ -28,7 +23,7 @@ namespace AeroScenery.Common
                 if (Directory.Exists(afsUserDirectoryPath))
                 {
                     // If no scenery sub-directory exists, create one
-                    //#MOD_i
+                    //#MOD
                     //string afsUserDirectorySceneryPath = afsUserDirectoryPath + @"scenery\";
                     string afsUserDirectorySceneryPath = afsUserDirectoryPath + settings.AFSSceneryFolder;
 

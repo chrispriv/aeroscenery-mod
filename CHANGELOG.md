@@ -7,6 +7,31 @@ This project is a community-maintained fork of
 
 ---
 
+## [1.1.3-mod.k] – Community Mod k (TEST)
+**Maintainer:** chrispriv  
+**Based on:** AeroScenery 1.1.3-beta / community Mod j
+
+### Added
+- Additional water masking using Carto Basemaps / OpenStreetMap (API key in Settings)
+- Optional manual N/S shift correction when running GeoConvert
+- Aerofly FS4 Bridge shared-memory support for the moving map (`aeroflybridge.dll` in the Aerofly `external_dll` folder)
+- **Install Scenery** as an Actions option for all selected tiles (waits for GeoConvert)
+- Sequential GeoConvert jobs built into AeroScenery (replaces GeoConvert Wrapper)
+- Status-bar / log timer for completed work
+- Optional PC shutdown when sequential processing has finished
+- Portable run without the original MSI
+
+### Changed
+- NuGet packages (including GMap.NET) updated
+- Tooltips and beginner hints (still being cleaned up)
+
+### Removed
+- GeoConvert Wrapper project and EXE workflow
+- Non-functional original MSI installer project
+- TreesDetection integration (Aerofly FS4 Global Data; app no longer public). Still available in Mod j.
+
+---
+
 ## [1.1.3-mod.j] – Community Mod j
 **Maintainer:** chrispriv  
 **Based on:** AeroScenery 1.1.3-beta

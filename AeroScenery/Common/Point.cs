@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AeroScenery.Common
+﻿namespace AeroScenery.Common
 {
     /// <summary>
     /// A Point. Why oh why is the System.Drawing one a struct?

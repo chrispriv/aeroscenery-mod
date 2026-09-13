@@ -1,12 +1,6 @@
-﻿//#MOD_g
-// InputBox static method that simulates InputBox method known from VB and VB.NET used from https://www.csharp-examples.net/inputbox/
-using System;
+﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace AeroScenery.Controls

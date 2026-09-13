@@ -1,9 +1,4 @@
 ﻿using GMap.NET.MapProviders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AeroScenery.Common
 {
@@ -111,8 +106,6 @@ namespace AeroScenery.Common
                     return GMapProviders.OpenSeaMapHybrid;
                 case "OpenStreetMapQuestHybrid":
                     return GMapProviders.OpenStreetMapQuestHybrid;
-                case "OpenStreetMapQuestSattelite":
-                    return GMapProviders.OpenStreetMapQuestSattelite;
                 case "OpenStreetMapQuest":
                     return GMapProviders.OpenStreetMapQuest;
                 case "OpenCycleTransportMap":
@@ -161,11 +154,8 @@ namespace AeroScenery.Common
                     return GMapProviders.GoogleChinaMap;
                 case "GoogleHybridMap":
                     return GMapProviders.GoogleHybridMap;
-                //#MOD_f
-                // Mapped with "Open Cycle Map", cause "Open Street Map" doesn't work anymore (keep the inital gmapProviderName to avoid troubles with saved values in the User-DB when starting the App)
                 case "OpenStreetMap":
                     return GMapProviders.OpenStreet4UMap;
-                    //return GMapProviders.OpenCycleMap;
                 default:
                     return GMapProviders.GoogleHybridMap;
             }

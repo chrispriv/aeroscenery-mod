@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AeroScenery.AFS2;
 using AeroScenery.Common;
 
@@ -10,7 +7,7 @@ namespace AeroScenery.OrthophotoSources
 {
     public class GoogleOrthophotoSource : GenericOrthophotoSource
     {
-        //#MOD_h
+        //#MOD
         public static string DefaultUrlTemplate = "https://www.google.com/maps/vt?lyrs=s@189&gl=cn&x={0}&y={1}&z={2}";
 
         // try out google khm server (doesn't work)

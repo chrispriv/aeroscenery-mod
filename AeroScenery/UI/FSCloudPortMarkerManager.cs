@@ -7,9 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AeroScenery.UI
@@ -65,7 +62,14 @@ namespace AeroScenery.UI
         public void UpdateFSCloudPortMarkers()
         {
             airportMarkers.Markers.Clear();
-            this.GMapControl.Overlays.Remove(airportMarkers);
+            //#MOD_k
+            //this.GMapControl.Overlays.Remove(airportMarkers);
+            int index = this.GMapControl.Overlays.IndexOf(airportMarkers);
+            if (index >= 0)
+            {
+                this.GMapControl.Overlays.RemoveAt(index);
+            }
+
             this.GMapControl.Overlays.Add(airportMarkers);
 
             var mapBounds = this.GMapControl.ViewArea;

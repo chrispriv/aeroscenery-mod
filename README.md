@@ -1,10 +1,11 @@
-﻿# AeroScenery Community Mod (Mod j)
+﻿# AeroScenery Community Mod (Mod k TEST)
 
 This repository is an **unofficial, community-maintained fork** of
 [AeroScenery](https://github.com/nickhod/aeroscenery), originally developed by Nick Hod.
 
-It is based on **AeroScenery 1.1.3-beta** and provides ongoing maintenance,
-bug fixes, and a wide range of functional extensions for the community.
+It is based on **AeroScenery 1.1.3-beta** and continues the community line
+through Mods a–j. The current working line is **Mod k** (TEST): portable,
+no MSI installer, and sequential GeoConvert built into the main app.
 
 ---
 
@@ -12,106 +13,108 @@ bug fixes, and a wide range of functional extensions for the community.
 
 - Base version: **AeroScenery 1.1.3-beta**
 - .NET Framework **4.8**
-- Active community maintenance starting with **Mod j**
+- Current line: **1.1.3 Mod k (TEST)**
 - Original author currently inactive
 
-This fork aims to keep AeroScenery usable on modern systems and extend its
-functionality where reasonable, while staying compatible with the original
-application.
+Mod k can run as a **portable** application (extract and run). The old
+AeroScenery 1.0.1 MSI is no longer required. A new community MSI is planned
+for a later **2.0.0** release and is **not** part of this TEST snapshot.
 
 ---
 
 ## Feature Overview
 
-| Feature | Original 1.1.3-beta | Community Mod j |
+| Feature | Original 1.1.3-beta | Community Mod k |
 |------|---------------------|-----------------|
 | Photo scenery creation | ✅ | ✅ |
 | Multiple map sources | ✅ | ✅ (extended & fixed) |
 | Community maintenance | ❌ | ✅ |
 | Simultaneous downloads | Up to 4 | Up to 8 |
 | Tile & location search | Basic | Enhanced (OSM geocoding) |
-| Improved workflows & UI tweaks | ❌ | ✅ |
-| Bug fixes & stability improvements | ❌ | ✅ |
-| Extended configuration options | ❌ | ✅ |
-| Consolidated binaries & dependencies | ❌ | ✅ |
-| Elevation data download | ❌ | ✅ |
-| OSM data download | ❌ | ✅ |
-| TreesDetection integration | ❌ | ✅ |
-| PowerShell scripts support| ❌ | ✅ |
-| Moving map (UDP) with flight tracing | ❌ | ✅ |
+| Portable (no MSI required) | ❌ | ✅ |
+| Sequential GeoConvert (built-in) | ❌ | ✅ |
+| Install Scenery (selected tiles) | Toolbar only | Toolbar + Actions (waits for GeoConvert) |
+| Carto / OSM water masking | ❌ | ✅ |
+| GeoConvert N/S shift correction | ❌ | ✅ |
+| Aerofly FS4 Bridge moving map | ❌ | ✅ (UDP + shared memory) |
+| Elevation / OSM download scripts | ❌ | ✅ |
+| TreesDetection integration | ❌ | Removed in Mod k (still in Mod j) |
 
 ---
 
 ## Projects in this Repository
 
 - **AeroScenery**  
-  Main application (extended and actively maintained)
+  Main application (only remaining project)
 
-- **GeoConvertWrapper**  
-  Legacy wrapper code (unchanged from the original project)
-
-- **AeroSceneryInstaller**  
-  Deprecated MSI installer project (no longer functional, kept for reference)
+`GeoConvertWrapper` and the old WiX **AeroSceneryInstaller** were removed
+in Mod k. Sequential GeoConvert runs inside AeroScenery.
 
 ---
 
-## Installation (Short Version)
+## Installation (Portable ZIP)
 
-1. Install the original **AeroScenery 1.0.1** using the official [MSI installer Release 1.0.1](https://github.com/nickhod/aeroscenery/releases/tag/1.0.1)
-   (base installation required).
-2. Download the desired **Community Mod** release (ZIP) from GitHub Releases (AeroScenery 1.1.3-beta is already included and therefore does not need to be installed first).
-3. Extract the ZIP archive and copy all files into your existing User ..\Program Files (x86)\AeroScenery\
-   installation directory.
-4. Overwrite existing files when prompted (admin rights needed).
+1. Download the **Community Mod k** ZIP from GitHub Releases (when published)
+   or build `AeroScenery` from this repository in Visual Studio.
+2. Extract the folder anywhere (no Program Files install required).
+3. Keep the libraries next to `AeroScenery.exe` (NuGet does not restore every
+   dependency used at runtime).
+4. Start `AeroScenery.exe` and set the Aerofly SDK / GeoConvert path under
+   **Settings**.
 
-➡️ For a detailed, step-by-step [installation](docs/installation.md) and [get started](docs/getting_started.md) guide (including screenshots),
-see the documentation links below.
+The original **AeroScenery 1.0.1 MSI** is optional history, not a requirement
+for Mod k.
+
+➡️ Step-by-step notes: [installation](docs/installation.md) and
+[get started](docs/getstarted.md).
 
 ---
 
 ## GeoConvert (Aerofly FS SDK)
 
-AeroScenery requires `GeoConvert.exe`, which is part of the
-Aerofly FS 2 Software Development Kit (SDK).
+AeroScenery requires `GeoConvert.exe` from the Aerofly FS 2 SDK.
 
-GeoConvert is **not included** in this project and must be obtained separately.
-It is no longer officially supported by IPACS, but still available on Aerofly-Sim.de:
+GeoConvert is **not included**. It is no longer officially supported by IPACS,
+but is still available on Aerofly-Sim.de:
 [Aerofly FS 2 Software Development Kit (SDK)](https://www.aerofly-sim.de/aerofly_fs_2_sdk).
 
-➡️ See: [Installation](docs/installation.md) 
+➡️ See: [Installation](docs/installation.md)
 
 ---
 
 ## Releases
 
-Binary releases (ZIP packages) are provided via **GitHub Releases**.
+Binary releases (portable ZIP, no installer) are provided via **GitHub Releases**.
 
-The first public community-maintained release is:
+Published community line so far:
+
 - **v1.1.3-mod.j**
+- **v1.1.3-mod.k** (TEST — this branch; release ZIP after remaining UI polish)
 
-Each release includes the full application package (EXE and required DLLs).
-No installer is provided.
+A later **2.0.0** line is planned with a new MSI. That work is out of scope
+until Mod k is finished.
 
 ---
 
 ## Documentation
 
-- 📘 **Full documentation website**  
-  https://<username>.github.io/<repository-name>/
-
-- ▶️ [Detailed Installation Guide](docs/installation.md)
+- 📘 **Documentation site:** https://chrispriv.github.io/aeroscenery-mod/
+- ▶️ [Installation Guide](docs/installation.md)
 - 🚀 [Get Started Guide](docs/getstarted.md)
-- ⭐ [Feature Overview (detailed)](docs/featureoverview.md)
+- ⭐ [Feature Overview](docs/featureoverview.md)
 - ❓ [FAQ](docs/faq.md)
 - 📝 [Changelog](CHANGELOG.md)
+- In-app notes: `AeroScenery/changelog.txt`
 
 ---
 
 ## Notes
 
-- The MSI installer project is deprecated and kept for reference only.
-- Some legacy wrapper and helper code originates from the original AeroScenery project.
-- This is a community-maintained project provided "as is".
+- This is a TEST snapshot of Mod k: functionally stable, with remaining
+  tooltip and Install Scenery polish still planned.
+- `bin\Debug` is gitignored. Local builds still need those libraries beside
+  the EXE because NuGet does not restore them all.
+- Community project, provided "as is".
 
 ---
 

@@ -3,7 +3,8 @@
 Welcome to the documentation of the **AeroScenery Community Mod**.
 
 This site provides extended documentation, guides and feature descriptions
-for the community-maintained AeroScenery fork based on version 1.1.3-beta.
+for the community-maintained AeroScenery fork based on version 1.1.3-beta
+(current line: **Mod k TEST**, portable, no MSI).
 
 ---
 

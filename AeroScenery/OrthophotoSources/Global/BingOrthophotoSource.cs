@@ -1,15 +1,7 @@
 ﻿using AeroScenery.AFS2;
 using AeroScenery.Common;
-using GMap.NET;
-using GMap.NET.MapProviders;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AeroScenery.OrthophotoSources
 {
