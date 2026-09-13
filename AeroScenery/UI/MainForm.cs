@@ -230,6 +230,26 @@ namespace AeroScenery
             toolTip3.InitialDelay = 500;
             toolTip3.SetToolTip(this.movingMapHelpImage, "Moving map (Aerofly FS2/FS4): turn on 'Broadcast flight info to IP address' under Settings > Miscellaneous settings.\nClick the (?) help icon for the broadcast IP (for example xxx.xxx.xxx.255). Broadcast port is 49002.\nFor FS4 shared-memory tracking, install aeroflybridge.dll from this package into your Aerofly 'external_dll' folder.\nAllow AeroScenery through the firewall / antivirus if the map does not move.");
 
+            var actionsTip = new System.Windows.Forms.ToolTip();
+            actionsTip.IsBalloon = true;
+            actionsTip.InitialDelay = 500;
+            actionsTip.SetToolTip(this.downloadOsmDataCheckBox, "Writes a PowerShell script to download OpenStreetMap Overpass data for the selected squares.\nEnable this in Settings (Elevation/OSM) first. Run the generated script in the working folder if the automatic run is skipped.");
+            actionsTip.SetToolTip(this.downloadElevationDataCheckBox, "Writes a PowerShell script to download 30 m elevation GeoTIFFs from OpenTopography for the selected area.\nSet an OpenTopography API key in Settings first. After download, use mesh_conv.bat for Aerofly .tth mesh files.");
+            actionsTip.SetToolTip(this.waterMaskingCheckBox, "Applies extra coastline/water masking from Carto Basemaps (OpenStreetMap).\nTurn this on in Settings (Carto API key + enhanced water masking) before it appears here.");
+            actionsTip.SetToolTip(this.allowShiftCorrectionCheckBox, "Optional north-south pixel shift applied when GeoConvert runs, for stitched images that sit slightly off the grid.\nEnable the feature in Settings (GeoConvert tab), then set the offset here if a tile is misaligned.");
+            actionsTip.SetToolTip(this.shiftCorrectionLevel, "North-south shift in GeoConvert levels (negative = south, positive = north).\nOnly used when Shift Correction is enabled.");
+            actionsTip.SetToolTip(this.installSceneryIntoAFSCheckBox, "After GeoConvert finishes, copy every selected square into the Aerofly user scenery folder from Settings.\nNeeds sequential GeoConvert if several squares run in one job. The toolbar Install Tile button still installs only the current square.");
+            actionsTip.SetToolTip(this.fixMissingTilesCheckBox, "Generates a PowerShell script that re-downloads only missing or empty image tiles instead of the whole square.");
+            actionsTip.SetToolTip(this.shutdownCheckbox, "When sequential GeoConvert is enabled, shut down Windows after every selected action (including Install Scenery) has finished.\nDisabled for parallel GeoConvert because jobs may still be running.");
+
+            var movingMapTip = new System.Windows.Forms.ToolTip();
+            movingMapTip.IsBalloon = true;
+            movingMapTip.InitialDelay = 500;
+            movingMapTip.SetToolTip(this.panel3DRadioButtonUDP, "HUD and aircraft position from Aerofly UDP broadcast (port 49002).\nWorks with FS2 and FS4 when 'Broadcast flight info' is on.");
+            movingMapTip.SetToolTip(this.panel3DRadioButtonDLL, "HUD and aircraft position from aeroflybridge.dll shared memory (Aerofly FS4).\nCopy the DLL from Resources\\external_dll into your Aerofly FS4 external_dll folder.");
+            movingMapTip.SetToolTip(this.movingMapFixCheckBox, "Keep the map centred; the aircraft symbol moves. Uncheck to pan the map with the aircraft.");
+            movingMapTip.SetToolTip(this.movingMapTraceFlightCheckBox, "Draw the flown route on the map.");
+            movingMapTip.SetToolTip(this.movingMapHideTilesCheckBox, "Hide working-grid overlays while the moving map is running so the view stays clearer.");
 
             // Initialize the AFS Levels CheckBoxLists
             afsLevels = new List<AFSLevel>();
@@ -3113,7 +3133,7 @@ namespace AeroScenery
 
             string yourIPAdress = GetLocalIPAddress();
 
-            var messageBox = new CustomMessageBox(String.Format("Your detected IP adress is: {0}", yourIPAdress),
+            var messageBox = new CustomMessageBox(String.Format("Your detected IP address is: {0}", yourIPAdress),
             "AeroScenery",
             MessageBoxIcon.Information);
 

@@ -1047,7 +1047,7 @@
             this.WaterMaskingEnabledCheckBox.Name = "WaterMaskingEnabledCheckBox";
             this.WaterMaskingEnabledCheckBox.Size = new System.Drawing.Size(278, 21);
             this.WaterMaskingEnabledCheckBox.TabIndex = 26;
-            this.WaterMaskingEnabledCheckBox.Text = "Einhanced water masking using OSM maps";
+            this.WaterMaskingEnabledCheckBox.Text = "Enhanced water masking using OSM maps";
             this.WaterMaskingEnabledCheckBox.UseVisualStyleBackColor = true;
             this.WaterMaskingEnabledCheckBox.CheckedChanged += new System.EventHandler(this.WaterMaskingEnabledCheckBox_CheckedChanged);
             // 

@@ -50,6 +50,14 @@ namespace AeroScenery.UI
             sequentialGeoConvertToolTip.IsBalloon = true;
             sequentialGeoConvertToolTip.InitialDelay = 500;
             sequentialGeoConvertToolTip.SetToolTip(this.useGeoConvertWrapperCheckBox, "When several grid squares are selected, run GeoConvert one square after another instead of all at once.\nThis is built into AeroScenery (the old GeoConvert Wrapper EXE is no longer used).\nEnable this if you also want 'Install Scenery' or 'Shut down PC when finished' to wait until every GeoConvert job has ended.");
+
+            var settingsExtraTip = new ToolTip();
+            settingsExtraTip.IsBalloon = true;
+            settingsExtraTip.InitialDelay = 500;
+            settingsExtraTip.SetToolTip(this.WaterMaskingEnabledCheckBox, "Adds Carto Basemaps / OpenStreetMap water masking when stitching.\nRequires a Carto API key on this page. The matching Actions checkbox then appears on the main window.");
+            settingsExtraTip.SetToolTip(this.cartodbKeyTextBox, "Carto Basemaps API key used for enhanced water masking.\nUse the 'Get a Carto Basemaps API Key' link if you do not have one.");
+            settingsExtraTip.SetToolTip(this.enableDownloadOsmDataCheckBox, "Shows 'Download OSM Data' under Actions on the main window and writes the Overpass PowerShell script for selected squares.");
+            settingsExtraTip.SetToolTip(this.AllowShiftCorrectionEnabledCheckBox, "Shows Shift Correction on the main window so you can apply a north-south offset when GeoConvert runs.");
         }
 
         private void closeButton_Click(object sender, EventArgs e)
