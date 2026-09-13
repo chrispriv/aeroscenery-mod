@@ -723,5 +723,5 @@ namespace AeroScenery.AFS2
             }
         }
     }
-
+}
 
