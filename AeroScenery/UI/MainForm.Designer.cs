@@ -94,6 +94,7 @@ namespace AeroScenery
             this.imagesTabPage = new System.Windows.Forms.TabPage();
             this.autoSelectAFSLevelsButton = new System.Windows.Forms.Button();
             this.generateAFS2LevelsHelpImage = new System.Windows.Forms.Label();
+            this.imageSourceHelpImage = new System.Windows.Forms.Label();
             this.zoomLevelLabel = new System.Windows.Forms.Label();
             this.zoomLevelTrackBar = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -803,6 +804,7 @@ namespace AeroScenery
             // imagesTabPage
             // 
             this.imagesTabPage.Controls.Add(this.autoSelectAFSLevelsButton);
+            this.imagesTabPage.Controls.Add(this.imageSourceHelpImage);
             this.imagesTabPage.Controls.Add(this.generateAFS2LevelsHelpImage);
             this.imagesTabPage.Controls.Add(this.zoomLevelLabel);
             this.imagesTabPage.Controls.Add(this.zoomLevelTrackBar);
@@ -839,6 +841,16 @@ namespace AeroScenery
             this.generateAFS2LevelsHelpImage.Size = new System.Drawing.Size(16, 17);
             this.generateAFS2LevelsHelpImage.TabIndex = 10;
             this.generateAFS2LevelsHelpImage.Text = "  ";
+            // 
+            // imageSourceHelpImage
+            // 
+            this.imageSourceHelpImage.AutoSize = true;
+            this.imageSourceHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("generateAFS2LevelsHelpImage.Image")));
+            this.imageSourceHelpImage.Location = new System.Drawing.Point(338, 22);
+            this.imageSourceHelpImage.Name = "imageSourceHelpImage";
+            this.imageSourceHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.imageSourceHelpImage.TabIndex = 12;
+            this.imageSourceHelpImage.Text = "  ";
             // 
             // zoomLevelLabel
             // 
@@ -1480,7 +1492,7 @@ namespace AeroScenery
             this.imageSourceComboBox.ImageList = null;
             this.imageSourceComboBox.Location = new System.Drawing.Point(112, 19);
             this.imageSourceComboBox.Name = "imageSourceComboBox";
-            this.imageSourceComboBox.Size = new System.Drawing.Size(243, 26);
+            this.imageSourceComboBox.Size = new System.Drawing.Size(220, 26);
             this.imageSourceComboBox.TabIndex = 1;
             this.imageSourceComboBox.SelectedIndexChanged += new System.EventHandler(this.imageSourceComboBox_SelectedIndexChanged);
             // 
@@ -1689,6 +1701,7 @@ namespace AeroScenery
         private System.Windows.Forms.TrackBar zoomLevelTrackBar;
         private System.Windows.Forms.Label zoomLevelLabel;
         private System.Windows.Forms.Label generateAFS2LevelsHelpImage;
+        private System.Windows.Forms.Label imageSourceHelpImage;
         private System.Windows.Forms.CheckBox shutdownCheckbox;
         private System.Windows.Forms.ToolStripStatusLabel statusStripLabel1;
         private System.Windows.Forms.ImageList imageList1;

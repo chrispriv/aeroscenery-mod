@@ -29,17 +29,17 @@ namespace AeroScenery.UI
             ToolTip toolTip1 = new ToolTip();
             toolTip1.IsBalloon = true;
             toolTip1.InitialDelay = 500;
-            toolTip1.SetToolTip(this.sdkGeoConvertHelpImage, "Aerofly FS2 GeoConvert (Aerofly FS2 SDK) converts stitched images. Use 'Get Aerofly FS2 SDK' in the toolbar for the download.\nSet Settings to the SDK root that contains the 'aerofly_fs_2_geoconvert' folder.");
+            toolTip1.SetToolTip(this.sdkGeoConvertHelpImage, "Aerofly FS2 GeoConvert (Aerofly FS2 SDK) converts stitched images. Use 'Get Aerofly FS2 SDK' in the toolbar for the download.\nSet Settings to the SDK root that contains the 'aerofly_fs_2_geoconvert\\' folder.");
 
             ToolTip toolTip2 = new ToolTip();
             toolTip2.IsBalloon = true;
             toolTip2.InitialDelay = 500;
-            toolTip2.SetToolTip(this.elevationMapHelpImage, "A free OpenTopography.org API key is required to download elevation data.\nWhen a key is set, 'Download Elevation Data (30m)' appears for the selected area.\nRun the generated PowerShell script _download_elevation_geotiff.ps1 to download.\nmesh_conv.bat then builds Aerofly .tth mesh files from the GeoTIFF via GeoConvert.");
+            toolTip2.SetToolTip(this.elevationMapHelpImage, "A free OpenTopography.org API key is required to download elevation data.\nWhen a key is set, 'Download Elevation Data (30m)' appears for the selected area.\nAfter the GeoTIFF images have downloaded, run mesh_conv.bat to convert them with GeoConvert into .tth files for Aerofly.");
 
             ToolTip toolTip3 = new ToolTip();
             toolTip3.IsBalloon = true;
             toolTip3.InitialDelay = 500;
-            toolTip3.SetToolTip(this.conversionForMobileHelpImage, "Aerofly FS2 Content Converter (SDK) can produce extra .ttc files for Android.\nWhen this option is on, 'Generate AID / TMC Files' also creates a mobile working folder from GeoConvert output.\nAfter GeoConvert finishes, run content_converter_config_mobile.bat to build the mobile .ttc files.");
+            toolTip3.SetToolTip(this.conversionForMobileHelpImage, "Aerofly FS2 Content Converter (SDK) can produce extra .ttc files for FSG Android.\nWhen this option is on, 'Generate AID / TMC Files' also creates a mobile working folder for further conversion of the raw images produced by GeoConvert.\nAfter GeoConvert finishes, right-click the generated TMC file and choose 'Run with Aerofly FS2 Content Converter' to run the extra conversion for FSG Android.\nThe FS2 Content Converter from the SDK must already be installed on the PC.");
 
             ToolTip toolTip6 = new ToolTip();
             toolTip6.IsBalloon = true;
@@ -54,9 +54,9 @@ namespace AeroScenery.UI
             var settingsExtraTip = new ToolTip();
             settingsExtraTip.IsBalloon = true;
             settingsExtraTip.InitialDelay = 500;
-            settingsExtraTip.SetToolTip(this.WaterMaskingEnabledCheckBox, "Adds Carto Basemaps / OpenStreetMap water masking when stitching.\nRequires a Carto API key on this page. The matching Actions checkbox then appears on the main window.");
+            settingsExtraTip.SetToolTip(this.label65, "Enables automatic water masking using Carto Basemaps to detect water (API key needed under Image Sources).\nThe Fade out and Replace 100% sliders (distance from the shoreline) can usually be left at the defaults 2 and 5.");
             settingsExtraTip.SetToolTip(this.cartodbKeyTextBox, "Carto Basemaps API key used for enhanced water masking.\nUse the 'Get a Carto Basemaps API Key' link if you do not have one.");
-            settingsExtraTip.SetToolTip(this.enableDownloadOsmDataCheckBox, "Shows 'Download OSM Data' under Actions on the main window and writes the Overpass PowerShell script for selected squares.");
+            settingsExtraTip.SetToolTip(this.label54, "Shows 'Download OSM Data' under Actions on the main window and downloads .osm data directly from OpenStreetMap.");
             settingsExtraTip.SetToolTip(this.AllowShiftCorrectionEnabledCheckBox, "Shows Shift Correction on the main window so you can apply a north-south offset when GeoConvert runs.");
         }
 

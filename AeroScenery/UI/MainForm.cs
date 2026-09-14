@@ -216,19 +216,21 @@ namespace AeroScenery
             toolTip1.IsBalloon = true;
             toolTip1.InitialDelay = 500;
             //#MOD
-            toolTip1.SetToolTip(this.generateAFS2LevelsHelpImage, "First set the image resolution with the 'Image Detail (Zoom Level)' slider, then press [Choose for me].\nAeroScenery selects the Aerofly levels that GeoConvert should compile.\nLevel 16 (~2.389 m) is a good default for a full Size 9 square. Use a higher zoom for smaller areas.");
+            toolTip1.SetToolTip(this.generateAFS2LevelsHelpImage, "First set the image resolution with the 'Image Detail (Zoom Level)' slider, then press [Choose for me].\nAeroScenery selects the Aerofly levels that GeoConvert should compile.\nLevel 16 (~2.389 m) is a good default for a full Size 9 square. Use a higher zoom level to make smaller tiles at a higher resolution.");
 
             //#MOD
             System.Windows.Forms.ToolTip toolTip2 = new System.Windows.Forms.ToolTip();
             toolTip2.IsBalloon = true;
             toolTip2.InitialDelay = 500;
-            toolTip2.SetToolTip(this.chooseActionsToRunHelpImage, "Use 'Run Default actions' to run the required steps in order.\nAfter GeoConvert finishes, enable 'Install Scenery (waiting for GeoConvert)' under Actions to copy every selected tile into the Aerofly user folder set in Settings.\nUse 'Choose actions to run' to run or repeat single steps (for example after editing stitched images). The toolbar 'Install Tile' button installs only the currently selected square.");
+            toolTip2.SetToolTip(this.chooseActionsToRunHelpImage, "Use 'Run Default actions' to run the required steps in order.\nIf 'Install Scenery (waiting for GeoConvert)' is selected, all selected tiles are installed automatically into the Aerofly working user folder set in Settings after GeoConvert finishes.\nUse 'Choose actions to run' to run or repeat single steps (for example 'Run GeoConvert' after manually editing the stitched images).\nThe toolbar 'Install Tile' button installs only the currently selected square.");
 
             //#MOD_j
             System.Windows.Forms.ToolTip toolTip3 = new System.Windows.Forms.ToolTip();
             toolTip3.IsBalloon = true;
             toolTip3.InitialDelay = 500;
             toolTip3.SetToolTip(this.movingMapHelpImage, "Moving map (Aerofly FS2/FS4): turn on 'Broadcast flight info to IP address' under Settings > Miscellaneous settings.\nClick the (?) help icon for the broadcast IP (for example xxx.xxx.xxx.255). Broadcast port is 49002.\nFor FS4 shared-memory tracking, install aeroflybridge.dll from this package into your Aerofly 'external_dll' folder.\nAllow AeroScenery through the firewall / antivirus if the map does not move.");
+
+            toolTip1.SetToolTip(this.imageSourceHelpImage, "First choose the Grid Square Size in the main toolbar, then select the Image Source.\nAerofly sceneries should be based on Size 9, or at least Size 10, at a base resolution.\nFor a first test you can start with a smaller tile.");
 
             var actionsTip = new System.Windows.Forms.ToolTip();
             actionsTip.IsBalloon = true;
