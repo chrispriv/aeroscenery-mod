@@ -23,12 +23,13 @@ This project is a community-maintained fork of
 
 ### Changed
 - NuGet packages (including GMap.NET) updated
-- Tooltips and beginner hints (still being cleaned up)
+- Tooltips and beginner hints
 
 ### Removed
 - GeoConvert Wrapper project and EXE workflow
 - Non-functional original MSI installer project
 - TreesDetection integration (Aerofly FS4 Global Data; app no longer public). Still available in Mod j.
+- **Show Airports** toolbar item (fscloudport.com is no longer online). The scrape, SQLite cache and map-marker code is retained for a later airport source (e.g. OurAirports / local ICAO scan).
 
 ---
 

@@ -405,14 +405,20 @@ namespace AeroScenery
 
             log.Info(String.Format("AeroScenery v{0} Started", AeroSceneryManager.Instance.Version));
 
-            await this.fsCloudPortService.UpdateAirportsIfRequiredAsync();
-            var airports = await this.fsCloudPortService.GetAirportsAsync();
-            this.fsCloudPortMarkerManager.Airports = airports;
-
-            if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
-            {
-                this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
-            }
+            //#MOD_k
+            // Show Airports is hidden for Mod k: fscloudport.com is permanently offline.
+            // The FSCloudPort scrape, SQLite cache and map-marker code is kept for a later
+            // replacement (e.g. OurAirports / local ICAO scan). Do not contact the dead server
+            // at startup.
+            AeroSceneryManager.Instance.Settings.ShowAirports = false;
+            //await this.fsCloudPortService.UpdateAirportsIfRequiredAsync();
+            //var airports = await this.fsCloudPortService.GetAirportsAsync();
+            //this.fsCloudPortMarkerManager.Airports = airports;
+            //
+            //if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
+            //{
+            //    this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
+            //}
 
         }
 
@@ -483,7 +489,7 @@ namespace AeroScenery
 
             if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
             {
-                this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
+                //#MOD_k Show Airports is hidden; do not draw fscloudport markers.
                 this.showAirportsToolstripButton.Text = "Hide Airports";
             }
             else

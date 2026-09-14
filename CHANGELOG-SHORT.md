@@ -13,6 +13,7 @@ Based on AeroScenery 1.1.3-beta
 - Optional GeoConvert N/S shift correction
 - Aerofly FS4 Bridge moving-map support
 - TreesDetection removed (use Mod j if still needed)
+- Show Airports hidden: fscloudport.com is offline (code kept for a later airport source)
 
 ---
 

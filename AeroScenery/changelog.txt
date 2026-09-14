@@ -28,6 +28,7 @@ Change log
  - AeroScenery can now also be run locally as a portable application without requiring the original MSI installation (non-functional original MSI installer removed from project)
  - Updated included NuGet packages (incl. GMap.NET) to newer versions to address potential security issues
  - External TreesDetection application is no longer supported, as tree generation is now handled through Global Data streaming in Aerofly FS4 and the application is no longer publicly available (still supported in AeroScenery 1.1.3 Mod_j)
+ - Show Airports has been removed from the toolbar because fscloudport.com is no longer online. The existing download, SQLite and map-marker code is kept for a later replacement (e.g. OurAirports / local ICAO scan).
 
 1.1.3 Mod_j by chrispriv
  - Now also to be used as a moving map for Aerofly reading UDP data port with data streaming 'on' in Aerofly FS2/4 Settings
