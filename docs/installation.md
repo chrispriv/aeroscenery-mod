@@ -51,20 +51,20 @@ Many problems come from skipping Settings.
 
 Set at least:
 
-- **Working folder** — downloads, stitches, scripts
-- **AeroScenery database folder**
-- **AFS user folder** — Aerofly user directory (Install Tile / Install Scenery)
+- **Working folder** — downloads, stitches, scripts (you may keep the default)
+- **AeroScenery database folder** — user settings and SQLite database (you may keep the default)
+- **Aerofly FS2 SDK path** (mandatory) — see the separate GeoConvert section
+- **AFS user folder** — Aerofly FS4 user folder (Install Tile Scenery), users without fs4 may create a dummy folder
 - **AFS Working Scenery Folder** — scenery name/folder used when installing
   into Aerofly FS4. Set this **before** using **Install Scenery (waiting for GeoConvert)**
 
 ### Tab 2 — GeoConvert
 
-- **Aerofly FS2 SDK path** (mandatory) — see the next section
 - Optional: **Run GeoConvert sequentially for multiple squares** (recommended
   on a normal PC)
 - Optional: conversion-for-mobile folder (FSG Android only)
 
-Do not start a nine-tile job until these two tabs are filled.
+Do not start a job until these two tabs are filled.
 
 ---
 
@@ -72,16 +72,15 @@ Do not start a nine-tile job until these two tabs are filled.
 
 AeroScenery calls `aerofly_fs_2_geoconvert.exe`. It is **not** bundled.
 
-The SDK is no longer one installer package. IPACS currently offers the tools
-as **separate apps**. Download GeoConvert from:
+The SDK is no longer one installer package and supported by IPACS. It's even still available as **separate apps**. Download GeoConvert from:
 
 https://www.aerofly-sim.de/aerofly_fs_2_sdk
 
 Then:
 
 1. **Unzip** the GeoConvert archive onto a disk (for example `D:\aerofly_sdk\`).
-   Do not run a Windows “install” unless the archive actually contains a setup.
-2. You need a folder that contains **`aerofly_fs_2_geoconvert\`** (with the
+   Do not run a Windows “install” caus it contains no setup.
+2. You need a subfolder that contains **`aerofly_fs_2_geoconvert\`** (with the
    EXE inside that subfolder).
 3. In Settings → GeoConvert, set the path to the **SDK root**, not to the
    `.exe`.
@@ -98,7 +97,7 @@ The `(?)` next to the SDK field describes the same rule.
 
 ## Installing scenery into Aerofly (do not copy by hand)
 
-Do **not** copy `.ttc` files into Aerofly folders manually.
+Once the GeoConverter process is complete, do **not** copy `.ttc` files into Aerofly folders manually.
 
 - **Install Tile** (map toolbar) — current grid square only, after GeoConvert
 - **Install Scenery (waiting for GeoConvert)** (Actions) — all selected squares,

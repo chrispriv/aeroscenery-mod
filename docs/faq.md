@@ -9,7 +9,7 @@ No. This is an unofficial, community-maintained fork of Nick Hod’s AeroScenery
 ## Does this work with Aerofly FS 4?
 
 Yes. Photo scenery, **Install Scenery**, and the moving map (UDP and FS4
-shared memory) are used with FS4. Zoom 18 is for FS4 **PC** hotspots only,
+shared memory) are used with FS4. Zoom 18 should be used for FS4 **PC** hotspots only,
 not for FSG Android.
 
 ---

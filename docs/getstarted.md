@@ -1,6 +1,6 @@
 ﻿# Get Started – First Photo Scenery
 
-Create a small test scenery for **Aerofly FS 2 / FS 4** with **Community Mod k**.
+Create a small test scenery for **Aerofly FS4** with **Community Mod k**.
 
 Install first: [Installation Guide](installation.md) (portable ZIP by default).
 Complete Settings tabs **AeroScenery** and **GeoConvert** before you continue.
@@ -9,7 +9,7 @@ Complete Settings tabs **AeroScenery** and **GeoConvert** before you continue.
 
 ## Grid size and zoom (read this first)
 
-Users often pick tiles that are too small, or Size 9 at zoom **20**
+Users often pick tiles that are too small, or Size 9 at much too high zoom **20**
 (~0.149 m/pixel). That is far too heavy for a first try.
 
 | Use | Grid Square Size (toolbar) | Image Detail (zoom) | Approx. resolution |
@@ -32,7 +32,7 @@ Do not start **nine Size 9** squares on a first run. One test square is enough.
 
 - Pan the map, pick land
 - Toolbar: Size 11 for a test, later Size 9 or 10
-- Click the map to select the square(s)
+- Click the map to select the square(s), one may be enough for a first try
 
 ---
 
@@ -50,9 +50,8 @@ Do not start **nine Size 9** squares on a first run. One test square is enough.
 - Or **Choose Actions To Run** for single steps (for example **Run GeoConvert**
   again after you edited stitched images)
 
-For FS4 on PC, enable **Install Scenery (waiting for GeoConvert)** so every
-selected square is installed when GeoConvert finishes. Set **AFS Working
-Scenery Folder** in Settings first.
+Set **AFS Working Scenery Folder** in Settings first. Enable **Install Scenery (waiting for GeoConvert)** so every
+selected square is installed for FS4 PC when GeoConvert finishes. 
 
 **Install Tile** on the map toolbar installs **only** the square that is
 selected. Prefer these functions over copying files by hand.
@@ -62,7 +61,8 @@ selected. Prefer these functions over copying files by hand.
 ## Step 4 – Run and wait
 
 Click **Start**. Downloads can take time. GeoConvert is heavier than the
-image download.
+image download, takes much longer and is CPU and memory intensive. 
+You can continue to work in AeroScenery while GeoConvert runs on powerful hardware.
 
 On a normal PC, turn on sequential GeoConvert in Settings if you process
 more than one square. Details: [Installation](installation.md).
@@ -71,7 +71,7 @@ more than one square. Details: [Installation](installation.md).
 
 ## Step 5 – Check in Aerofly
 
-- Start Aerofly FS 2 or FS 4
+- Start Aerofly FS4
 - Confirm the scenery name/folder you set in Settings
 - If nothing shows: you probably copied files manually — use **Install Tile**
   or **Install Scenery** and check the AFS user folder path
@@ -80,7 +80,7 @@ more than one square. Details: [Installation](installation.md).
 
 ## Next
 
-- Raise zoom only on airports and cities (17, or 18 on FS4 PC)
+- Raise zoom only on airports and cities (17, or up to 18 on FS4 PC)
 - Optional: OSM / elevation downloads, water masking (Settings + Actions)
 - [Feature Overview](featureoverview.md)
 - [FAQ](faq.md)
