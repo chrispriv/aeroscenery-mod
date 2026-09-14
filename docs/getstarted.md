@@ -1,93 +1,86 @@
-﻿# Get Started – Create Your First Photo Scenery
+﻿# Get Started – First Photo Scenery
 
-This guide walks you step by step through the creation of your **first photo
-scenery for Aerofly FS 2 / FS 4** using **AeroScenery Community Mod**.
+Create a small test scenery for **Aerofly FS 2 / FS 4** with **Community Mod k**.
 
----
-
-> ⚠️ **Work in progress**  
-> This guide is currently under construction and will be expanded with
-> screenshots and additional explanations.
+Install first: [Installation Guide](installation.md) (portable ZIP by default).
+Complete Settings tabs **AeroScenery** and **GeoConvert** before you continue.
 
 ---
 
-## Prerequisites (Short Overview)
+## Grid size and zoom (read this first)
 
-Before starting, make sure that:
+Users often pick tiles that are too small, or Size 9 at zoom **20**
+(~0.149 m/pixel). That is far too heavy for a first try.
 
-- AeroScenery Community Mod k is extracted and can start (portable ZIP / local build)
-- GeoConvert.exe is available
-- Aerofly FS 2 or FS 4 is installed
+| Use | Grid Square Size (toolbar) | Image Detail (zoom) | Approx. resolution |
+|---|---|---|---|
+| First test | Size **11** | 15 or 16 | ~4.8 m or ~2.4 m |
+| Normal base scenery | Size **9** or **10** (default 9) | 15 or 16 | ~4.8 m or ~2.4 m |
+| Airports, towns (smaller area) | Smaller than the base, or a subset | 17 | ~1.2 m |
+| Airport grounds, FS4 **PC** only | Small area | 18 | ~0.6 m |
 
-➡️ For detailed installation instructions, see:
-[Installation Guide](installation.md)
+Zoom **18** is not useful for the **mobile** (FSG Android) path.
 
----
+On the main window: set **Grid Square Selection Size** in the toolbar first,
+then **Image Source**. The `(?)` next to Image Source explains the same order.
 
-## Step 1 – Choose a Location
-
-- Select a geographic area using the map
-- Zoom level considerations
-- Choosing a reasonable scenery size for beginners
-
-*(Screenshot placeholder)*
+Do not start **nine Size 9** squares on a first run. One test square is enough.
 
 ---
 
-## Step 2 – Select Image Sources
+## Step 1 – Location and size
 
-- Available imagery sources
-- Differences between sources
-- Recommended settings for first-time users
-
-*(Screenshot placeholder)*
+- Pan the map, pick land
+- Toolbar: Size 11 for a test, later Size 9 or 10
+- Click the map to select the square(s)
 
 ---
 
-## Step 3 – Configure Scenery Settings
+## Step 2 – Image source and zoom
 
-- Zoom level selection
-- Tile size and coverage
-- Output format overview
-
-*(Screenshot placeholder)*
+- Choose an image source (Google and similar sources have their own limits)
+- Set **Image Detail (Zoom Level)** — 15 or 16 for the first scenery
+- **Generate AFS Levels** → **Choose For Me** (see the `(?)` there)
 
 ---
 
-## Step 4 – Download and Process Scenery
+## Step 3 – Actions
 
-- Downloading imagery
-- Running GeoConvert
-- Typical processing times
-- Common errors and warnings
+- **Run Default Actions** runs the usual chain
+- Or **Choose Actions To Run** for single steps (for example **Run GeoConvert**
+  again after you edited stitched images)
 
-*(Screenshot placeholder)*
+For FS4 on PC, enable **Install Scenery (waiting for GeoConvert)** so every
+selected square is installed when GeoConvert finishes. Set **AFS Working
+Scenery Folder** in Settings first.
 
----
-
-## Step 5 – Install the Scenery in Aerofly FS
-
-- Where AeroScenery places the output
-- Aerofly scenery directory structure
-- Verifying the installation in Aerofly FS
-
-*(Screenshot placeholder)*
+**Install Tile** on the map toolbar installs **only** the square that is
+selected. Prefer these functions over copying files by hand.
 
 ---
 
-## Step 6 – First Test in Aerofly FS
+## Step 4 – Run and wait
 
-- Loading the scenery
-- Checking alignment and resolution
-- What to do if the scenery does not appear
+Click **Start**. Downloads can take time. GeoConvert is heavier than the
+image download.
+
+On a normal PC, turn on sequential GeoConvert in Settings if you process
+more than one square. Details: [Installation](installation.md).
 
 ---
 
-## Next Steps
+## Step 5 – Check in Aerofly
 
-- Improve quality with higher zoom levels
-- Add cultivation and elevation data
-- Explore advanced AeroScenery features
+- Start Aerofly FS 2 or FS 4
+- Confirm the scenery name/folder you set in Settings
+- If nothing shows: you probably copied files manually — use **Install Tile**
+  or **Install Scenery** and check the AFS user folder path
 
-➡️ See also:
-[Feature Overview](featureoverview.md)
+---
+
+## Next
+
+- Raise zoom only on airports and cities (17, or 18 on FS4 PC)
+- Optional: OSM / elevation downloads, water masking (Settings + Actions)
+- [Feature Overview](featureoverview.md)
+- [FAQ](faq.md)

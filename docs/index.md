@@ -1,63 +1,34 @@
 ﻿# AeroScenery Community Mod – Documentation
 
-Welcome to the documentation of the **AeroScenery Community Mod**.
-
-This site provides extended documentation, guides and feature descriptions
-for the community-maintained AeroScenery fork based on version 1.1.3-beta
-(current line: **Mod k TEST**, portable, no MSI).
-
----
-
-> ⚠️ **Work in progress**  
-> This documentation is currently under active development.  
-> Content, structure and screenshots will be expanded and refined over time.
+Guides for the **AeroScenery Community Mod k** fork of Nick Hod’s AeroScenery
+1.1.3-beta. Mod k is **portable** (unzip and run). A later **2.0.0** line may
+add a new community MSI; that is not part of Mod k.
 
 ---
 
 ## Getting Started
 
-If you are new to the AeroScenery Community Mod, start here:
-
 - 🚀 [Get Started](getstarted.md)  
-  Installation overview, requirements and first run instructions.
-
----
-
-## Features
-
-Learn more about the enhancements introduced by the community-maintained mod:
-
-- ⭐ [Feature Overview (Detailed)](featureoverview.md)  
-  Extended descriptions and screenshots of key features.
-
----
-
-## Installation & Usage
+  Grid size, zoom, first scenery, Install Tile / Install Scenery.
 
 - 🛠️ [Installation Guide](installation.md)  
-  Step-by-step installation instructions and common pitfalls.
+  Portable ZIP (default) or overlay on the official 1.0.1 MSI, GeoConvert path,
+  first Settings tabs.
 
 ---
 
-## Help & Reference
+## Features and help
 
-- ❓ [FAQ](faq.md)  
-  Frequently asked questions and known issues.
-
-- 📝 [Changelog](https://github.com/chrispriv/aeroscenery-mod/blob/master/CHANGELOG.md)  
-  Detailed list of changes and release history.
+- ⭐ [Feature Overview](featureoverview.md)
+- ❓ [FAQ](faq.md)
+- 📝 [Changelog](https://github.com/chrispriv/aeroscenery-mod/blob/master/CHANGELOG.md)
 
 ---
 
-## Project Background
+## Project
 
-This project is an **unofficial, community-maintained fork** of the original
-[AeroScenery](https://github.com/nickhod/aeroscenery) application.
+Unofficial community fork of [AeroScenery](https://github.com/nickhod/aeroscenery).
+The original author is inactive; this line keeps the app usable on current PCs
+and Aerofly FS 4.
 
-The goal is to keep AeroScenery usable on modern systems, provide maintenance,
-and extend functionality where reasonable, while remaining compatible with the
-original design.
-
----
-
-⬅️ Return to the [GitHub repository](https://github.com/chrispriv/aeroscenery-mod)
+⬅️ [GitHub repository](https://github.com/chrispriv/aeroscenery-mod)

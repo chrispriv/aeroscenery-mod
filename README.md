@@ -1,11 +1,11 @@
-﻿# AeroScenery Community Mod (Mod k TEST)
+﻿# AeroScenery Community Mod (Mod k)
 
 This repository is an **unofficial, community-maintained fork** of
 [AeroScenery](https://github.com/nickhod/aeroscenery), originally developed by Nick Hod.
 
 It is based on **AeroScenery 1.1.3-beta** and continues the community line
-through Mods a–j. The current working line is **Mod k** (TEST): portable,
-no MSI installer, and sequential GeoConvert built into the main app.
+through Mods a–j. The current public line is **Mod k**: portable by default,
+no community MSI, sequential GeoConvert built into the main app.
 
 ---
 
@@ -13,12 +13,12 @@ no MSI installer, and sequential GeoConvert built into the main app.
 
 - Base version: **AeroScenery 1.1.3-beta**
 - .NET Framework **4.8**
-- Current line: **1.1.3 Mod k (TEST)**
+- Current line: **1.1.3 Mod k**
 - Original author currently inactive
 
-Mod k can run as a **portable** application (extract and run). The old
-AeroScenery 1.0.1 MSI is no longer required. A new community MSI is planned
-for a later **2.0.0** release and is **not** part of this TEST snapshot.
+Mod k runs as a **portable** app (extract and run). The original
+**AeroScenery 1.0.1 MSI** is optional (overlay). A new community MSI is planned
+for a later **2.0.0** release, not for Mod k.
 
 ---
 
@@ -52,21 +52,19 @@ in Mod k. Sequential GeoConvert runs inside AeroScenery.
 
 ---
 
-## Installation (Portable ZIP)
+## Installation
 
-1. Download the **Community Mod k** ZIP from GitHub Releases (when published)
-   or build `AeroScenery` from this repository in Visual Studio.
-2. Extract the folder anywhere (no Program Files install required).
-3. Keep the libraries next to `AeroScenery.exe` (NuGet does not restore every
-   dependency used at runtime).
-4. Start `AeroScenery.exe` and set the Aerofly SDK / GeoConvert path under
-   **Settings**.
+**Default (portable):** download the Mod k ZIP from GitHub Releases, extract
+the whole folder anywhere, start `AeroScenery.exe`. Then fill in Settings tabs
+**AeroScenery** and **GeoConvert** (SDK **folder**, not the GeoConvert EXE).
 
-The original **AeroScenery 1.0.1 MSI** is optional history, not a requirement
-for Mod k.
+**Alternative:** install Nick Hod’s official [AeroScenery 1.0.1 MSI](https://github.com/nickhod/aeroscenery/releases/tag/1.0.1)
+(there is no official 1.1.3 installer), then copy the Mod k ZIP over
+`Program Files (x86)\AeroScenery\` and overwrite.
 
-➡️ Step-by-step notes: [installation](docs/installation.md) and
-[get started](docs/getstarted.md).
+Keep every file next to the EXE. NuGet does not restore all runtime libraries.
+
+➡️ [Installation](docs/installation.md) · [Get started](docs/getstarted.md)
 
 ---
 
@@ -89,10 +87,9 @@ Binary releases (portable ZIP, no installer) are provided via **GitHub Releases*
 Published community line so far:
 
 - **v1.1.3-mod.j**
-- **v1.1.3-mod.k** (TEST — this branch; release ZIP after remaining UI polish)
+- **v1.1.3-mod.k** (portable ZIP, no installer)
 
-A later **2.0.0** line is planned with a new MSI. That work is out of scope
-until Mod k is finished.
+A later **2.0.0** line is planned with a new MSI.
 
 ---
 
@@ -110,10 +107,7 @@ until Mod k is finished.
 
 ## Notes
 
-- This is a TEST snapshot of Mod k: functionally stable, with remaining
-  tooltip and Install Scenery polish still planned.
-- `bin\Debug` is gitignored. Local builds still need those libraries beside
-  the EXE because NuGet does not restore them all.
+- Mod k is portable. Runtime libraries must sit next to `AeroScenery.exe`.
 - Community project, provided "as is".
 
 ---
