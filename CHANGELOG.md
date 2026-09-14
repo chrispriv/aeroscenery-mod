@@ -7,7 +7,7 @@ This project is a community-maintained fork of
 
 ---
 
-## [1.1.3-mod.k] – Community Mod k (TEST)
+## [1.1.3-mod.k] – Community Mod k
 **Maintainer:** chrispriv  
 **Based on:** AeroScenery 1.1.3-beta / community Mod j
 
@@ -24,6 +24,7 @@ This project is a community-maintained fork of
 ### Changed
 - NuGet packages (including GMap.NET) updated
 - Tooltips and beginner hints
+- GitHub Pages docs: portable install (default), optional 1.0.1 MSI overlay, GeoConvert path, tile size/zoom, sequential GeoConvert
 
 ### Removed
 - GeoConvert Wrapper project and EXE workflow

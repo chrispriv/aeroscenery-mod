@@ -5,7 +5,7 @@ Based on AeroScenery 1.1.3-beta
 
 ---
 
-## v1.1.3-mod.k (TEST)
+## v1.1.3-mod.k
 - Portable app (no MSI required)
 - Sequential GeoConvert built into AeroScenery (GeoConvert Wrapper removed)
 - Install Scenery for all selected tiles (waits for GeoConvert)
