@@ -118,7 +118,9 @@ In Mod k:
 
 - Settings → GeoConvert → **Run GeoConvert sequentially for multiple squares**
 - If **Install Scenery (waiting for GeoConvert)** is on, processing stays
-  sequential so install can wait for each job
+  sequential so install can wait for each job. AeroScenery then closes the
+  GeoConvert window after about **60 seconds** of idle work unless you close
+  it first. If detection fails, close the GeoConvert console manually.
 
 A fast PC can still run GeoConvert in parallel (sequential option off) and
 download or stitch further tiles while GeoConvert is busy. Start with

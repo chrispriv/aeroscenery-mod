@@ -65,7 +65,11 @@ image download, takes much longer and is CPU and memory intensive.
 You can continue to work in AeroScenery while GeoConvert runs on powerful hardware.
 
 On a normal PC, turn on sequential GeoConvert in Settings if you process
-more than one square. Details: [Installation](installation.md).
+more than one square. With **Install Scenery (waiting for GeoConvert)**,
+AeroScenery waits about **60 seconds** of idle GeoConvert (stable memory and
+lower CPU) before it closes the GeoConvert window, unless you close it
+yourself. If the automatic “finished” detection fails, close the GeoConvert
+console manually. Details: [Installation](installation.md) and [FAQ](faq.md).
 
 ---
 
@@ -95,17 +99,71 @@ Aerofly install for that.
 
 ### Extra conversion for Android
 
-1. Install **Aerofly FS2 Content Converter** from the FS2 SDK tools on the PC
-   (same SDK family as GeoConvert; it is a separate app).
-2. In Settings → **GeoConvert**, enable conversion for mobile so **Generate
-   AID / TMC Files** also creates a mobile working folder from the GeoConvert
-   raw images.
-3. After GeoConvert has finished, open that folder, right-click the generated
-   **TMC** file and choose **Run with Aerofly FS2 Content Converter**.
-4. Use a sensible zoom for mobile (15–17). Zoom **18** is for FS4 PC hotspots
-   only and is not useful on FSG Android.
+1. Install **Aerofly FS 2 Content Converter** from the FS2 SDK tools on the PC
+   (same SDK family as GeoConvert; it is a **separate** app and must already
+   be installed).
+2. In Settings → **GeoConvert**, enable **Conversion for mobile**. Then the
+   step **Generate AID / TMC Files** also creates:
+   - a folder named `##-geoconvert-ttc-mobile` (`##` is the zoom level), and
+   - `content_converter_config_mobile.tmc`
+3. After GeoConvert has finished, right-click that **TMC** file and choose
+   **Run with Aerofly FS 2 Content Converter**. That writes FSG (Android)
+   compatible `.ttc` files.
+4. In the scenery **install** folder (the dummy folder is fine if you do not
+   use FS4) — **better: a copy of that folder** — replace the desktop `.ttc`
+   files with these mobile `.ttc` files.
+5. Pack the scenery for FSG as a **`.tme`** file. The folder layout is close
+   to FS4; only the front part (the `scenery` insert) differs:
 
-The `(?)` next to **Conversion for mobile** in Settings repeats this sequence.
+   `dlc_<scenery-name>\scenery\images\map_09_...`
+
+   Zip that folder, then rename `.zip` to `.tme`. This rename trick is **only
+   for image scenery**, not for other FSG add-ons.
+
+Use a sensible zoom for mobile (15–17). Zoom **18** is for FS4 PC hotspots
+only.
+
+The `(?)` next to **Conversion for mobile** in Settings covers the TMC step.
+To run the extra conversion **later** on existing tiles, see the [FAQ](faq.md).
+
+---
+
+## Moving map (Aerofly FS4 only)
+
+The moving map tracks the aircraft on the AeroScenery map. It works **only with
+Aerofly FS4 on PC**:
+
+- **FSG Android** has no *Broadcast flight info to IP address* setting.
+- **Shared memory** works only on the **same PC** that is running FS4.
+
+Open the **Moving Map** side tab. Use **UDP** or **DLL (Shared Memory)** under
+the HUD. Map fixed, flight tracing and hide working tiles are optional.
+
+### UDP
+
+1. In Aerofly FS4: **Settings → Miscellaneous → Broadcast flight info to IP
+   address = on**.
+2. Set the broadcast IP to your subnet broadcast (last octet **255**), for
+   example `192.168.1.255`.
+3. Set **Broadcast IP port** to **49002**.
+4. Click the moving-map `(?)` in AeroScenery to see the IPv4 address it
+   detected. Allow AeroScenery through the firewall / antivirus if the map
+   does not move.
+5. Start a flight in FS4, then start the moving map in AeroScenery.
+
+### Shared memory (DLL bridge)
+
+This mode uses **AeroflyBridge** by [Juan Luis Gabriel (jlgabriel)](https://github.com/jlgabriel/Aerofly-FS4-Bridge)
+(MIT). Follow that project’s **Quick install**:
+
+1. Copy `AeroflyBridge.dll` into  
+   `%USERPROFILE%\Documents\Aerofly FS 4\external_dll\`  
+   Mod k includes a copy under `Resources\external_dll\`. You can also take
+   the DLL from the [Aerofly-FS4-Bridge releases](https://github.com/jlgabriel/Aerofly-FS4-Bridge/releases).
+2. Start Aerofly FS4 and load a flight.
+3. In AeroScenery, select **DLL (Shared Memory)** on the Moving Map tab.
+
+Credits: Aerofly FS4 Bridge — https://github.com/jlgabriel/Aerofly-FS4-Bridge
 
 ---
 
@@ -113,5 +171,7 @@ The `(?)` next to **Conversion for mobile** in Settings repeats this sequence.
 
 - Raise zoom only on airports and cities (17, or up to 18 on FS4 PC)
 - Optional: OSM / elevation downloads, water masking (Settings + Actions)
+- Optional: FSG Android conversion and `.tme` pack (Step 6)
+- Moving map: UDP or shared-memory DLL (FS4 PC only)
 - [Feature Overview](featureoverview.md)
 - [FAQ](faq.md)

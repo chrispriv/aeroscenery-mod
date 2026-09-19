@@ -88,6 +88,12 @@ In Mod k enable **Run GeoConvert sequentially for multiple squares**
 (Settings → GeoConvert). The same sequential behaviour applies when
 **Install Scenery (waiting for GeoConvert)** is selected.
 
+With that option, the GeoConvert window is closed automatically after about
+**60 seconds** of idle work (stable memory and a CPU drop), unless you close
+it earlier. The delay avoids stopping GeoConvert too soon. If automatic
+completion detection fails in a particular case, close the GeoConvert console
+manually.
+
 Do not begin with nine Size 9 squares. A powerful PC may still run GeoConvert
 in parallel and download or stitch more tiles at the same time.
 
@@ -99,6 +105,51 @@ in parallel and download or stitch more tiles at the same time.
 - Stitch and AID/TMC steps have already run
 - Watch the log for “Running GeoConvert”
 - One square first; sequential mode if you run several
+- If sequential install never continues: wait ~60 seconds, or close the
+  GeoConvert console yourself
+
+---
+
+## How do I convert existing tiles for FSG Android later?
+
+Turn on **Conversion for mobile** in Settings → **GeoConvert**. Select the
+tiles with the **same Image Source** and **Image Detail (Zoom Level)** as
+the original job. Under **Choose Actions To Run**, run **only**
+**Generate AID / TMC Files**. Then right-click `content_converter_config_mobile.tmc`
+and choose **Run with Aerofly FS 2 Content Converter**. Replace `.ttc` files
+in a **copy** of the scenery folder and pack as `.tme`
+(`dlc_<scenery-name>\scenery\images\map_09_...`). See [Get Started](getstarted.md)
+Step 6.
+
+---
+
+## The moving map does not move / which mode should I use?
+
+The moving map works **only with Aerofly FS4 on the PC**. FSG Android has no
+*Broadcast flight info to IP address* setting. Shared memory works only on
+the **same computer** that is running FS4.
+
+**UDP**
+
+- FS4: **Settings → Miscellaneous → Broadcast flight info to IP address = on**
+- Broadcast IP: your LAN broadcast (last octet **255**), for example
+  `192.168.1.255`
+- **Broadcast IP port:** **49002**
+- Click the moving-map `(?)` in AeroScenery for the detected address
+- Allow AeroScenery in the firewall / antivirus
+- FS4 must be in a flight
+
+**Shared memory (DLL)**
+
+- Copy `AeroflyBridge.dll` to  
+  `%USERPROFILE%\Documents\Aerofly FS 4\external_dll\`  
+  (from Mod k `Resources\external_dll\` or from
+  [Aerofly-FS4-Bridge](https://github.com/jlgabriel/Aerofly-FS4-Bridge))
+- Start FS4, load a flight, then choose **DLL (Shared Memory)** in AeroScenery
+- Credits: [jlgabriel/Aerofly-FS4-Bridge](https://github.com/jlgabriel/Aerofly-FS4-Bridge)
+  (Quick install in that README)
+
+Full steps: [Get Started — Moving map](getstarted.md).
 
 ---
 
@@ -128,17 +179,6 @@ If Windows reports that running scripts is disabled:
    ```
 
 4. Confirm when prompted.
-
----
-
-## The moving map does not move
-
-- Aerofly: **Settings → Miscellaneous → Broadcast flight info to IP address = on**
-- Port **49002**. Click the moving-map `(?)` to see the detected IP
-- Allow AeroScenery in the firewall / antivirus
-- FS4 shared memory: copy `aeroflybridge.dll` from this package into the
-  Aerofly FS4 `external_dll` folder
-- Aerofly must be running
 
 ---
 

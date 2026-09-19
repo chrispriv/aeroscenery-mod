@@ -81,8 +81,10 @@ Actions, after the matching Settings switches.
 
 ## Moving map
 
-UDP broadcast (port 49002) for FS2/FS4, plus Aerofly FS4 **shared memory**
-via `aeroflybridge.dll`. Map-fixed, flight trace, hide working tiles, HUD.
+**Aerofly FS4 on PC only.** UDP broadcast (port **49002**, IP `…255`) or
+shared memory via `AeroflyBridge.dll`
+([jlgabriel/Aerofly-FS4-Bridge](https://github.com/jlgabriel/Aerofly-FS4-Bridge)).
+Map-fixed, flight trace, hide working tiles, HUD. Setup: [Get Started](getstarted.md).
 
 ---
 

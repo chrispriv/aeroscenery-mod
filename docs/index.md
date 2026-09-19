@@ -9,7 +9,7 @@ add a new community MSI; that is not part of Mod k.
 ## Getting Started
 
 - 🚀 [Get Started](getstarted.md)  
-  Install AeroScenery, Grid size, zoom, first scenery, Install Tile / Install Scenery.
+  Install AeroScenery, first scenery, FSG Android conversion, moving map.
 
 - 🛠️ [Installation Guide](installation.md)  
   Portable ZIP (default) or overlay on the official 1.0.1 MSI, GeoConvert path,
