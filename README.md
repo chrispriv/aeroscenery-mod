@@ -123,3 +123,4 @@ in accordance with the original AeroScenery project.
 
 - Original AeroScenery by **Nick Hod**
 - Community maintenance and extensions by **@chrispriv**
+- Aerofly FS4 Bridge (`AeroflyBridge.dll`) by **[Juan Luis Gabriel](https://github.com/jlgabriel/Aerofly-FS4-Bridge)**
