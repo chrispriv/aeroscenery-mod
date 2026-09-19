@@ -78,6 +78,37 @@ more than one square. Details: [Installation](installation.md).
 
 ---
 
+## Step 6 – Optional: convert for FSG Android (mobile)
+
+Always build the scenery **for Aerofly FS4 on the PC first** (the steps above).
+Mobile is an **extra** conversion of that desktop result, not a separate
+workflow.
+
+### If you have no Aerofly FS4 on this PC
+
+You can still run the full AeroScenery chain. Create an empty **dummy AFS user
+folder** anywhere on disk (for example `D:\AFS4UserDummy\`) and enter it under
+Settings → **AeroScenery** as the AFS user folder. Set **AFS Working Scenery
+Folder** as usual, then use **Install Tile** or **Install Scenery** so the
+desktop `.ttc` files land in that dummy folder. You do not need a licensed
+Aerofly install for that.
+
+### Extra conversion for Android
+
+1. Install **Aerofly FS2 Content Converter** from the FS2 SDK tools on the PC
+   (same SDK family as GeoConvert; it is a separate app).
+2. In Settings → **GeoConvert**, enable conversion for mobile so **Generate
+   AID / TMC Files** also creates a mobile working folder from the GeoConvert
+   raw images.
+3. After GeoConvert has finished, open that folder, right-click the generated
+   **TMC** file and choose **Run with Aerofly FS2 Content Converter**.
+4. Use a sensible zoom for mobile (15–17). Zoom **18** is for FS4 PC hotspots
+   only and is not useful on FSG Android.
+
+The `(?)` next to **Conversion for mobile** in Settings repeats this sequence.
+
+---
+
 ## Next
 
 - Raise zoom only on airports and cities (17, or up to 18 on FS4 PC)
