@@ -1300,7 +1300,7 @@ namespace AeroScenery
                             await fileOperationProgressForm.DoTaskAsync();
                             fileOperationProgressForm = null;
 
-                            //#DEVL
+                            //#MOD
                             // Additionally delete the OSM folder in the root folder of the tile (seperate treatment needed) & also the new trees folder should be added as option!
                             if (deleteSquareOptionsForm.DeleteOSMFolder == true)
                             {

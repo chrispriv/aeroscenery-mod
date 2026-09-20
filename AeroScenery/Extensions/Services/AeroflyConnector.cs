@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace AeroScenery.Extensions.Services
 {
-    //DEVL_k
+    //MOD_k
     //This class is responsible for connecting to the Aerofly flight simulator and reading data from it using memory-mapped files. It provides methods to read various types of data (double, uint32, uint64, string) from the shared memory, as well as a method to convert heading values from radians to degrees.
     public class AeroflyConnector : IDisposable
     {
@@ -24,7 +24,7 @@ namespace AeroScenery.Extensions.Services
         {
             try
             {
-                //DEVL_k FINAL PATH TO BE SET (json not integrated yet) AND MISSING ERROR HANDLING, if AeroflyBridge_offsets.json not found!
+                //MOD_k FINAL PATH TO BE SET (json not integrated yet) AND MISSING ERROR HANDLING, if AeroflyBridge_offsets.json not found!
                 // Lade Offsets nur einmal
                 if (_offsets == null)
                 {

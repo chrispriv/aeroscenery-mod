@@ -63,7 +63,7 @@ namespace AeroScenery.UI
             }
         }
 
-       //#DEVL
+       //#MOD
         private void osmFolderCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             this.DeleteOSMFolder = this.osmFolderCheckBox.Checked;
@@ -82,7 +82,7 @@ namespace AeroScenery.UI
                 this.stitchedImagesCheckBox.Checked = true;
                 this.rawImagesCheckBox.Checked = true;
                 this.ttcFilesCheckBox.Checked = true;
-                //#DEVL
+                //#MOD
                 this.osmFolderCheckBox.Checked = true;
             }
         }

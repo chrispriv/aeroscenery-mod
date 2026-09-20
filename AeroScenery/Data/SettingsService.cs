@@ -220,22 +220,23 @@ namespace AeroScenery.Data
                 settings.InstallScenery = false;
 
             if (settings.OrthophotoSource == null)
-                settings.OrthophotoSource = OrthophotoSource.Google;
+                settings.OrthophotoSource = OrthophotoSource.Bing;
 
             if (settings.ZoomLevel == null)
-                settings.ZoomLevel = 17;
+                settings.ZoomLevel = 15;
 
             if (settings.AFSLevelsToGenerate == null)
             {
                 settings.AFSLevelsToGenerate = new List<int>();
+                //#MOD_k
                 settings.AFSLevelsToGenerate.Add(9);
+                settings.AFSLevelsToGenerate.Add(10);
                 settings.AFSLevelsToGenerate.Add(11);
                 settings.AFSLevelsToGenerate.Add(12);
-                settings.AFSLevelsToGenerate.Add(13);
-                settings.AFSLevelsToGenerate.Add(14);
+                //settings.AFSLevelsToGenerate.Add(14);
             }
 
-            //#DEVL Trying out different setting for useragent
+            //#MOD Trying out different setting for useragent
             settings.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
             //settings.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46";
             //settings.UserAgent = "Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 42.0.2311.135 Safari / 537.36 Edge / 12.246";

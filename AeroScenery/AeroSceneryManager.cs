@@ -98,7 +98,7 @@ namespace AeroScenery
             dataRepository = new SqlLiteDataRepository();
 
             imageTiles = null;
-            version = "1.1.3 MOD k DEVL by @chrispriv"; //#DEVL_k
+            version = "1.1.3 MOD k by @chrispriv"; //#MOD_k
             incrementalVersion = 13;
         }
 
@@ -593,7 +593,7 @@ namespace AeroScenery
                                 this.dataRepository.CreateGridSquare(this.gridSquareMapper.ToModel(afs2GridSquare));
                                 this.mainForm.AddDownloadedGridSquare(afs2GridSquare);
                             }
-                            //DEVL_k
+                            //MOD_k
                             else if (existingGridSquare.Fixed == 0)
                             {
                                 existingGridSquare.Fixed = 1;
