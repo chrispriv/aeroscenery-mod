@@ -43,6 +43,24 @@ Keep every DLL next to the EXE. A partial copy will fail at start.
 
 ---
 
+## Verify the download (EXE hashes)
+
+Mod k ships as a portable ZIP with `AeroScenery.exe`. Published **SHA-256** and
+**SHA-1** values for that EXE (and for the ZIP) are listed on the
+[GitHub Release](https://github.com/chrispriv/aeroscenery-mod/releases/tag/v1.1.3-mod.k).
+
+On Windows, hash the files you actually downloaded:
+
+```powershell
+Get-FileHash .\AeroScenery.exe -Algorithm SHA256
+Get-FileHash .\AeroScenery.exe -Algorithm SHA1
+Get-FileHash .\AeroScenery_v1_1_3_MOD_k.zip -Algorithm SHA256
+```
+
+The hashes must match the release page. Do not run the EXE if they differ.
+
+---
+
 ## First launch — complete Settings (both first tabs)
 
 Many problems come from skipping Settings. Example of typical first-run values

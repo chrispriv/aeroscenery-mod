@@ -14,6 +14,7 @@ Based on AeroScenery 1.1.3-beta
 - Aerofly FS4 Bridge moving-map support
 - TreesDetection removed (use Mod j if still needed)
 - Show Airports hidden: fscloudport.com is offline (code kept for a later airport source)
+- GitHub Release lists SHA-256 / SHA-1 for `AeroScenery.exe`
 
 ---
 

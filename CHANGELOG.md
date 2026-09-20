@@ -24,7 +24,8 @@ This project is a community-maintained fork of
 ### Changed
 - NuGet packages (including GMap.NET) updated
 - Tooltips and beginner hints
-- GitHub Pages docs: portable install (default), optional 1.0.1 MSI overlay, GeoConvert path, tile size/zoom, sequential GeoConvert
+- GitHub Pages docs: portable install (default), optional 1.0.1 MSI overlay, GeoConvert path, tile size/zoom, sequential GeoConvert, first-run screenshots
+- Release notes list SHA-256 / SHA-1 of `AeroScenery.exe` (and the ZIP) so the portable binary can be verified
 
 ### Removed
 - GeoConvert Wrapper project and EXE workflow
