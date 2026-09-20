@@ -5,6 +5,14 @@ Create a small test scenery for **Aerofly FS4** with **Community Mod k**.
 Install first: [Installation Guide](installation.md) (portable ZIP by default).
 Complete Settings tabs **AeroScenery** and **GeoConvert** before you continue.
 
+The main window in **easy** mode (**Run Default Actions**) after a first start:
+
+<img src="aeroscenery_main_default.jpg" alt="AeroScenery Mod k main window, easy mode with Run Default Actions" width="900">
+
+**Choose Actions To Run** shows the extra steps (expert / pro mode):
+
+<img src="aeroscenery_main_expert.jpg" alt="AeroScenery Mod k main window, expert mode with Choose Actions To Run" width="900">
+
 ---
 
 ## Grid size and zoom (read this first)

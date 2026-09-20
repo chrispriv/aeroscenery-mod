@@ -45,7 +45,14 @@ Keep every DLL next to the EXE. A partial copy will fail at start.
 
 ## First launch — complete Settings (both first tabs)
 
-Many problems come from skipping Settings.
+Many problems come from skipping Settings. Example of typical first-run values
+on the first two tabs:
+
+<img src="aeroscenery_settings1_aeroscenery.jpg" alt="Settings tab AeroScenery with folders and download defaults" width="800">
+
+<img src="aeroscenery_settings2_geoconvert.jpg" alt="Settings tab GeoConvert with SDK path and sequential option" width="800">
+
+Paths on your PC will differ. Fill in **AeroScenery** and **GeoConvert** as below.
 
 ### Tab 1 — AeroScenery
 
