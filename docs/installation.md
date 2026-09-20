@@ -45,19 +45,25 @@ Keep every DLL next to the EXE. A partial copy will fail at start.
 
 ## Verify the download (EXE hashes)
 
-Mod k ships as a portable ZIP with `AeroScenery.exe`. Published **SHA-256** and
-**SHA-1** values for that EXE (and for the ZIP) are listed on the
-[GitHub Release](https://github.com/chrispriv/aeroscenery-mod/releases/tag/v1.1.3-mod.k).
+Mod k ships as a portable ZIP. Values below are for
+[release v1.1.3-mod.k](https://github.com/chrispriv/aeroscenery-mod/releases/tag/v1.1.3-mod.k).
 
-On Windows, hash the files you actually downloaded:
+| File | Algorithm | Hash |
+|---|---|---|
+| `AeroScenery.exe` | SHA-256 | `2AD252BF100927E707DB9255F5253DDE28E6CEE199DC6BB6F32F974AB9A538C4` |
+| `AeroScenery.exe` | SHA-1 | `E30179A98B24A9595106D6297E2A75CB746E8B64` |
+| `AeroScenery_v1_1_3_MOD_k.zip` | SHA-256 | `E5F8F99408EB767577B4A481C626F952617E620FF5A005DECB7CC193E4C068B7` |
+
+On Windows PowerShell, hash the ZIP in the download folder first, then the EXE
+after unzip (path depends on extract location; this is the Visual Studio layout):
 
 ```powershell
-Get-FileHash .\AeroScenery.exe -Algorithm SHA256
-Get-FileHash .\AeroScenery.exe -Algorithm SHA1
 Get-FileHash .\AeroScenery_v1_1_3_MOD_k.zip -Algorithm SHA256
+Get-FileHash .\AeroScenery_v1_1_3_MOD_k\AeroScenery\AeroScenery.exe -Algorithm SHA256
+Get-FileHash .\AeroScenery_v1_1_3_MOD_k\AeroScenery\AeroScenery.exe -Algorithm SHA1
 ```
 
-The hashes must match the release page. Do not run the EXE if they differ.
+The hashes must match. Do not run the EXE if they differ.
 
 ---
 
