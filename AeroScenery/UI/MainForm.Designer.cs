@@ -156,6 +156,7 @@ namespace AeroScenery
             this.downloadThreadProgress3 = new AeroScenery.UI.DownloadThreadProgressControl();
             this.downloadThreadProgress2 = new AeroScenery.UI.DownloadThreadProgressControl();
             this.downloadThreadProgress1 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadersScrollPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.mainTabControl.SuspendLayout();
@@ -164,6 +165,7 @@ namespace AeroScenery
             this.toolStrip2.SuspendLayout();
             this.progressTabPage.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.downloadersScrollPanel.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.sideTabControl.SuspendLayout();
             this.imagesTabPage.SuspendLayout();
@@ -719,20 +721,32 @@ namespace AeroScenery
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.downloadThreadProgress8);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress7);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress6);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress5);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress4);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress3);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress2);
-            this.groupBox1.Controls.Add(this.downloadThreadProgress1);
+            this.groupBox1.Controls.Add(this.downloadersScrollPanel);
             this.groupBox1.Location = new System.Drawing.Point(9, 154);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1055, 571);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Downloaders";
+            // 
+            // downloadersScrollPanel
+            // 
+            this.downloadersScrollPanel.AutoScroll = true;
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress1);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress2);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress3);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress4);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress5);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress6);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress7);
+            this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress8);
+            this.downloadersScrollPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.downloadersScrollPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.downloadersScrollPanel.Location = new System.Drawing.Point(3, 19);
+            this.downloadersScrollPanel.Name = "downloadersScrollPanel";
+            this.downloadersScrollPanel.Size = new System.Drawing.Size(1049, 549);
+            this.downloadersScrollPanel.TabIndex = 0;
+            this.downloadersScrollPanel.WrapContents = false;
             // 
             // label6
             // 
@@ -1499,8 +1513,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress8
             // 
-            this.downloadThreadProgress8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress8.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress8.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress8.Location = new System.Drawing.Point(6, 477);
@@ -1511,8 +1524,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress7
             // 
-            this.downloadThreadProgress7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress7.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress7.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress7.Location = new System.Drawing.Point(6, 413);
@@ -1523,8 +1535,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress6
             // 
-            this.downloadThreadProgress6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress6.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress6.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress6.Location = new System.Drawing.Point(6, 350);
@@ -1535,8 +1546,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress5
             // 
-            this.downloadThreadProgress5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress5.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress5.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress5.Location = new System.Drawing.Point(6, 286);
@@ -1547,8 +1557,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress4
             // 
-            this.downloadThreadProgress4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress4.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress4.Location = new System.Drawing.Point(7, 222);
@@ -1559,8 +1568,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress3
             // 
-            this.downloadThreadProgress3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress3.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress3.Location = new System.Drawing.Point(7, 156);
@@ -1571,8 +1579,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress2
             // 
-            this.downloadThreadProgress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress2.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress2.Location = new System.Drawing.Point(7, 93);
@@ -1583,8 +1590,7 @@ namespace AeroScenery
             // 
             // downloadThreadProgress1
             // 
-            this.downloadThreadProgress1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.downloadThreadProgress1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.downloadThreadProgress1.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress1.Location = new System.Drawing.Point(7, 31);
@@ -1622,6 +1628,7 @@ namespace AeroScenery
             this.toolStrip2.PerformLayout();
             this.progressTabPage.ResumeLayout(false);
             this.progressTabPage.PerformLayout();
+            this.downloadersScrollPanel.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
@@ -1662,6 +1669,7 @@ namespace AeroScenery
         private System.Windows.Forms.ProgressBar currentActionProgressBar;
         private System.Windows.Forms.Label parentTaskLabel;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.FlowLayoutPanel downloadersScrollPanel;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label childTaskLabel;
         private System.Windows.Forms.Label label7;

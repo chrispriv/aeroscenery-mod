@@ -4,6 +4,7 @@ using AeroScenery.Controls;
 using AeroScenery.Data;
 using AeroScenery.Data.Mappers;
 using AeroScenery.Data.Models;
+using AeroScenery.Download;
 using AeroScenery.FileManagement;
 using AeroScenery.FSCloudPort;
 using AeroScenery.OrthoPhotoSources;
@@ -197,6 +198,29 @@ namespace AeroScenery
             this.downloadThreadProgress7.SetDownloadThreadNumber(7);
             this.downloadThreadProgress8.SetDownloadThreadNumber(8);
 
+            //#MOD_l
+            // Bars 9-16 match Settings Simultaneous Downloads up to 16. The Downloaders
+            // group scrolls when more bars are visible than fit on screen.
+            this.downloadersScrollPanel.AutoScroll = true;
+            this.downloadersScrollPanel.WrapContents = false;
+            this.downloadersScrollPanel.FlowDirection = FlowDirection.TopDown;
+            this.downloadersScrollPanel.SizeChanged += DownloadersScrollPanel_SizeChanged;
+            for (int n = 9; n <= DownloadManager.MaxSimultaneousDownloads; n++)
+            {
+                var bar = new DownloadThreadProgressControl();
+                bar.Anchor = AnchorStyles.None;
+                bar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                bar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+                bar.Margin = new Padding(3, 4, 3, 4);
+                bar.Name = "downloadThreadProgress" + n;
+                bar.Size = new System.Drawing.Size(995, 58);
+                bar.TabIndex = n - 1;
+                this.downloadersScrollPanel.Controls.Add(bar);
+                this.downloadThreadProgressControls.Add(bar);
+                bar.SetDownloadThreadNumber(n);
+            }
+            this.UpdateDownloadProgressBarsFromSettings();
+
             this.gridSquareLabel.Text = "";
             //#MOD
             this.gridSquareBoundaryBox.Text = "";
@@ -267,15 +291,17 @@ namespace AeroScenery
             afsLevels.Add(new AFSLevel("Level 7", 7));
             afsLevels.Add(new AFSLevel("Level 8", 8));
 
-            this.afsLevelsCheckBoxList.DataSource = afsLevels;
+            // CheckedListBox inherits DataSource from ListBox but does not support it.
+            // Binding here throws NullReferenceException under the debugger (Continue still shows the form).
             this.afsLevelsCheckBoxList.DisplayMember = "Name";
             this.afsLevelsCheckBoxList.ValueMember = "Level";
+            this.afsLevelsCheckBoxList.Items.AddRange(afsLevels.ToArray());
             this.afsLevelsCheckBoxList.ClearSelected();
 
-            this.elevationAfsLevelCheckBoxList.DataSource = afsLevels;
             this.elevationAfsLevelCheckBoxList.DisplayMember = "Name";
             this.elevationAfsLevelCheckBoxList.ValueMember = "Level";
-            this.afsLevelsCheckBoxList.ClearSelected();
+            this.elevationAfsLevelCheckBoxList.Items.AddRange(afsLevels.ToArray());
+            this.elevationAfsLevelCheckBoxList.ClearSelected();
 
             imageSourceComboBox.DisplayMember = "Text";
             imageSourceComboBox.ValueMember = "Value";
@@ -497,26 +523,8 @@ namespace AeroScenery
                 this.showAirportsToolstripButton.Text = "Show Airports";
             }
 
-            //#MOD
-            // Hide not used downloaders/ threads
-            if (settings.SimultaneousDownloads < 8)
-            {
-                this.downloadThreadProgress8.Visible = false;
-                this.downloadThreadProgress7.Visible = false;
-            }
-            if (settings.SimultaneousDownloads < 6)
-            {
-                this.downloadThreadProgress6.Visible = false;
-                this.downloadThreadProgress5.Visible = false;
-            }
-            if (settings.SimultaneousDownloads < 4)
-            {
-                this.downloadThreadProgress4.Visible = false;
-                this.downloadThreadProgress3.Visible = false;
-            }
-
-            if (settings.SimultaneousDownloads < 2)
-                this.downloadThreadProgress2.Visible = false;
+            //#MOD_l
+            this.UpdateDownloadProgressBarsFromSettings();
 
             this.uiSetFromSettings = true;
 
@@ -705,15 +713,10 @@ namespace AeroScenery
 
         private void ResetProgress()
         {
-            this.downloadThreadProgress1.Reset();
-            this.downloadThreadProgress2.Reset();
-            this.downloadThreadProgress3.Reset();
-            this.downloadThreadProgress4.Reset();
-            //#MOD
-            this.downloadThreadProgress5.Reset();
-            this.downloadThreadProgress6.Reset();
-            this.downloadThreadProgress7.Reset();
-            this.downloadThreadProgress8.Reset();
+            foreach (var progressControl in this.downloadThreadProgressControls)
+            {
+                progressControl.Reset();
+            }
 
             this.currentActionProgressBar.Value = 0;
         }
@@ -1092,6 +1095,67 @@ namespace AeroScenery
             }
             downloadElevationDataCheckBox_CheckedChanged(this.downloadElevationDataCheckBox, EventArgs.Empty);
 
+            //#MOD_l
+            this.UpdateDownloadProgressBarsFromSettings();
+        }
+
+        private void DownloadersScrollPanel_SizeChanged(object sender, EventArgs e)
+        {
+            this.SizeDownloadProgressBars();
+        }
+
+        private int GetConfiguredSimultaneousDownloads()
+        {
+            var settings = AeroSceneryManager.Instance.Settings;
+            int simultaneous = (settings.SimultaneousDownloads.HasValue) ? settings.SimultaneousDownloads.Value : 8;
+            if (simultaneous < 1)
+            {
+                simultaneous = 1;
+            }
+            if (simultaneous > DownloadManager.MaxSimultaneousDownloads)
+            {
+                simultaneous = DownloadManager.MaxSimultaneousDownloads;
+            }
+            return simultaneous;
+        }
+
+        private void UpdateDownloadProgressBarsFromSettings()
+        {
+            if (this.downloadThreadProgressControls == null || this.downloadThreadProgressControls.Count == 0)
+            {
+                return;
+            }
+
+            int simultaneous = this.GetConfiguredSimultaneousDownloads();
+            for (int i = 0; i < this.downloadThreadProgressControls.Count; i++)
+            {
+                this.downloadThreadProgressControls[i].Visible = i < simultaneous;
+            }
+
+            this.SizeDownloadProgressBars();
+            this.downloadersScrollPanel.PerformLayout();
+        }
+
+        private void SizeDownloadProgressBars()
+        {
+            if (this.downloadersScrollPanel == null || this.downloadThreadProgressControls == null)
+            {
+                return;
+            }
+
+            int width = this.downloadersScrollPanel.ClientSize.Width - 10;
+            if (width < 200)
+            {
+                width = 200;
+            }
+
+            foreach (var bar in this.downloadThreadProgressControls)
+            {
+                bar.Anchor = AnchorStyles.None;
+                bar.Margin = new Padding(3, 4, 3, 4);
+                bar.Height = 58;
+                bar.Width = width;
+            }
         }
 
         private void MainMap_MouseDown(object sender, MouseEventArgs e)

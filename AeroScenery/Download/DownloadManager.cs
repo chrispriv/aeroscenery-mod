@@ -20,6 +20,9 @@ namespace AeroScenery.Download
     {
         private int downloadThreads = 4; // = Default Value (without override from Settings)
 
+        //#MOD_l
+        public const int MaxSimultaneousDownloads = 16;
+
         //#MOD
         private int maxDownloadRetryAttempts = 10;  // 10 attempts instead of 5 for a better reliability
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
@@ -45,9 +48,34 @@ namespace AeroScenery.Download
             //#MOD
             //Override numbers of Simultaneous Downloads from Settings
             this.downloadThreads = downloadThreads;
+            if (this.downloadThreads < 1)
+            {
+                this.downloadThreads = 1;
+            }
+            if (this.downloadThreads > MaxSimultaneousDownloads)
+            {
+                this.downloadThreads = MaxSimultaneousDownloads;
+            }
+
+            //#MOD_l
+            // GetAsync(...).Result holds a thread-pool thread for the whole request. The default
+            // pool does not grow fast enough, so raising Simultaneous Downloads above the core
+            // count used to starve workers instead of speeding the run up. Size the pool for the
+            // chosen worker count so those downloads actually overlap.
+            int minWorkerThreads;
+            int minCompletionPortThreads;
+            ThreadPool.GetMinThreads(out minWorkerThreads, out minCompletionPortThreads);
+            if (minWorkerThreads < this.downloadThreads + 8)
+            {
+                ThreadPool.SetMinThreads(this.downloadThreads + 8, minCompletionPortThreads);
+            }
 
             // Reset cancellation token status
             cancellationTokenSource = new CancellationTokenSource();
+
+            //#MOD_l
+            // StopDownloads replaces this token. Workers must keep the token from this run.
+            var token = cancellationTokenSource.Token;
 
             if (imageTiles.Count > 0)
             {
@@ -84,6 +112,10 @@ namespace AeroScenery.Download
 
                 log.InfoFormat("Beginning download of {0} image tiles from {1}", imageTiles.Count, orthophotoSource.ToString());
 
+                //#MOD_l
+                // Stop clears the caller's list. Workers use this copy so indexes stay valid.
+                imageTiles = new List<ImageTile>(imageTiles);
+
                 int downloadsPerThread = imageTiles.Count / this.downloadThreads;
                 int downloadsPerThreadMod = imageTiles.Count % this.downloadThreads;
 
@@ -101,7 +133,9 @@ namespace AeroScenery.Download
 
                             var maxWait = AeroSceneryManager.Instance.Settings.DownloadWaitMs.Value + AeroSceneryManager.Instance.Settings.DownloadWaitRandomMs.Value;
                             var minWait = AeroSceneryManager.Instance.Settings.DownloadWaitMs.Value - AeroSceneryManager.Instance.Settings.DownloadWaitRandomMs.Value;
-                            Random random = new Random();
+                            //#MOD_l
+                            // One seed per worker so the wait jitter does not lock-step.
+                            Random random = new Random(Guid.NewGuid().GetHashCode());
 
 
                             var downloadThreadProgress = new DownloadThreadProgress();
@@ -128,7 +162,7 @@ namespace AeroScenery.Download
                                 // Work through this threads share of downloads
                                 for (int j = 0 + (threadNumber * downloadsPerThread); j < (threadNumber + 1) * downloadsPerThread; j++)
                                     {
-                                        if (this.cancellationTokenSource.Token.IsCancellationRequested)
+                                        if (token.IsCancellationRequested)
                                         {
                                             break;
                                         }
@@ -169,7 +203,7 @@ namespace AeroScenery.Download
                                     {
                                         for (int k = 0; k < downloadsPerThreadMod; k++)
                                         {
-                                            if (this.cancellationTokenSource.Token.IsCancellationRequested)
+                                            if (token.IsCancellationRequested)
                                             {
                                                 break;
                                             }
@@ -181,18 +215,17 @@ namespace AeroScenery.Download
 
                                             var index = k + (downloadsPerThread * this.downloadThreads);
 
-                                        // We nee to re-eval this. If the user has cancelled, image tiles will be cleared
-                                        if (imageTiles != null && imageTiles.Count > 0)
+                                            if ((!File.Exists(downloadDirectory + imageTiles[index].FileName + "." + imageTiles[index].ImageExtension)) || (new FileInfo(downloadDirectory + imageTiles[index].FileName + "." + imageTiles[index].ImageExtension).Length == 0))
                                             {
-                                                await this.DownloadFile(httpClient, cookieContainer, imageTiles[index], downloadDirectory, orthophotoSource, orthophotoSourceInstance, waitTimeSpan);
-                                            }
+                                                if (imageTiles != null && imageTiles.Count > 0)
+                                                {
+                                                    await this.DownloadFile(httpClient, cookieContainer, imageTiles[index], downloadDirectory, orthophotoSource, orthophotoSourceInstance, waitTimeSpan);
+                                                }
 
-                                        // We nee to re-eval this. If the user has cancelled, image tiles will be cleared
-                                        if (imageTiles != null && imageTiles.Count > 0)
-                                            {
-
-                                                this.SaveImageTileAeroFile(xmlSerializer, imageTiles[index], downloadDirectory);
-
+                                                if (imageTiles != null && imageTiles.Count > 0)
+                                                {
+                                                    this.SaveImageTileAeroFile(xmlSerializer, imageTiles[index], downloadDirectory);
+                                                }
                                             }
 
                                             downloadThreadProgress.FilesDownloaded++;
@@ -209,7 +242,7 @@ namespace AeroScenery.Download
 
                             xmlSerializer = null;
 
-                        }, this.cancellationTokenSource.Token));
+                        }, token));
                     }
 
 

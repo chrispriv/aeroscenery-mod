@@ -86,6 +86,11 @@ namespace AeroScenery
         private string version;
         private int incrementalVersion;
 
+        //#MOD_l
+        // Overall download progress is the sum of all workers, not the fastest worker.
+        private readonly int[] downloadThreadFilesDownloaded = new int[DownloadManager.MaxSimultaneousDownloads];
+        private readonly int[] downloadThreadFilesTotal = new int[DownloadManager.MaxSimultaneousDownloads];
+
         public AeroSceneryManager()
         {
             downloadManager = new DownloadManager();
@@ -98,7 +103,7 @@ namespace AeroScenery
             dataRepository = new SqlLiteDataRepository();
 
             imageTiles = null;
-            version = "1.1.3 MOD k by @chrispriv"; //#MOD_k
+            version = "1.1.3 MOD l DEVL by @chrispriv"; //#MOD_l
             incrementalVersion = 13;
         }
 
@@ -415,6 +420,7 @@ namespace AeroScenery
                             // Capture the progress of each thread
                             var downloadThreadProgress = new Progress<DownloadThreadProgress>();
                             downloadThreadProgress.ProgressChanged += DownloadThreadProgress_ProgressChanged;
+                            this.ResetDownloadThreadProgressTotals();
 
                             // Send the masking image tiles to the download manager
                             await downloadManager.DownloadImageTiles(OrthophotoSource.CartoDBLight, imageTiles, downloadThreadProgress, tileDownloadDirectoryMask, orthophotoSourceInstance, Convert.ToInt16(settings.SimultaneousDownloads));
@@ -578,6 +584,7 @@ namespace AeroScenery
                         // Capture the progress of each thread
                         var downloadThreadProgress = new Progress<DownloadThreadProgress>();
                         downloadThreadProgress.ProgressChanged += DownloadThreadProgress_ProgressChanged;
+                        this.ResetDownloadThreadProgressTotals();
 
                         // Send the image tiles to the download manager
                         //#MOD (max. number of simultaneous downloads can be set in settings)
@@ -1288,22 +1295,54 @@ namespace AeroScenery
         }
 
 
+        private void ResetDownloadThreadProgressTotals()
+        {
+            Array.Clear(this.downloadThreadFilesDownloaded, 0, this.downloadThreadFilesDownloaded.Length);
+            Array.Clear(this.downloadThreadFilesTotal, 0, this.downloadThreadFilesTotal.Length);
+        }
+
         private void DownloadThreadProgress_ProgressChanged(object sender, DownloadThreadProgress progress)
         {
             if (this.mainForm.ActionsRunning)
             {
                 var progressControl = this.mainForm.GetDownloadThreadProgressControl(progress.DownloadThreadNumber);
+                if (progressControl == null || progress.TotalFiles <= 0)
+                {
+                    return;
+                }
+
                 var percentageProgress = (int)Math.Floor(((double)progress.FilesDownloaded / (double)progress.TotalFiles) * 100);
+                if (percentageProgress > 100)
+                {
+                    percentageProgress = 100;
+                }
 
                 progressControl.SetProgressPercentage(percentageProgress);
-
                 progressControl.SetImageTileCount(progress.FilesDownloaded, progress.TotalFiles);
 
-                var downloadActionProgressPercentage = this.mainForm.CurrentActionProgressPercentage;
-
-                if (percentageProgress > downloadActionProgressPercentage)
+                if (progress.DownloadThreadNumber >= 0 && progress.DownloadThreadNumber < DownloadManager.MaxSimultaneousDownloads)
                 {
-                    this.mainForm.CurrentActionProgressPercentage = percentageProgress;
+                    this.downloadThreadFilesDownloaded[progress.DownloadThreadNumber] = progress.FilesDownloaded;
+                    this.downloadThreadFilesTotal[progress.DownloadThreadNumber] = progress.TotalFiles;
+                }
+
+                int filesDownloaded = 0;
+                int filesTotal = 0;
+                for (int i = 0; i < DownloadManager.MaxSimultaneousDownloads; i++)
+                {
+                    filesDownloaded += this.downloadThreadFilesDownloaded[i];
+                    filesTotal += this.downloadThreadFilesTotal[i];
+                }
+
+                if (filesTotal > 0)
+                {
+                    var overallPercentage = (int)Math.Floor(((double)filesDownloaded / (double)filesTotal) * 100);
+                    if (overallPercentage > 100)
+                    {
+                        overallPercentage = 100;
+                    }
+
+                    this.mainForm.CurrentActionProgressPercentage = overallPercentage;
                 }
             }
 

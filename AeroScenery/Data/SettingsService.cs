@@ -1,5 +1,6 @@
 ﻿using AeroScenery.Common;
 using AeroScenery.Controls;
+using AeroScenery.Download;
 using AeroScenery.OrthophotoSources;
 using AeroScenery.OrthoPhotoSources;
 using log4net;
@@ -252,7 +253,13 @@ namespace AeroScenery.Data
                 settings.DownloadWaitRandomMs = 3;
 
             if (settings.SimultaneousDownloads == null)
-                settings.SimultaneousDownloads = 4;
+                settings.SimultaneousDownloads = 8;
+
+            if (settings.SimultaneousDownloads < 1)
+                settings.SimultaneousDownloads = 1;
+
+            if (settings.SimultaneousDownloads > DownloadManager.MaxSimultaneousDownloads)
+                settings.SimultaneousDownloads = DownloadManager.MaxSimultaneousDownloads;
 
             if (settings.AFS2SDKDirectory == null)
                 settings.AFS2SDKDirectory = "";

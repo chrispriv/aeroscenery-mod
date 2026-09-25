@@ -466,13 +466,15 @@
             // 
             this.simultaneousDownloadsComboBox.BackColor = System.Drawing.SystemColors.Window;
             this.simultaneousDownloadsComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.simultaneousDownloadsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.simultaneousDownloadsComboBox.FormattingEnabled = true;
             this.simultaneousDownloadsComboBox.Items.AddRange(new object[] {
             "1",
             "2",
             "4",
             "6",
-            "8"});
+            "8",
+            "16"});
             this.simultaneousDownloadsComboBox.Location = new System.Drawing.Point(216, 63);
             this.simultaneousDownloadsComboBox.Name = "simultaneousDownloadsComboBox";
             this.simultaneousDownloadsComboBox.Size = new System.Drawing.Size(420, 25);

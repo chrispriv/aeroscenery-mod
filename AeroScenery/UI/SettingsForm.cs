@@ -7,6 +7,7 @@ using System.IO;
 using System.Globalization;
 using AeroScenery.ImageProcessing;
 using AeroScenery.Controls;
+using AeroScenery.Download;
 
 namespace AeroScenery.UI
 {
@@ -117,8 +118,16 @@ namespace AeroScenery.UI
             //#MOD
             if (Convert.ToInt32(this.simultaneousDownloadsComboBox.Text) != settings.SimultaneousDownloads)
             {
-                showMessageStartAppAgain = true;
-                settings.SimultaneousDownloads = Convert.ToInt32(this.simultaneousDownloadsComboBox.Text);
+                int simultaneous = Convert.ToInt32(this.simultaneousDownloadsComboBox.Text);
+                if (simultaneous < 1)
+                {
+                    simultaneous = 1;
+                }
+                if (simultaneous > DownloadManager.MaxSimultaneousDownloads)
+                {
+                    simultaneous = DownloadManager.MaxSimultaneousDownloads;
+                }
+                settings.SimultaneousDownloads = simultaneous;
             }
             /*
             switch (this.simultaneousDownloadsComboBox.SelectedIndex)
