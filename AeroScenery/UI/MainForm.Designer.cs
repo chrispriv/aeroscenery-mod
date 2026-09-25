@@ -323,7 +323,7 @@ namespace AeroScenery
             this.showAirportsToolstripButton.Name = "showAirportsToolstripButton";
             this.showAirportsToolstripButton.Size = new System.Drawing.Size(101, 29);
             this.showAirportsToolstripButton.Text = "Show Airports";
-            this.showAirportsToolstripButton.ToolTipText = "Show airports from fscloudport.com on the map";
+            this.showAirportsToolstripButton.ToolTipText = "Show airports from an optional OurAirports import on the map";
             this.showAirportsToolstripButton.Visible = false;
             this.showAirportsToolstripButton.Click += new System.EventHandler(this.showAirportsToolstripButton_Click);
             // 

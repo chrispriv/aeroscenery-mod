@@ -5,7 +5,6 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -59,11 +58,14 @@ namespace AeroScenery.UI
             this.containerForFSCloudPortPopup.Close();
         }
 
+        public Func<RectLatLng, double, IList<FSCloudPortAirport>> LoadAirportsInView { get; set; }
+
+        public Func<string, IList<OurRunway>> LoadRunwaysForAirport { get; set; }
+
         public void UpdateFSCloudPortMarkers()
         {
             airportMarkers.Markers.Clear();
             //#MOD_k
-            //this.GMapControl.Overlays.Remove(airportMarkers);
             int index = this.GMapControl.Overlays.IndexOf(airportMarkers);
             if (index >= 0)
             {
@@ -74,28 +76,37 @@ namespace AeroScenery.UI
 
             var mapBounds = this.GMapControl.ViewArea;
 
-            if (this.GMapControl.Zoom >= 7 && this.airportLookup != null && mapBounds != null)
+            if (this.GMapControl.Zoom >= 7 && mapBounds != null)
             {
-                var watch = System.Diagnostics.Stopwatch.StartNew();
-
-                foreach (var airport in this.airportLookup.Values)
+                IList<FSCloudPortAirport> airports = null;
+                if (this.LoadAirportsInView != null)
                 {
-                    if (mapBounds.Left < airport.Longitude &&
-                        mapBounds.Right > airport.Longitude &&
-                        mapBounds.Top > airport.Latitude &&
-                        mapBounds.Bottom < airport.Latitude)
+                    airports = this.LoadAirportsInView(mapBounds, this.GMapControl.Zoom);
+                    this.airportLookup.Clear();
+                    if (airports != null)
                     {
-                        var point = new PointLatLng(airport.Latitude, airport.Longitude);
-                        var marker = new GMarkerGoogle(point, new Bitmap(Properties.Resources.windsock));
-                        marker.Tag = airport.ICAO;
-                        airportMarkers.Markers.Add(marker);
+                        foreach (var airport in airports)
+                        {
+                            if (!string.IsNullOrEmpty(airport.ICAO) && !this.airportLookup.ContainsKey(airport.ICAO))
+                            {
+                                this.airportLookup.Add(airport.ICAO, airport);
+                            }
+                        }
                     }
-
                 }
 
-                watch.Stop();
-                var elapsedMs = watch.ElapsedMilliseconds;
-                Debug.WriteLine("Looped through airports in " + elapsedMs + "ms");
+                if (airports == null)
+                {
+                    return;
+                }
+
+                foreach (var airport in airports)
+                {
+                    var point = new PointLatLng(airport.Latitude, airport.Longitude);
+                    var marker = new GMarkerGoogle(point, new Bitmap(Properties.Resources.windsock));
+                    marker.Tag = airport.ICAO;
+                    airportMarkers.Markers.Add(marker);
+                }
             }
 
         }
@@ -114,7 +125,10 @@ namespace AeroScenery.UI
         public void RemoveAllFSCloudPortMarkers()
         {
             airportMarkers.Markers.Clear();
-            this.GMapControl.Overlays.Remove(airportMarkers);
+            if (this.GMapControl != null && this.GMapControl.Overlays.Contains(airportMarkers))
+            {
+                this.GMapControl.Overlays.Remove(airportMarkers);
+            }
         }
 
         public void ShowAirportPopup(string icao, Form form, Point location)
@@ -124,6 +138,15 @@ namespace AeroScenery.UI
             if (this.airportLookup.TryGetValue(icao, out airport))
             {
                 this.fsCloudPortPopup.Airport = airport;
+                if (this.LoadRunwaysForAirport != null)
+                {
+                    this.fsCloudPortPopup.SetRunways(this.LoadRunwaysForAirport(icao));
+                }
+                else
+                {
+                    this.fsCloudPortPopup.SetRunways(null);
+                }
+
                 this.containerForFSCloudPortPopup.Show(form, location);
 
             }

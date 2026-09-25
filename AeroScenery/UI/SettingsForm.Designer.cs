@@ -1481,7 +1481,7 @@
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(693, 574);
             this.tabPage5.TabIndex = 5;
-            this.tabPage5.Text = "Elevation/OSM";
+            this.tabPage5.Text = "Extras";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // groupBox15

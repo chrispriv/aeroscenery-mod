@@ -35,7 +35,15 @@ namespace AeroScenery.Data
                     this.UpgradeToVersion5();
                     break;
                 case 5:
-                    //this.UpgradeToVersion5();
+                    this.UpgradeToVersion6();
+                    break;
+                case 6:
+                    this.UpgradeToVersion7();
+                    break;
+                case 7:
+                    this.UpgradeToVersion8();
+                    break;
+                case 8:
                     break;
             }
         }
@@ -133,7 +141,106 @@ namespace AeroScenery.Data
 
 
             this.SaveNewSchemaVersion(5);
-            //this.UpgradeToVersion6();
+            this.UpgradeToVersion6();
+        }
+
+        private void UpgradeToVersion6()
+        {
+            log.Info("Updating database to version 6");
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                con.Execute(
+                    @"create table if not exists OurAirports
+                      (
+                        Ident           TEXT PRIMARY KEY,
+                        Type            TEXT,
+                        Name            TEXT,
+                        Latitude        REAL,
+                        Longitude       REAL,
+                        ElevationFt     INTEGER,
+                        GpsCode         TEXT,
+                        Url             TEXT
+                      )");
+                con.Execute(@"CREATE INDEX if not exists ix_OurAirports_LatLon ON OurAirports (Latitude, Longitude);");
+                con.Execute(
+                    @"create table if not exists OurAirportsImport
+                      (
+                        Id                 INTEGER PRIMARY KEY,
+                        FileLength         INTEGER,
+                        FileLastWriteUtc   TEXT,
+                        ImportedUtc        TEXT,
+                        RowCount           INTEGER
+                      )");
+                con.Close();
+            }
+
+            this.SaveNewSchemaVersion(6);
+            this.UpgradeToVersion7();
+        }
+
+        private void UpgradeToVersion7()
+        {
+            log.Info("Updating database to version 7");
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                var hasUrl = false;
+                foreach (var row in con.Query("PRAGMA table_info(OurAirports);"))
+                {
+                    if (string.Equals(Convert.ToString(row.name), "Url", StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasUrl = true;
+                        break;
+                    }
+                }
+
+                if (!hasUrl)
+                {
+                    con.Execute(@"ALTER TABLE OurAirports ADD COLUMN Url TEXT;");
+                }
+
+                con.Close();
+            }
+
+            this.SaveNewSchemaVersion(7);
+            this.UpgradeToVersion8();
+        }
+
+        private void UpgradeToVersion8()
+        {
+            log.Info("Updating database to version 8");
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                con.Execute(
+                    @"create table if not exists OurRunways
+                      (
+                        Id              INTEGER PRIMARY KEY,
+                        AirportIdent    TEXT,
+                        LengthFt        INTEGER,
+                        WidthFt         INTEGER,
+                        Surface         TEXT,
+                        LeIdent         TEXT,
+                        HeIdent         TEXT
+                      )");
+                con.Execute(@"CREATE INDEX if not exists ix_OurRunways_AirportIdent ON OurRunways (AirportIdent);");
+                con.Execute(
+                    @"create table if not exists OurRunwaysImport
+                      (
+                        Id                 INTEGER PRIMARY KEY,
+                        FileLength         INTEGER,
+                        FileLastWriteUtc   TEXT,
+                        ImportedUtc        TEXT,
+                        RowCount           INTEGER
+                      )");
+                con.Close();
+            }
+
+            this.SaveNewSchemaVersion(8);
         }
 
         private SQLiteConnection DbConnection()

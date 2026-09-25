@@ -296,6 +296,9 @@ namespace AeroScenery.Data
                 settings.WorkingDirectory = aeroSceneryWorkingDirectoryPath;
             }
 
+            //#MOD_l
+            OurAirportsImporter.GetCsvDirectory();
+
             //#MOD
             if ((settings.AFSSceneryFolder == null) || (settings.AFSSceneryFolder == ""))
                 settings.AFSSceneryFolder = "myscenery\\";
@@ -469,6 +472,9 @@ namespace AeroScenery.Data
                 {
                     Directory.CreateDirectory(Path.Combine(settings.AeroSceneryDBDirectory, "elevation"));
                 }
+
+                //#MOD_l
+                OurAirportsImporter.GetCsvDirectory();
 
                 if (!Directory.Exists(settings.WorkingDirectory))
                 {

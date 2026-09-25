@@ -15,6 +15,10 @@ namespace AeroScenery.Data.Models
 
         public string Url { get; set; }
 
+        public string Type { get; set; }
+
+        public int? ElevationFt { get; set; }
+
         public string LastModified { get; set; }
 
         public string LastCached { get; set; }

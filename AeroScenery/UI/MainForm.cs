@@ -416,6 +416,9 @@ namespace AeroScenery
 
             this.dataRepository = new SqlLiteDataRepository();
             this.dataRepository.Settings = AeroSceneryManager.Instance.Settings;
+            this.fsCloudPortMarkerManager.LoadAirportsInView = this.LoadOurAirportsForMap;
+            this.fsCloudPortMarkerManager.LoadRunwaysForAirport = this.LoadOurRunwaysForAirport;
+            this.UpdateShowAirportsToolbar();
 
             this.LoadDownloadedGridSquares();
 
@@ -425,26 +428,19 @@ namespace AeroScenery
 
         }
 
-        private async void MainForm_Shown(object sender, EventArgs e)
+        private void MainForm_Shown(object sender, EventArgs e)
         {
             TextBoxAppender.ConfigureTextBoxAppender(this.logTextBox);
 
             log.Info(String.Format("AeroScenery v{0} Started", AeroSceneryManager.Instance.Version));
 
-            //#MOD_k
-            // Show Airports is hidden for Mod k: fscloudport.com is permanently offline.
-            // The FSCloudPort scrape, SQLite cache and map-marker code is kept for a later
-            // replacement (e.g. OurAirports / local ICAO scan). Do not contact the dead server
-            // at startup.
-            AeroSceneryManager.Instance.Settings.ShowAirports = false;
-            //await this.fsCloudPortService.UpdateAirportsIfRequiredAsync();
-            //var airports = await this.fsCloudPortService.GetAirportsAsync();
-            //this.fsCloudPortMarkerManager.Airports = airports;
-            //
-            //if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
-            //{
-            //    this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
-            //}
+            //#MOD_l
+            // Show Airports uses an optional OurAirports import. Do not contact fscloudport.com.
+            this.UpdateShowAirportsToolbar();
+            if (AeroSceneryManager.Instance.Settings.ShowAirports.GetValueOrDefault())
+            {
+                this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
+            }
 
         }
 
@@ -513,9 +509,8 @@ namespace AeroScenery
             }
 
 
-            if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
+            if (AeroSceneryManager.Instance.Settings.ShowAirports.GetValueOrDefault())
             {
-                //#MOD_k Show Airports is hidden; do not draw fscloudport markers.
                 this.showAirportsToolstripButton.Text = "Hide Airports";
             }
             else
@@ -1097,6 +1092,7 @@ namespace AeroScenery
 
             //#MOD_l
             this.UpdateDownloadProgressBarsFromSettings();
+            this.UpdateShowAirportsToolbar();
         }
 
         private void DownloadersScrollPanel_SizeChanged(object sender, EventArgs e)
@@ -1158,6 +1154,79 @@ namespace AeroScenery
             }
         }
 
+        private void UpdateShowAirportsToolbar()
+        {
+            var repo = this.dataRepository as SqlLiteDataRepository;
+            int count = 0;
+            if (repo != null)
+            {
+                count = repo.GetOurAirportCount();
+            }
+
+            bool hasData = count > 0;
+            this.showAirportsToolstripButton.Visible = hasData;
+            this.showAirportsToolstripButton.Enabled = hasData;
+
+            if (!hasData)
+            {
+                AeroSceneryManager.Instance.Settings.ShowAirports = false;
+                this.fsCloudPortMarkerManager.RemoveAllFSCloudPortMarkers();
+            }
+
+            if (AeroSceneryManager.Instance.Settings.ShowAirports.GetValueOrDefault())
+            {
+                this.showAirportsToolstripButton.Text = "Hide Airports";
+            }
+            else
+            {
+                this.showAirportsToolstripButton.Text = "Show Airports";
+            }
+        }
+
+        private IList<FSCloudPortAirport> LoadOurAirportsForMap(RectLatLng bounds, double zoom)
+        {
+            var repo = this.dataRepository as SqlLiteDataRepository;
+            if (repo == null)
+            {
+                return new List<FSCloudPortAirport>();
+            }
+
+            var types = OurAirportsImporter.TypesForZoom(zoom);
+            double west = Math.Min(bounds.Left, bounds.Right);
+            double east = Math.Max(bounds.Left, bounds.Right);
+            double south = Math.Min(bounds.Bottom, bounds.Top);
+            double north = Math.Max(bounds.Bottom, bounds.Top);
+
+            var rows = repo.GetOurAirportsInBounds(west, east, south, north, types, 400);
+            var result = new List<FSCloudPortAirport>();
+            foreach (var row in rows)
+            {
+                result.Add(new FSCloudPortAirport
+                {
+                    ICAO = row.Ident,
+                    Name = row.Name,
+                    Latitude = row.Latitude,
+                    Longitude = row.Longitude,
+                    Type = row.Type,
+                    ElevationFt = row.ElevationFt,
+                    Url = row.Url
+                });
+            }
+
+            return result;
+        }
+
+        private IList<OurRunway> LoadOurRunwaysForAirport(string ident)
+        {
+            var repo = this.dataRepository as SqlLiteDataRepository;
+            if (repo == null)
+            {
+                return new List<OurRunway>();
+            }
+
+            return repo.GetOurRunwaysForAirport(ident);
+        }
+
         private void MainMap_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
@@ -1212,7 +1281,7 @@ namespace AeroScenery
                         }
                         else
                         {
-                            if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
+                            if (AeroSceneryManager.Instance.Settings.ShowAirports.GetValueOrDefault())
                             {
                                 this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
                             }
@@ -2239,7 +2308,7 @@ namespace AeroScenery
         {
             AeroSceneryManager.Instance.Settings.MapControlLastZoomLevel = Convert.ToInt32(this.mainMap.Zoom);
 
-            if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
+            if (AeroSceneryManager.Instance.Settings.ShowAirports.GetValueOrDefault())
             {
                 this.fsCloudPortMarkerManager.UpdateFSCloudPortMarkers();
             }
@@ -2266,7 +2335,7 @@ namespace AeroScenery
         private void showAirportsToolstripButton_Click(object sender, EventArgs e)
         {
             // We need to hide airports
-            if (AeroSceneryManager.Instance.Settings.ShowAirports.Value)
+            if (AeroSceneryManager.Instance.Settings.ShowAirports.GetValueOrDefault())
             {
                 AeroSceneryManager.Instance.Settings.ShowAirports = false;
                 this.showAirportsToolstripButton.Text = "Show Airports";

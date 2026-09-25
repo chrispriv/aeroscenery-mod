@@ -8,6 +8,7 @@ using System.Globalization;
 using AeroScenery.ImageProcessing;
 using AeroScenery.Controls;
 using AeroScenery.Download;
+using AeroScenery.Data;
 
 namespace AeroScenery.UI
 {
@@ -21,10 +22,14 @@ namespace AeroScenery.UI
         //#MOD
         private bool showMessageStartAppAgain = false;
 
+        private Label ourAirportsStatusLabel;
+        private Label ourRunwaysStatusLabel;
+
         public SettingsForm()
         {
             InitializeComponent();
             this.updateImagePreview = true;
+            this.BuildOurAirportsSettingsGroup();
 
             //#MOD
             ToolTip toolTip1 = new ToolTip();
@@ -277,7 +282,8 @@ namespace AeroScenery.UI
             //#MOD
             this.simultaneousDownloadsComboBox.Text = Convert.ToString(settings.SimultaneousDownloads);
 
-            this.maxTilesPerStitchedImageTextBox.Text = settings.MaximumStitchedImageSize.ToString();
+            this.RefreshOurAirportsStatus();
+            this.RefreshOurRunwaysStatus();
 
             if (settings.GeoConvertWriteImagesWithMask.Value)
             {
@@ -956,6 +962,246 @@ namespace AeroScenery.UI
             }
 
             this.UpdateImagePreview();
+        }
+
+        private void BuildOurAirportsSettingsGroup()
+        {
+            this.tabPage5.Text = "Extras";
+
+            var group = new GroupBox();
+            group.Text = "Airports on map";
+            group.Location = new System.Drawing.Point(18, 255);
+            group.Size = new System.Drawing.Size(653, 215);
+            group.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+            var infoLabel = new Label();
+            infoLabel.AutoSize = true;
+            infoLabel.Location = new System.Drawing.Point(20, 24);
+            infoLabel.MaximumSize = new System.Drawing.Size(610, 0);
+            infoLabel.Text = "Optional. Import airports.csv for map markers. Import runways.csv to show runway details in the airport popup.";
+
+            var link = new LinkLabel();
+            link.AutoSize = true;
+            link.Location = new System.Drawing.Point(20, 58);
+            link.Text = "Download OurAirports CSV files";
+            link.LinkClicked += (s, e) =>
+            {
+                System.Diagnostics.Process.Start(OurAirportsImporter.DownloadUrl);
+            };
+
+            this.ourAirportsStatusLabel = new Label();
+            this.ourAirportsStatusLabel.AutoSize = true;
+            this.ourAirportsStatusLabel.Location = new System.Drawing.Point(20, 84);
+            this.ourAirportsStatusLabel.MaximumSize = new System.Drawing.Size(400, 0);
+            this.ourAirportsStatusLabel.Text = "Airports: not imported.";
+
+            var importAirportsButton = new Button();
+            importAirportsButton.Text = "Import airports.csv";
+            importAirportsButton.Location = new System.Drawing.Point(430, 78);
+            importAirportsButton.Size = new System.Drawing.Size(200, 32);
+            importAirportsButton.UseVisualStyleBackColor = true;
+            importAirportsButton.Click += ImportOurAirportsButton_Click;
+
+            this.ourRunwaysStatusLabel = new Label();
+            this.ourRunwaysStatusLabel.AutoSize = true;
+            this.ourRunwaysStatusLabel.Location = new System.Drawing.Point(20, 128);
+            this.ourRunwaysStatusLabel.MaximumSize = new System.Drawing.Size(400, 0);
+            this.ourRunwaysStatusLabel.Text = "Runways: not imported.";
+
+            var importRunwaysButton = new Button();
+            importRunwaysButton.Text = "Import runways.csv";
+            importRunwaysButton.Location = new System.Drawing.Point(430, 122);
+            importRunwaysButton.Size = new System.Drawing.Size(200, 32);
+            importRunwaysButton.UseVisualStyleBackColor = true;
+            importRunwaysButton.Click += ImportOurRunwaysButton_Click;
+
+            group.Controls.Add(infoLabel);
+            group.Controls.Add(link);
+            group.Controls.Add(this.ourAirportsStatusLabel);
+            group.Controls.Add(importAirportsButton);
+            group.Controls.Add(this.ourRunwaysStatusLabel);
+            group.Controls.Add(importRunwaysButton);
+            this.tabPage5.Controls.Add(group);
+            group.BringToFront();
+        }
+
+        private SqlLiteDataRepository CreateAirportRepository()
+        {
+            var repo = new SqlLiteDataRepository();
+            repo.Settings = AeroSceneryManager.Instance.Settings;
+            return repo;
+        }
+
+        private void RefreshOurAirportsStatus()
+        {
+            if (this.ourAirportsStatusLabel == null)
+            {
+                return;
+            }
+
+            var repo = this.CreateAirportRepository();
+            var info = repo.GetOurAirportsImportInfo();
+            if (info == null || info.RowCount <= 0)
+            {
+                this.ourAirportsStatusLabel.Text = "Airports: not imported.";
+                return;
+            }
+
+            this.ourAirportsStatusLabel.Text = string.Format("{0} airports imported {1} UTC", info.RowCount, info.ImportedUtc);
+        }
+
+        private void RefreshOurRunwaysStatus()
+        {
+            if (this.ourRunwaysStatusLabel == null)
+            {
+                return;
+            }
+
+            var repo = this.CreateAirportRepository();
+            var info = repo.GetOurRunwaysImportInfo();
+            if (info == null || info.RowCount <= 0)
+            {
+                this.ourRunwaysStatusLabel.Text = "Runways: not imported.";
+                return;
+            }
+
+            this.ourRunwaysStatusLabel.Text = string.Format("{0} runways imported {1} UTC", info.RowCount, info.ImportedUtc);
+        }
+
+        private bool TryCopyCsvFromDialog(string destPath, string title, string defaultFileName)
+        {
+            using (var dialog = new OpenFileDialog())
+            {
+                dialog.Title = title;
+                dialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+                dialog.FileName = defaultFileName;
+                dialog.InitialDirectory = OurAirportsImporter.GetCsvDirectory();
+                if (File.Exists(destPath))
+                {
+                    dialog.FileName = destPath;
+                }
+
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return false;
+                }
+
+                if (!string.Equals(dialog.FileName, destPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Copy(dialog.FileName, destPath, true);
+                }
+            }
+
+            return true;
+        }
+
+        private void ImportOurAirportsButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var destPath = OurAirportsImporter.GetCsvPath();
+                if (!this.TryCopyCsvFromDialog(destPath, "Select OurAirports airports.csv", "airports.csv"))
+                {
+                    return;
+                }
+
+                var csvFile = new FileInfo(destPath);
+                var repo = this.CreateAirportRepository();
+                var previous = repo.GetOurAirportsImportInfo();
+                var lastWrite = csvFile.LastWriteTimeUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                if (previous != null
+                    && previous.FileLength == csvFile.Length
+                    && previous.FileLastWriteUtc == lastWrite
+                    && previous.RowCount > 0
+                    && repo.OurAirportsHaveUrls())
+                {
+                    CustomMessageBox already = new CustomMessageBox(
+                        "The OurAirports file has not changed since the last import.",
+                        "AeroScenery",
+                        MessageBoxIcon.Information);
+                    already.ShowDialog(this);
+                    this.RefreshOurAirportsStatus();
+                    return;
+                }
+
+                this.Cursor = Cursors.WaitCursor;
+                var importer = new OurAirportsImporter();
+                var airports = importer.ReadAirports(destPath);
+                repo.ReplaceOurAirports(airports, csvFile);
+                this.Cursor = Cursors.Default;
+
+                this.RefreshOurAirportsStatus();
+                CustomMessageBox done = new CustomMessageBox(
+                    string.Format("Imported {0} airports into the AeroScenery database.\nShow Airports is available on the map toolbar.", airports.Count),
+                    "AeroScenery",
+                    MessageBoxIcon.Information);
+                done.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                this.Cursor = Cursors.Default;
+                this.log.Error("OurAirports import failed", ex);
+                CustomMessageBox failed = new CustomMessageBox(
+                    "Could not import airports.csv.\nDownload the current file from OurAirports and try again.",
+                    "AeroScenery",
+                    MessageBoxIcon.Error);
+                failed.ShowDialog(this);
+            }
+        }
+
+        private void ImportOurRunwaysButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var destPath = OurAirportsImporter.GetRunwaysCsvPath();
+                if (!this.TryCopyCsvFromDialog(destPath, "Select OurAirports runways.csv", "runways.csv"))
+                {
+                    return;
+                }
+
+                var csvFile = new FileInfo(destPath);
+                var repo = this.CreateAirportRepository();
+                var previous = repo.GetOurRunwaysImportInfo();
+                var lastWrite = csvFile.LastWriteTimeUtc.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+                if (previous != null
+                    && previous.FileLength == csvFile.Length
+                    && previous.FileLastWriteUtc == lastWrite
+                    && previous.RowCount > 0)
+                {
+                    CustomMessageBox already = new CustomMessageBox(
+                        "The runways.csv file has not changed since the last import.",
+                        "AeroScenery",
+                        MessageBoxIcon.Information);
+                    already.ShowDialog(this);
+                    this.RefreshOurRunwaysStatus();
+                    return;
+                }
+
+                this.Cursor = Cursors.WaitCursor;
+                var importer = new OurAirportsImporter();
+                var runways = importer.ReadRunways(destPath);
+                repo.ReplaceOurRunways(runways, csvFile);
+                this.Cursor = Cursors.Default;
+
+                this.RefreshOurRunwaysStatus();
+                CustomMessageBox done = new CustomMessageBox(
+                    string.Format("Imported {0} runways into the AeroScenery database.", runways.Count),
+                    "AeroScenery",
+                    MessageBoxIcon.Information);
+                done.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                this.Cursor = Cursors.Default;
+                this.log.Error("OurRunways import failed", ex);
+                CustomMessageBox failed = new CustomMessageBox(
+                    "Could not import runways.csv.\nDownload the current file from OurAirports and try again.",
+                    "AeroScenery",
+                    MessageBoxIcon.Error);
+                failed.ShowDialog(this);
+            }
         }
 
     }

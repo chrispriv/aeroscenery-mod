@@ -242,7 +242,9 @@
     <Compile Include="Data\Mappers\GridSquareMapper.cs" />
     <Compile Include="Data\Models\DatabaseVersion.cs" />
     <Compile Include="Data\Models\FSCloudPortAirport.cs" />
+    <Compile Include="Data\Models\OurAirport.cs" />
     <Compile Include="Data\Models\GridSquare.cs" />
+    <Compile Include="Data\OurAirportsImporter.cs" />
     <Compile Include="Data\RegistryService.cs" />
     <Compile Include="Data\SchemaUpgrader.cs" />
     <Compile Include="Data\SettingsService.cs" />
