@@ -47,5 +47,51 @@
         public static readonly string GoogleRoads = "r-mask";
         public static readonly string OSMMaps = "o-mask";
         public static readonly string CartoDBLight = "c-mask";
+
+        public static string GetDirectoryName(OrthophotoSource source)
+        {
+            switch (source)
+            {
+                case OrthophotoSource.Google:
+                    return Google;
+                case OrthophotoSource.ArcGIS:
+                    return ArcGIS;
+                case OrthophotoSource.USGS:
+                case OrthophotoSource.US_USGS:
+                    return US_USGS;
+                case OrthophotoSource.NZ_Linz:
+                    return NZ_Linz;
+                case OrthophotoSource.ES_IDEIB:
+                    return ES_IDEIB;
+                case OrthophotoSource.CH_Geoportal:
+                    return CH_Geoportal;
+                case OrthophotoSource.NO_NorgeBilder:
+                    return NO_NorgeBilder;
+                case OrthophotoSource.SE_Lantmateriet:
+                    return SE_Lantmateriet;
+                case OrthophotoSource.ES_IGN:
+                    return ES_IGN;
+                case OrthophotoSource.JP_GSI:
+                    return JP_GSI;
+                case OrthophotoSource.SE_Hitta:
+                    return SE_Hitta;
+                case OrthophotoSource.HereWeGo:
+                    return HereWeGo;
+                case OrthophotoSource.NO_GuleSider:
+                    return NO_GuleSider;
+                case OrthophotoSource.Mapbox:
+                    return Mapbox;
+                case OrthophotoSource.GoogleMaps:
+                    return GoogleMaps;
+                case OrthophotoSource.GoogleRoads:
+                    return GoogleRoads;
+                case OrthophotoSource.OSMMaps:
+                    return OSMMaps;
+                case OrthophotoSource.CartoDBLight:
+                    return CartoDBLight;
+                default:
+                    return Bing;
+            }
+        }
     }
 }

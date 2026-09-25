@@ -2372,30 +2372,52 @@ namespace AeroScenery
                 {
                     var ttcFiles = new List<string>();
 
-                    var duplicateResult = this.sceneryInstaller.CheckForDuplicateTTCFiles(afs2GridSquare, out ttcFiles);
+                    var duplicateResult = this.sceneryInstaller.CheckForDuplicateTTCFiles(afs2GridSquare, confirmWithUser, out ttcFiles);
 
                     if (duplicateResult == null || duplicateResult == DialogResult.OK)
                     {
-                        var installTask = this.sceneryInstaller.InstallSceneryAsync(afs2GridSquare, ttcFiles);
+                        if (ttcFiles.Count == 0)
+                        {
+                            log.WarnFormat("No ttc files to install for grid square {0} and the current image source.", afs2GridSquare.Name);
 
-                        var fileOperationProgressForm = new FileOperationProgressForm();
-                        fileOperationProgressForm.MessageText = "Installing Scenery";
-                        fileOperationProgressForm.Title = "Installing Scenery";
+                            if (confirmWithUser)
+                            {
+                                var noFilesMessageBox = new CustomMessageBox(
+                                    String.Format("No ttc files were found for grid square {0} and the current image source.", afs2GridSquare.Name),
+                                    "AeroScenery",
+                                    MessageBoxIcon.Information);
 
-                        fileOperationProgressForm.FileOperationTask = installTask;
-                        await fileOperationProgressForm.DoTaskAsync();
-                        fileOperationProgressForm = null;
+                                noFilesMessageBox.ShowDialog();
+                            }
+                        }
+                        else
+                        {
+                            var installTask = this.sceneryInstaller.InstallSceneryAsync(afs2GridSquare, ttcFiles);
+
+                            var fileOperationProgressForm = new FileOperationProgressForm();
+                            fileOperationProgressForm.MessageText = "Installing Scenery";
+                            fileOperationProgressForm.Title = "Installing Scenery";
+
+                            fileOperationProgressForm.FileOperationTask = installTask;
+                            await fileOperationProgressForm.DoTaskAsync();
+                            fileOperationProgressForm = null;
+                        }
                     }
                 }
 
             }
             else
             {
-                var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", afs2GridSquare.Name),
-                    "AeroScenery",
-                    MessageBoxIcon.Information);
+                log.WarnFormat("There is no image folder yet for grid square {0}", afs2GridSquare.Name);
 
-                messageBox.ShowDialog();
+                if (confirmWithUser)
+                {
+                    var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", afs2GridSquare.Name),
+                        "AeroScenery",
+                        MessageBoxIcon.Information);
+
+                    messageBox.ShowDialog();
+                }
             }
 
         }

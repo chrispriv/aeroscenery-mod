@@ -1,6 +1,8 @@
 ﻿using AeroScenery.AFS2;
 using AeroScenery.Common;
 using AeroScenery.Controls;
+using AeroScenery.OrthoPhotoSources;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +15,7 @@ namespace AeroScenery.FileManagement
 {
     public class SceneryInstaller
     {
+        private readonly ILog log = LogManager.GetLogger("AeroScenery");
         private AFS2Grid afsGrid;
 
         //#MOD_k
@@ -46,7 +49,7 @@ namespace AeroScenery.FileManagement
                     // Confirm that the user does want to install scenery
                     StringBuilder sb = new StringBuilder();
 
-                    sb.AppendLine("Are you sure you want to install all scenery for this grid square?");
+                    sb.AppendLine("Are you sure you want to install the selected scenery for this grid square?");
                     sb.AppendLine("Any existing files in the same destination folder will be overwritten.");
                     sb.AppendLine("");
                     sb.AppendLine(String.Format("Destination: {0}", afsSceneryInstallDirectory));
@@ -63,19 +66,23 @@ namespace AeroScenery.FileManagement
                 }
                 else
                 {
-                    // Can't find anywhere to install
-                    StringBuilder sb = new StringBuilder();
+                    log.Error("Could not find a location to install scenery to.");
 
-                    sb.AppendLine("Could not find a location to install to.");
-                    sb.AppendLine("");
-                    sb.AppendLine("AeroScenery looks for 'Aerofly FS 4' and then 'Aerofly FS 2' in your Documents folder.");
-                    sb.AppendLine("If your Aerofly user folder is somewhere else, set it as the AFS User Folder in Settings.");
+                    if (promptUser)
+                    {
+                        StringBuilder sb = new StringBuilder();
 
-                    var messageBox = new CustomMessageBox(sb.ToString(),
-                        "AeroScenery",
-                        MessageBoxIcon.Error);
+                        sb.AppendLine("Could not find a location to install to.");
+                        sb.AppendLine("");
+                        sb.AppendLine("AeroScenery looks for 'Aerofly FS 4' and then 'Aerofly FS 2' in your Documents folder.");
+                        sb.AppendLine("If your Aerofly user folder is somewhere else, set it as the AFS User Folder in Settings.");
 
-                    result = messageBox.ShowDialog();
+                        var messageBox = new CustomMessageBox(sb.ToString(),
+                            "AeroScenery",
+                            MessageBoxIcon.Error);
+
+                        result = messageBox.ShowDialog();
+                    }
                 }
             }
             else
@@ -143,26 +150,30 @@ namespace AeroScenery.FileManagement
         }
         */
 
-        public DialogResult? CheckForDuplicateTTCFiles(AFS2GridSquare afs2GridSquare, out List<string> ttcFiles)
+        public DialogResult? CheckForDuplicateTTCFiles(AFS2GridSquare afs2GridSquare, bool promptUser, out List<string> ttcFiles)
         {
-            // A null dialog result means that there are no duplicates
+            // A null dialog result means that there are no duplicates, or the unattended
+            // install continues with the filtered list.
             DialogResult? result = null;
 
-            var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + afs2GridSquare.Name;
-
-            ttcFiles = this.EnumerateFilesRecursive(gridSquareDirectory, "*.ttc").ToList();
+            ttcFiles = this.CollectTtcFilesForCurrentImageSource(afs2GridSquare);
 
             List<string> ttcFileNames = new List<string>();
 
             foreach (var ttcFile in ttcFiles)
             {
-                var tccFileName = Path.GetFileName(ttcFile);
-                ttcFileNames.Add(tccFileName);
+                ttcFileNames.Add(Path.GetFileName(ttcFile));
             }
 
-            // Check for duplicate ttc files
             if (ttcFileNames.Count != ttcFileNames.Distinct().Count())
             {
+                log.WarnFormat("Duplicate ttc file names remain for grid square {0} after filtering to the current image source.", afs2GridSquare.Name);
+
+                if (!promptUser)
+                {
+                    return null;
+                }
+
                 StringBuilder sbDuplicates = new StringBuilder();
 
                 sbDuplicates.AppendLine(String.Format("Duplicate ttc files were found in the folder for grid square ({0})", afs2GridSquare.Name));
@@ -181,6 +192,30 @@ namespace AeroScenery.FileManagement
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Collects desktop GeoConvert .ttc files for the image source selected on the main window.
+        /// Mobile conversion folders (*-ttc-mobile) are skipped until FSG install is implemented.
+        /// </summary>
+        private List<string> CollectTtcFilesForCurrentImageSource(AFS2GridSquare afs2GridSquare)
+        {
+            var settings = AeroSceneryManager.Instance.Settings;
+            var gridSquareDirectory = settings.WorkingDirectory + afs2GridSquare.Name;
+            var sourceFolderName = OrthophotoSourceDirectoryName.GetDirectoryName(settings.OrthophotoSource.Value);
+            var sourceDirectory = Path.Combine(gridSquareDirectory, sourceFolderName);
+
+            if (!Directory.Exists(sourceDirectory))
+            {
+                log.WarnFormat("No working folder for image source {0} ({1}) in grid square {2}.",
+                    settings.OrthophotoSource, sourceFolderName, afs2GridSquare.Name);
+                return new List<string>();
+            }
+
+            var ttcFiles = this.EnumerateFilesRecursive(sourceDirectory, "*.ttc").ToList();
+            log.InfoFormat("Install will copy {0} ttc file(s) from {1} for grid square {2}.",
+                ttcFiles.Count, sourceDirectory, afs2GridSquare.Name);
+            return ttcFiles;
         }
 
         public async Task InstallSceneryAsync(AFS2GridSquare afs2GridSquare, List<string> ttcFiles)
@@ -265,6 +300,11 @@ namespace AeroScenery.FileManagement
 
                 foreach (string subdir in subdirs)
                 {
+                    if (IsMobileTtcDirectory(subdir))
+                    {
+                        continue;
+                    }
+
                     todo.Enqueue(subdir);
                 }
                 foreach (string filename in files)
@@ -272,6 +312,13 @@ namespace AeroScenery.FileManagement
                     yield return filename;
                 }
             }
+        }
+
+        private static bool IsMobileTtcDirectory(string directoryPath)
+        {
+            var name = Path.GetFileName(directoryPath);
+            return name.EndsWith("-ttc-mobile", StringComparison.OrdinalIgnoreCase)
+                || name.IndexOf("ttc-mobile", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
 
