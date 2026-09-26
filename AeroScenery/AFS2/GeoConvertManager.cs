@@ -270,6 +270,8 @@ namespace AeroScenery.AFS2
                 .ToList();
 
             await Task.WhenAll(waitTasks);
+
+            mainForm.UpdateChildTaskProgress("Finished GeoConvert");
         }
 
 

@@ -60,6 +60,13 @@ namespace AeroScenery
         private DownloadManager downloadManager;
 
         private GeoConvertManager geoConvertManager;
+        private TtcConverterManager ttcConverterManager;
+
+        //#MOD_l
+        private bool UseBuiltInTtcConverter
+        {
+            get { return this.settings.UseBuiltInTtcConverter.GetValueOrDefault(true); }
+        }
         //#MOD_k
         private TerrainData _terrainData;
 
@@ -95,6 +102,7 @@ namespace AeroScenery
         {
             downloadManager = new DownloadManager();
             geoConvertManager = new GeoConvertManager();
+            ttcConverterManager = new TtcConverterManager();
             imageTileService = new ImageTileService();
             tileStitcher = new TileStitcher();
             settingsService = new SettingsService();
@@ -955,13 +963,9 @@ namespace AeroScenery
                 */
                 if (this.settings.RunGeoConvert.Value && this.mainForm.ActionsRunning)
                 {
-                    Task geoConvertTask = this.StartGeoConvertProcessAsync();
-
-                    if (this.settings.InstallScenery.Value) 
-                    {
-                        await geoConvertTask;
-                    }
-
+                    // Always wait. If this is fire-and-forget, ActionsComplete() stops the elapsed
+                    // clocks while the converter is still running.
+                    await this.StartGeoConvertProcessAsync();
                 }
 
                 //#Nickohod (not implemented)
@@ -1023,7 +1027,7 @@ namespace AeroScenery
         {
             if (this.mainForm.ActionsRunning)
             {
-                if (String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
+                if (!UseBuiltInTtcConverter && String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
                 {
                     var messageBox = new CustomMessageBox("Please set the location of the Aerofly SDK in Settings before running Geoconvert",
                         "AeroScenery",
@@ -1044,7 +1048,8 @@ namespace AeroScenery
                     else
                     {
 
-                        if (this.mainForm.SelectedAFS2GridSquares.Count > 1 &&
+                        if (!UseBuiltInTtcConverter
+                            && this.mainForm.SelectedAFS2GridSquares.Count > 1 &&
                             this.settings.GeoConvertUseWrapper.Value == false)
                         {
                             if (this.settings.ShowMultipleConcurrentSquaresWarning.HasValue && this.settings.ShowMultipleConcurrentSquaresWarning.Value)
@@ -1076,7 +1081,9 @@ namespace AeroScenery
 
         public async Task RunGeoConvertProcessAsync()
         {
-            log.Info("Starting GeoConvert Process");
+            log.Info(UseBuiltInTtcConverter
+                ? "Starting built-in TTC converter"
+                : "Starting GeoConvert Process");
 
             // Without the wrapper the grid squares convert in parallel, so their processes are
             // collected here and waited for once they have all been started
@@ -1116,7 +1123,19 @@ namespace AeroScenery
                                 Directory.CreateDirectory(ttcDirectory);
                             }
 
-                            pendingRuns.AddRange(await this.geoConvertManager.RunGeoConvertAsync(stitchedTilesDirectory, ttcDirectory, this.mainForm, this.settings.GeoConvertUseWrapper.Value));
+                            if (UseBuiltInTtcConverter)
+                            {
+                                await this.ttcConverterManager.ConvertAllAsync(
+                                    stitchedTilesDirectory,
+                                    ttcDirectory,
+                                    this.mainForm,
+                                    this.settings.GeoConvertWriteRawFiles.GetValueOrDefault() ? rawDirectory : null,
+                                    this.settings.ConverterThreads);
+                            }
+                            else
+                            {
+                                pendingRuns.AddRange(await this.geoConvertManager.RunGeoConvertAsync(stitchedTilesDirectory, ttcDirectory, this.mainForm, this.settings.GeoConvertUseWrapper.Value));
+                            }
                         }
                         else
                         {
@@ -1137,7 +1156,10 @@ namespace AeroScenery
                 }
             }
 
-            await this.geoConvertManager.WaitForRunsAsync(pendingRuns, this.mainForm);
+            if (pendingRuns.Count > 0)
+            {
+                await this.geoConvertManager.WaitForRunsAsync(pendingRuns, this.mainForm);
+            }
         }
 
         /*

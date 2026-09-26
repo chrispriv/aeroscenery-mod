@@ -13,6 +13,10 @@ roadmap.txt
 *.vsidx
 CopilotIndices/
 
+# Unused LZHAM rebuild leftovers (TTC tiles use zlib)
+AeroScenery/Native/lzham_codec/
+AeroScenery/Native/lzham_x64.dll
+
 # Legacy project paths (removed in Mod k)
 /AeroSceneryInstaller/
 /GeoConvertWrapper/

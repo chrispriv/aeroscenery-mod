@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 using System.Globalization;
+using AeroScenery.AFS2;
 using AeroScenery.ImageProcessing;
 using AeroScenery.Controls;
 using AeroScenery.Download;
@@ -24,6 +25,14 @@ namespace AeroScenery.UI
 
         private Label ourAirportsStatusLabel;
         private Label ourRunwaysStatusLabel;
+        private ToolTip converterHelpToolTip;
+        private ToolTip sequentialGeoConvertToolTip;
+        private const string SdkFolderToolTip =
+            "Aerofly FS2 GeoConvert (Aerofly FS2 SDK) converts stitched images when the SDK converter is selected.\nUse 'Get Aerofly FS2 SDK' in the toolbar for the download.\nSet this to the SDK root that contains the 'aerofly_fs_2_geoconvert\\' folder. Elevation mesh conversion also uses this path.";
+        private const string SequentialGeoConvertToolTipText =
+            "When several grid squares are selected, run GeoConvert one square after another instead of all at once.\nThis is built into AeroScenery (the old GeoConvert Wrapper EXE is no longer used).\nEnable this if you also want 'Install Scenery' or 'Shut down PC when finished' to wait until every GeoConvert job has ended.";
+        private const string BuiltInSequentialToolTipText =
+            "The built-in converter always processes selected grid squares one after another. Sequential GeoConvert is only used with the Aerofly FS2 SDK.";
 
         public SettingsForm()
         {
@@ -31,11 +40,13 @@ namespace AeroScenery.UI
             this.updateImagePreview = true;
             this.BuildOurAirportsSettingsGroup();
 
-            //#MOD
-            ToolTip toolTip1 = new ToolTip();
-            toolTip1.IsBalloon = true;
-            toolTip1.InitialDelay = 500;
-            toolTip1.SetToolTip(this.sdkGeoConvertHelpImage, "Aerofly FS2 GeoConvert (Aerofly FS2 SDK) converts stitched images. Use 'Get Aerofly FS2 SDK' in the toolbar for the download.\nSet Settings to the SDK root that contains the 'aerofly_fs_2_geoconvert\\' folder.");
+            this.converterHelpToolTip = new ToolTip();
+            this.converterHelpToolTip.IsBalloon = true;
+            this.converterHelpToolTip.InitialDelay = 500;
+            this.converterHelpToolTip.SetToolTip(this.converterThreadsHelpImage, "How many CPU threads the built-in converter may use.\nAutomatic sets half the logical processors so the PC stays usable while a square converts.");
+            this.converterHelpToolTip.SetToolTip(this.useBuiltInConverterRadioButton, "Converts TMC files to TTC in this process. No Aerofly SDK GeoConvert is launched.");
+            this.converterHelpToolTip.SetToolTip(this.useSdkGeoConvertRadioButton, "Runs the original Aerofly FS2 GeoConvert from the SDK folder below.");
+            this.converterHelpToolTip.SetToolTip(this.sdkGeoConvertHelpImage, SdkFolderToolTip);
 
             ToolTip toolTip2 = new ToolTip();
             toolTip2.IsBalloon = true;
@@ -52,10 +63,10 @@ namespace AeroScenery.UI
             toolTip6.InitialDelay = 500;
             toolTip6.SetToolTip(this.imageProcessingHelpImage, "Adjust images before GeoConvert.\nAfter changing the parameters, run the single step 'Stitch Image Tiles' again to apply them.\n'Remove alpha channel' replaces the sea alpha channel with a default dark blue (masked Google images only).");
 
-            ToolTip sequentialGeoConvertToolTip = new ToolTip();
-            sequentialGeoConvertToolTip.IsBalloon = true;
-            sequentialGeoConvertToolTip.InitialDelay = 500;
-            sequentialGeoConvertToolTip.SetToolTip(this.useGeoConvertWrapperCheckBox, "When several grid squares are selected, run GeoConvert one square after another instead of all at once.\nThis is built into AeroScenery (the old GeoConvert Wrapper EXE is no longer used).\nEnable this if you also want 'Install Scenery' or 'Shut down PC when finished' to wait until every GeoConvert job has ended.");
+            this.sequentialGeoConvertToolTip = new ToolTip();
+            this.sequentialGeoConvertToolTip.IsBalloon = true;
+            this.sequentialGeoConvertToolTip.InitialDelay = 500;
+            this.sequentialGeoConvertToolTip.SetToolTip(this.useGeoConvertWrapperCheckBox, SequentialGeoConvertToolTipText);
 
             var settingsExtraTip = new ToolTip();
             settingsExtraTip.IsBalloon = true;
@@ -175,6 +186,8 @@ namespace AeroScenery.UI
 
             settings.GeoConvertUseWrapper = useGeoConvertWrapperCheckBox.Checked;
             settings.ShowMultipleConcurrentSquaresWarning = multipleConcurrentSquaresWarningCheckBox.Checked;
+            settings.UseBuiltInTtcConverter = this.useBuiltInConverterRadioButton.Checked;
+            settings.ConverterThreads = (int)this.converterThreadsNumeric.Value;
 
             //if (this.gcDoMultipleSmallerRunsComboBox.SelectedIndex == 0)
             //{
@@ -282,6 +295,8 @@ namespace AeroScenery.UI
             //#MOD
             this.simultaneousDownloadsComboBox.Text = Convert.ToString(settings.SimultaneousDownloads);
 
+            this.maxTilesPerStitchedImageTextBox.Text = settings.MaximumStitchedImageSize.GetValueOrDefault(66).ToString();
+
             this.RefreshOurAirportsStatus();
             this.RefreshOurRunwaysStatus();
 
@@ -305,6 +320,25 @@ namespace AeroScenery.UI
 
             useGeoConvertWrapperCheckBox.Checked = settings.GeoConvertUseWrapper.Value;
             multipleConcurrentSquaresWarningCheckBox.Checked = settings.ShowMultipleConcurrentSquaresWarning.Value;
+
+            int maxThreads = Math.Max(1, Environment.ProcessorCount);
+            this.converterThreadsNumeric.Maximum = maxThreads;
+            int threads = settings.ConverterThreads.GetValueOrDefault(TtcConverter.DefaultThreads());
+            if (threads < 1)
+            {
+                threads = 1;
+            }
+            if (threads > maxThreads)
+            {
+                threads = maxThreads;
+            }
+            this.converterThreadsNumeric.Value = threads;
+            this.UpdateConverterThreadsInfoLabel();
+
+            bool useBuiltIn = settings.UseBuiltInTtcConverter.GetValueOrDefault(true);
+            this.useBuiltInConverterRadioButton.Checked = useBuiltIn;
+            this.useSdkGeoConvertRadioButton.Checked = !useBuiltIn;
+            this.UpdateConverterOptionRows();
 
             this.usgsUsernameTextBox.Text = settings.USGSUsername;
             this.usgsPasswordTextBox.Text = settings.USGSPassword;
@@ -381,6 +415,66 @@ namespace AeroScenery.UI
                 this.ToggleImageWaterMaskingControlsEnabled(false);
             }
 
+        }
+
+        private void ConverterModeRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            this.UpdateConverterOptionRows();
+        }
+
+        private void UpdateConverterOptionRows()
+        {
+            bool builtIn = this.useBuiltInConverterRadioButton.Checked;
+
+            this.converterThreadsLabel.Visible = builtIn;
+            this.converterThreadsNumeric.Visible = builtIn;
+            this.converterThreadsHelpImage.Visible = builtIn;
+            this.converterThreadsAutoButton.Visible = builtIn;
+            this.converterThreadsInfoLabel.Visible = builtIn;
+
+            this.label3.Visible = !builtIn;
+            this.afsSDKFolderTextBox.Visible = !builtIn;
+            this.sdkButton.Visible = !builtIn;
+            this.sdkGeoConvertHelpImage.Visible = !builtIn;
+
+            this.useGeoConvertWrapperCheckBox.Enabled = !builtIn;
+            this.multipleConcurrentSquaresWarningCheckBox.Enabled = !builtIn;
+
+            if (builtIn)
+            {
+                this.converterHelpToolTip.SetToolTip(this.sdkGeoConvertHelpImage, "");
+                this.sequentialGeoConvertToolTip.SetToolTip(this.useGeoConvertWrapperCheckBox, BuiltInSequentialToolTipText);
+            }
+            else
+            {
+                this.converterHelpToolTip.SetToolTip(this.sdkGeoConvertHelpImage, SdkFolderToolTip);
+                this.sequentialGeoConvertToolTip.SetToolTip(this.useGeoConvertWrapperCheckBox, SequentialGeoConvertToolTipText);
+            }
+        }
+
+        private void converterThreadsNumeric_ValueChanged(object sender, EventArgs e)
+        {
+            this.UpdateConverterThreadsInfoLabel();
+        }
+
+        private void converterThreadsAutoButton_Click(object sender, EventArgs e)
+        {
+            int autoThreads = TtcConverter.DefaultThreads();
+            decimal max = this.converterThreadsNumeric.Maximum;
+            if (autoThreads > max)
+            {
+                autoThreads = (int)max;
+            }
+            this.converterThreadsNumeric.Value = autoThreads;
+        }
+
+        private void UpdateConverterThreadsInfoLabel()
+        {
+            int selected = (int)this.converterThreadsNumeric.Value;
+            int total = Math.Max(1, Environment.ProcessorCount);
+            int percent = (int)Math.Round(100.0 * selected / total);
+            this.converterThreadsInfoLabel.Text = String.Format("{0} of {1} logical processors ({2}%)",
+                selected, total, percent);
         }
 
         private void ToggleImageProcessingControlsEnabled(bool enabled)

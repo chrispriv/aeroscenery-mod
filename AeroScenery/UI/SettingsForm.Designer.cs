@@ -66,6 +66,14 @@
             this.maxTilesPerStitchedImageTextBox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.converterThreadsHelpImage = new System.Windows.Forms.Label();
+            this.converterThreadsNumeric = new System.Windows.Forms.NumericUpDown();
+            this.converterThreadsAutoButton = new System.Windows.Forms.Button();
+            this.converterThreadsInfoLabel = new System.Windows.Forms.Label();
+            this.converterThreadsLabel = new System.Windows.Forms.Label();
+            this.useSdkGeoConvertRadioButton = new System.Windows.Forms.RadioButton();
+            this.useBuiltInConverterRadioButton = new System.Windows.Forms.RadioButton();
+            this.converterModeLabel = new System.Windows.Forms.Label();
             this.AllowShiftCorrectionEnabledCheckBox = new System.Windows.Forms.CheckBox();
             this.label69 = new System.Windows.Forms.Label();
             this.label67 = new System.Windows.Forms.Label();
@@ -171,6 +179,7 @@
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.converterThreadsNumeric)).BeginInit();
             this.groupBox5.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -201,18 +210,14 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.sdkGeoConvertHelpImage);
             this.groupBox1.Controls.Add(this.label57);
             this.groupBox1.Controls.Add(this.afsSceneryFolderTextBox);
             this.groupBox1.Controls.Add(this.label42);
             this.groupBox1.Controls.Add(this.afs2UserFolderButton);
             this.groupBox1.Controls.Add(this.afs2UserFolderTextBox);
             this.groupBox1.Controls.Add(this.label9);
-            this.groupBox1.Controls.Add(this.sdkButton);
             this.groupBox1.Controls.Add(this.aerosceneryDatabaseFolderButton);
             this.groupBox1.Controls.Add(this.workingFolderButton);
-            this.groupBox1.Controls.Add(this.afsSDKFolderTextBox);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.aeroSceneryDatabaseFolderTextBox);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.workingFolderTextBox);
@@ -229,7 +234,7 @@
             // 
             this.sdkGeoConvertHelpImage.AutoSize = true;
             this.sdkGeoConvertHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkGeoConvertHelpImage.Image")));
-            this.sdkGeoConvertHelpImage.Location = new System.Drawing.Point(131, 94);
+            this.sdkGeoConvertHelpImage.Location = new System.Drawing.Point(131, 83);
             this.sdkGeoConvertHelpImage.Name = "sdkGeoConvertHelpImage";
             this.sdkGeoConvertHelpImage.Size = new System.Drawing.Size(16, 17);
             this.sdkGeoConvertHelpImage.TabIndex = 17;
@@ -293,7 +298,7 @@
             // 
             // sdkButton
             // 
-            this.sdkButton.Location = new System.Drawing.Point(603, 91);
+            this.sdkButton.Location = new System.Drawing.Point(603, 80);
             this.sdkButton.Name = "sdkButton";
             this.sdkButton.Size = new System.Drawing.Size(33, 25);
             this.sdkButton.TabIndex = 8;
@@ -323,7 +328,7 @@
             // 
             // afsSDKFolderTextBox
             // 
-            this.afsSDKFolderTextBox.Location = new System.Drawing.Point(216, 91);
+            this.afsSDKFolderTextBox.Location = new System.Drawing.Point(216, 80);
             this.afsSDKFolderTextBox.Name = "afsSDKFolderTextBox";
             this.afsSDKFolderTextBox.Size = new System.Drawing.Size(381, 25);
             this.afsSDKFolderTextBox.TabIndex = 5;
@@ -332,7 +337,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(20, 94);
+            this.label3.Location = new System.Drawing.Point(20, 83);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(105, 17);
             this.label3.TabIndex = 4;
@@ -587,6 +592,18 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.sdkGeoConvertHelpImage);
+            this.groupBox4.Controls.Add(this.sdkButton);
+            this.groupBox4.Controls.Add(this.afsSDKFolderTextBox);
+            this.groupBox4.Controls.Add(this.label3);
+            this.groupBox4.Controls.Add(this.converterThreadsHelpImage);
+            this.groupBox4.Controls.Add(this.converterThreadsNumeric);
+            this.groupBox4.Controls.Add(this.converterThreadsAutoButton);
+            this.groupBox4.Controls.Add(this.converterThreadsInfoLabel);
+            this.groupBox4.Controls.Add(this.converterThreadsLabel);
+            this.groupBox4.Controls.Add(this.useSdkGeoConvertRadioButton);
+            this.groupBox4.Controls.Add(this.useBuiltInConverterRadioButton);
+            this.groupBox4.Controls.Add(this.converterModeLabel);
             this.groupBox4.Controls.Add(this.AllowShiftCorrectionEnabledCheckBox);
             this.groupBox4.Controls.Add(this.label69);
             this.groupBox4.Controls.Add(this.label67);
@@ -604,15 +621,111 @@
             this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(14, 9);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(654, 247);
+            this.groupBox4.Size = new System.Drawing.Size(654, 330);
             this.groupBox4.TabIndex = 13;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "GeoConvert";
             // 
+            // converterModeLabel
+            // 
+            this.converterModeLabel.AutoSize = true;
+            this.converterModeLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.converterModeLabel.Location = new System.Drawing.Point(20, 29);
+            this.converterModeLabel.Name = "converterModeLabel";
+            this.converterModeLabel.Size = new System.Drawing.Size(70, 17);
+            this.converterModeLabel.TabIndex = 18;
+            this.converterModeLabel.Text = "Converter";
+            // 
+            // useBuiltInConverterRadioButton
+            // 
+            this.useBuiltInConverterRadioButton.AutoSize = true;
+            this.useBuiltInConverterRadioButton.Location = new System.Drawing.Point(216, 27);
+            this.useBuiltInConverterRadioButton.Name = "useBuiltInConverterRadioButton";
+            this.useBuiltInConverterRadioButton.Size = new System.Drawing.Size(250, 21);
+            this.useBuiltInConverterRadioButton.TabIndex = 19;
+            this.useBuiltInConverterRadioButton.TabStop = true;
+            this.useBuiltInConverterRadioButton.Text = "Built-in converter";
+            this.useBuiltInConverterRadioButton.UseVisualStyleBackColor = true;
+            this.useBuiltInConverterRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
+            // 
+            // useSdkGeoConvertRadioButton
+            // 
+            this.useSdkGeoConvertRadioButton.AutoSize = true;
+            this.useSdkGeoConvertRadioButton.Location = new System.Drawing.Point(216, 52);
+            this.useSdkGeoConvertRadioButton.Name = "useSdkGeoConvertRadioButton";
+            this.useSdkGeoConvertRadioButton.Size = new System.Drawing.Size(250, 21);
+            this.useSdkGeoConvertRadioButton.TabIndex = 20;
+            this.useSdkGeoConvertRadioButton.Text = "Aerofly FS2 GeoConvert (SDK)";
+            this.useSdkGeoConvertRadioButton.UseVisualStyleBackColor = true;
+            this.useSdkGeoConvertRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
+            // 
+            // converterThreadsLabel
+            // 
+            this.converterThreadsLabel.AutoSize = true;
+            this.converterThreadsLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.converterThreadsLabel.Location = new System.Drawing.Point(20, 83);
+            this.converterThreadsLabel.Name = "converterThreadsLabel";
+            this.converterThreadsLabel.Size = new System.Drawing.Size(118, 17);
+            this.converterThreadsLabel.TabIndex = 21;
+            this.converterThreadsLabel.Text = "Converter Threads";
+            // 
+            // converterThreadsNumeric
+            // 
+            this.converterThreadsNumeric.Location = new System.Drawing.Point(216, 80);
+            this.converterThreadsNumeric.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.converterThreadsNumeric.Maximum = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            this.converterThreadsNumeric.Name = "converterThreadsNumeric";
+            this.converterThreadsNumeric.Size = new System.Drawing.Size(79, 25);
+            this.converterThreadsNumeric.TabIndex = 22;
+            this.converterThreadsNumeric.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.converterThreadsNumeric.ValueChanged += new System.EventHandler(this.converterThreadsNumeric_ValueChanged);
+            // 
+            // converterThreadsAutoButton
+            // 
+            this.converterThreadsAutoButton.Location = new System.Drawing.Point(301, 80);
+            this.converterThreadsAutoButton.Name = "converterThreadsAutoButton";
+            this.converterThreadsAutoButton.Size = new System.Drawing.Size(90, 25);
+            this.converterThreadsAutoButton.TabIndex = 24;
+            this.converterThreadsAutoButton.Text = "Automatic";
+            this.converterThreadsAutoButton.UseVisualStyleBackColor = true;
+            this.converterThreadsAutoButton.Click += new System.EventHandler(this.converterThreadsAutoButton_Click);
+            // 
+            // converterThreadsInfoLabel
+            // 
+            this.converterThreadsInfoLabel.AutoSize = true;
+            this.converterThreadsInfoLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.converterThreadsInfoLabel.Location = new System.Drawing.Point(397, 83);
+            this.converterThreadsInfoLabel.Name = "converterThreadsInfoLabel";
+            this.converterThreadsInfoLabel.Size = new System.Drawing.Size(230, 17);
+            this.converterThreadsInfoLabel.TabIndex = 25;
+            this.converterThreadsInfoLabel.Text = "16 of 32 logical processors (50%)";
+            // 
+            // converterThreadsHelpImage
+            // 
+            this.converterThreadsHelpImage.AutoSize = true;
+            this.converterThreadsHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkGeoConvertHelpImage.Image")));
+            this.converterThreadsHelpImage.Location = new System.Drawing.Point(148, 83);
+            this.converterThreadsHelpImage.Name = "converterThreadsHelpImage";
+            this.converterThreadsHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.converterThreadsHelpImage.TabIndex = 23;
+            this.converterThreadsHelpImage.Text = "  ";
+            // 
             // AllowShiftCorrectionEnabledCheckBox
             // 
             this.AllowShiftCorrectionEnabledCheckBox.AutoSize = true;
-            this.AllowShiftCorrectionEnabledCheckBox.Location = new System.Drawing.Point(216, 210);
+            this.AllowShiftCorrectionEnabledCheckBox.Location = new System.Drawing.Point(216, 295);
             this.AllowShiftCorrectionEnabledCheckBox.Name = "AllowShiftCorrectionEnabledCheckBox";
             this.AllowShiftCorrectionEnabledCheckBox.Size = new System.Drawing.Size(341, 21);
             this.AllowShiftCorrectionEnabledCheckBox.TabIndex = 17;
@@ -623,7 +736,7 @@
             // 
             this.label69.AutoSize = true;
             this.label69.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label69.Location = new System.Drawing.Point(20, 210);
+            this.label69.Location = new System.Drawing.Point(20, 295);
             this.label69.Name = "label69";
             this.label69.Size = new System.Drawing.Size(98, 17);
             this.label69.TabIndex = 16;
@@ -633,7 +746,7 @@
             // 
             this.label67.AutoSize = true;
             this.label67.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label67.Location = new System.Drawing.Point(352, 104);
+            this.label67.Location = new System.Drawing.Point(352, 189);
             this.label67.Name = "label67";
             this.label67.Size = new System.Drawing.Size(231, 17);
             this.label67.TabIndex = 15;
@@ -642,7 +755,7 @@
             // multipleConcurrentSquaresWarningCheckBox
             // 
             this.multipleConcurrentSquaresWarningCheckBox.AutoSize = true;
-            this.multipleConcurrentSquaresWarningCheckBox.Location = new System.Drawing.Point(216, 176);
+            this.multipleConcurrentSquaresWarningCheckBox.Location = new System.Drawing.Point(216, 261);
             this.multipleConcurrentSquaresWarningCheckBox.Name = "multipleConcurrentSquaresWarningCheckBox";
             this.multipleConcurrentSquaresWarningCheckBox.Size = new System.Drawing.Size(335, 21);
             this.multipleConcurrentSquaresWarningCheckBox.TabIndex = 14;
@@ -653,7 +766,7 @@
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(20, 176);
+            this.label26.Location = new System.Drawing.Point(20, 261);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(106, 17);
             this.label26.TabIndex = 13;
@@ -662,7 +775,7 @@
             // useGeoConvertWrapperCheckBox
             // 
             this.useGeoConvertWrapperCheckBox.AutoSize = true;
-            this.useGeoConvertWrapperCheckBox.Location = new System.Drawing.Point(216, 142);
+            this.useGeoConvertWrapperCheckBox.Location = new System.Drawing.Point(216, 227);
             this.useGeoConvertWrapperCheckBox.Name = "useGeoConvertWrapperCheckBox";
             this.useGeoConvertWrapperCheckBox.Size = new System.Drawing.Size(430, 21);
             this.useGeoConvertWrapperCheckBox.TabIndex = 12;
@@ -673,7 +786,7 @@
             // 
             this.label25.AutoSize = true;
             this.label25.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label25.Location = new System.Drawing.Point(20, 143);
+            this.label25.Location = new System.Drawing.Point(20, 228);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(103, 17);
             this.label25.TabIndex = 11;
@@ -683,7 +796,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(301, 104);
+            this.label11.Location = new System.Drawing.Point(301, 189);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(56, 17);
             this.label11.TabIndex = 10;
@@ -691,7 +804,7 @@
             // 
             // shrinkTMCGridSquaresTextBox
             // 
-            this.shrinkTMCGridSquaresTextBox.Location = new System.Drawing.Point(216, 101);
+            this.shrinkTMCGridSquaresTextBox.Location = new System.Drawing.Point(216, 186);
             this.shrinkTMCGridSquaresTextBox.Name = "shrinkTMCGridSquaresTextBox";
             this.shrinkTMCGridSquaresTextBox.Size = new System.Drawing.Size(79, 25);
             this.shrinkTMCGridSquaresTextBox.TabIndex = 9;
@@ -701,7 +814,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(20, 104);
+            this.label15.Location = new System.Drawing.Point(20, 189);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(170, 17);
             this.label15.TabIndex = 8;
@@ -714,7 +827,7 @@
             this.gcWriteImagesWithMaskCombo.Items.AddRange(new object[] {
             "Yes",
             "No"});
-            this.gcWriteImagesWithMaskCombo.Location = new System.Drawing.Point(216, 63);
+            this.gcWriteImagesWithMaskCombo.Location = new System.Drawing.Point(216, 148);
             this.gcWriteImagesWithMaskCombo.Name = "gcWriteImagesWithMaskCombo";
             this.gcWriteImagesWithMaskCombo.Size = new System.Drawing.Size(417, 25);
             this.gcWriteImagesWithMaskCombo.TabIndex = 7;
@@ -723,7 +836,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(20, 66);
+            this.label14.Location = new System.Drawing.Point(20, 151);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(150, 17);
             this.label14.TabIndex = 6;
@@ -736,7 +849,7 @@
             this.gcWriteRawFilesComboBox.Items.AddRange(new object[] {
             "Yes",
             "No"});
-            this.gcWriteRawFilesComboBox.Location = new System.Drawing.Point(216, 29);
+            this.gcWriteRawFilesComboBox.Location = new System.Drawing.Point(216, 114);
             this.gcWriteRawFilesComboBox.Name = "gcWriteRawFilesComboBox";
             this.gcWriteRawFilesComboBox.Size = new System.Drawing.Size(417, 25);
             this.gcWriteRawFilesComboBox.TabIndex = 5;
@@ -745,7 +858,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(20, 32);
+            this.label13.Location = new System.Drawing.Point(20, 117);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(96, 17);
             this.label13.TabIndex = 3;
@@ -859,7 +972,7 @@
             this.groupBox12.Controls.Add(this.createAddForMobileCheckBox);
             this.groupBox12.Controls.Add(this.label52);
             this.groupBox12.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox12.Location = new System.Drawing.Point(14, 270);
+            this.groupBox12.Location = new System.Drawing.Point(14, 348);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(654, 148);
             this.groupBox12.TabIndex = 15;
@@ -1751,6 +1864,7 @@
             this.groupBox3.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.converterThreadsNumeric)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -1894,6 +2008,14 @@
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Label conversionForMobileHelpImage;
         private System.Windows.Forms.Label sdkGeoConvertHelpImage;
+        private System.Windows.Forms.Label converterModeLabel;
+        private System.Windows.Forms.RadioButton useBuiltInConverterRadioButton;
+        private System.Windows.Forms.RadioButton useSdkGeoConvertRadioButton;
+        private System.Windows.Forms.Label converterThreadsLabel;
+        private System.Windows.Forms.NumericUpDown converterThreadsNumeric;
+        private System.Windows.Forms.Button converterThreadsAutoButton;
+        private System.Windows.Forms.Label converterThreadsInfoLabel;
+        private System.Windows.Forms.Label converterThreadsHelpImage;
         private System.Windows.Forms.Label imageProcessingHelpImage;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.GroupBox groupBox10;

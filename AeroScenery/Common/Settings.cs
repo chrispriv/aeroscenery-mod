@@ -74,6 +74,17 @@ namespace AeroScenery.Common
 
         public bool? GeoConvertUseWrapper { get; set; }
 
+        //#MOD_l
+        /// <summary>
+        /// True: in-process TTC converter. False: Aerofly FS2 GeoConvert from the SDK.
+        /// </summary>
+        public bool? UseBuiltInTtcConverter { get; set; }
+
+        /// <summary>
+        /// Worker threads for the built-in converter. Null means half the logical processors.
+        /// </summary>
+        public int? ConverterThreads { get; set; }
+
         public bool? ShowMultipleConcurrentSquaresWarning { get; set; }
 
         public string USGSUsername { get; set; }

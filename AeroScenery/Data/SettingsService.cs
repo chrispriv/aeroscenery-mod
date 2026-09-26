@@ -1,4 +1,5 @@
-﻿using AeroScenery.Common;
+﻿using AeroScenery.AFS2;
+using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.Download;
 using AeroScenery.OrthophotoSources;
@@ -163,6 +164,8 @@ namespace AeroScenery.Data
             log.Info(String.Format("GeoConvertWriteImagesWithMask: {0}", settings.GeoConvertWriteImagesWithMask));
             log.Info(String.Format("GeoConvertWriteRawFiles: {0}", settings.GeoConvertWriteRawFiles));
             log.Info(String.Format("GeoConvertDoMultipleSmallerRuns: {0}", settings.GeoConvertDoMultipleSmallerRuns));
+            log.Info(String.Format("UseBuiltInTtcConverter: {0}", settings.UseBuiltInTtcConverter));
+            log.Info(String.Format("ConverterThreads: {0}", settings.ConverterThreads));
             log.Info(String.Format("ShowMultipleConcurrentSquaresWarning: {0}", settings.ShowMultipleConcurrentSquaresWarning));
             //#MOD_k
             log.Info(String.Format("WaterMaskingEnable: {0}", settings.WaterMaskingEnable));
@@ -317,6 +320,17 @@ namespace AeroScenery.Data
 
             if (settings.GeoConvertUseWrapper == null)
                 settings.GeoConvertUseWrapper = true;
+
+            //#MOD_l
+            if (settings.UseBuiltInTtcConverter == null)
+                settings.UseBuiltInTtcConverter = true;
+
+            if (settings.ConverterThreads == null || settings.ConverterThreads < 1)
+                settings.ConverterThreads = TtcConverter.DefaultThreads();
+
+            int maxConverterThreads = Math.Max(1, Environment.ProcessorCount);
+            if (settings.ConverterThreads > maxConverterThreads)
+                settings.ConverterThreads = maxConverterThreads;
 
             if (settings.ShowMultipleConcurrentSquaresWarning == null)
                 settings.ShowMultipleConcurrentSquaresWarning = true;

@@ -521,6 +521,8 @@ namespace AeroScenery
             //#MOD_l
             this.UpdateDownloadProgressBarsFromSettings();
 
+            this.UpdateConverterActionLabel();
+
             this.uiSetFromSettings = true;
 
         }
@@ -1093,6 +1095,13 @@ namespace AeroScenery
             //#MOD_l
             this.UpdateDownloadProgressBarsFromSettings();
             this.UpdateShowAirportsToolbar();
+            this.UpdateConverterActionLabel();
+        }
+
+        private void UpdateConverterActionLabel()
+        {
+            bool builtIn = AeroSceneryManager.Instance.Settings.UseBuiltInTtcConverter.GetValueOrDefault(true);
+            this.runGeoConvertCheckBox.Text = builtIn ? "Run Built-in converter" : "Run GeoConvert";
         }
 
         private void DownloadersScrollPanel_SizeChanged(object sender, EventArgs e)
@@ -1770,8 +1779,28 @@ namespace AeroScenery
 
         public void UpdateChildTaskLabel(string childTask)
         {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action(() => this.UpdateChildTaskLabel(childTask)));
+                return;
+            }
+
             this.childTaskLabel.Text = childTask;
             this.StartTimingStep(childTask);
+        }
+
+        public void UpdateChildTaskProgress(string childTask)
+        {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action(() => this.UpdateChildTaskProgress(childTask)));
+                return;
+            }
+
+            this.childTaskLabel.Text = childTask;
+            // The WinForms timer is WM_TIMER, which is starved while tile progress is posted.
+            // Refresh the clocks here so they keep moving during the in-process converter.
+            this.UpdateElapsedLabels();
         }
 
 
@@ -1858,6 +1887,12 @@ namespace AeroScenery
 
         private void UpdateElapsedLabels()
         {
+            if (this.InvokeRequired)
+            {
+                this.BeginInvoke(new Action(this.UpdateElapsedLabels));
+                return;
+            }
+
             this.runElapsedLabel.Text = String.Format("Elapsed {0}", FormatElapsed(this.runStopwatch.Elapsed));
 
             this.stepElapsedLabel.Text = this.currentStepName != null
