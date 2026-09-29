@@ -45,6 +45,15 @@ namespace AeroScenery.AFS2
                 {
                     int nw, nh;
                     cur = Halve(cur, cw, ch, channels, out nw, out nh);
+                    if (format == TtcFile.FormatL8)
+                    {
+                        // FS4 mask tiles are black/white only. Any coverage becomes 255 so mixed
+                        // 2x2 blocks stay white instead of greying into a black fringe.
+                        for (int p = 0; p < cur.Length; p++)
+                        {
+                            cur[p] = cur[p] > TtcTileWriter.MaskWhiteMinAlpha ? (byte)255 : (byte)0;
+                        }
+                    }
                     cw = nw;
                     ch = nh;
                 }

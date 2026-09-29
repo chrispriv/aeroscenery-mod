@@ -35,7 +35,7 @@ namespace AeroScenery.AFS2
         public const uint Version = 0x00000100;
         public const int HeaderLength = 0x100;
 
-        public const uint FormatL8 = 0;
+        public const uint FormatL8 = 0;   // GeoConvert _mask.ttc / decoder "r8"
         public const uint FormatDxt1 = 10;
         public const uint FormatEtc2 = 21;
 

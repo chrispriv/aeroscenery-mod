@@ -130,6 +130,7 @@ namespace AeroScenery.AFS2
             // The parent row currently being assembled, indexed by tileX - WorkX0.
             public byte[][] Rgb;
             public bool[][] Covered;
+            public byte[][] Alpha;
             public bool[] Touched;
             public int PendingTy = Int32.MinValue;
 
@@ -176,6 +177,22 @@ namespace AeroScenery.AFS2
             try
             {
                 var levels = BuildLevels(regions);
+                bool captureAlpha = false;
+                foreach (var lb in levels)
+                {
+                    if (lb.WantMask)
+                    {
+                        captureAlpha = true;
+                        break;
+                    }
+                }
+                if (captureAlpha)
+                {
+                    foreach (var s in sources)
+                    {
+                        s.CaptureAlpha = true;
+                    }
+                }
                 int deepest = levels[levels.Count - 1].Level;
                 int shallowest = levels[0].Level;
 
@@ -207,6 +224,7 @@ namespace AeroScenery.AFS2
 
                 var rgb = new byte[TileSize * TileSize * 3];
                 var covered = new bool[TileSize * TileSize];
+                byte[] maskAlpha = captureAlpha ? new byte[TileSize * TileSize] : null;
 
                 // North to south, which for this grid means descending ty.
                 for (int ty = deepY1 - 1; ty >= deepY0; ty--)
@@ -216,8 +234,8 @@ namespace AeroScenery.AFS2
                         cancellationToken.ThrowIfCancellationRequested();
 
                         TileSampler.Sample(sources, deepest, tx, ty, rgb, covered, TileSize,
-                            true, BlackIsMissing, coastField, Water);
-                        EmitTile(byLevel, shallowest, deepest, tx, ty, rgb, covered,
+                            true, BlackIsMissing, coastField, Water, maskAlpha);
+                        EmitTile(byLevel, shallowest, deepest, tx, ty, rgb, covered, maskAlpha,
                             outputDirectory, result, MaxThreads, rawDirectory,
                             MobileDirectory, WriteDxt1, WriteEtc2);
 
@@ -309,6 +327,23 @@ namespace AeroScenery.AFS2
                 lb.Touched = new bool[lb.Width];
             }
 
+            bool anyMask = false;
+            foreach (var lb in levels)
+            {
+                if (lb.WantMask)
+                {
+                    anyMask = true;
+                    break;
+                }
+            }
+            if (anyMask)
+            {
+                foreach (var lb in levels)
+                {
+                    lb.Alpha = new byte[lb.Width][];
+                }
+            }
+
             return levels;
         }
 
@@ -373,7 +408,7 @@ namespace AeroScenery.AFS2
         /// a tile outside the requested range still exists to make its parent whole.
         /// </summary>
         private static void EmitTile(Dictionary<int, LevelBuffer> byLevel, int shallowest,
-            int level, int tx, int ty, byte[] rgb, bool[] covered,
+            int level, int tx, int ty, byte[] rgb, bool[] covered, byte[] maskAlpha,
             string outputDirectory, TtcConversionResult result, int threads, string rawDirectory,
             string mobileDirectory, bool writeDxt1, bool writeEtc2)
         {
@@ -382,7 +417,8 @@ namespace AeroScenery.AFS2
                 && tx >= lb.OutX0 && tx < lb.OutX1 && ty >= lb.OutY0 && ty < lb.OutY1)
             {
                 var names = TtcTileWriter.Write(outputDirectory, level, tx, ty, rgb, covered,
-                    lb.WantMask, threads, rawDirectory, mobileDirectory, writeDxt1, writeEtc2);
+                    lb.WantMask, threads, rawDirectory, mobileDirectory, writeDxt1, writeEtc2,
+                    maskAlpha);
                 foreach (var n in names)
                 {
                     result.FilesWritten.Add(Path.GetFileName(n));
@@ -420,15 +456,24 @@ namespace AeroScenery.AFS2
             {
                 parent.Rgb[slot] = new byte[TileSize * TileSize * 3];
                 parent.Covered[slot] = new bool[TileSize * TileSize];
+                if (parent.Alpha != null)
+                {
+                    parent.Alpha[slot] = new byte[TileSize * TileSize];
+                }
             }
             if (!parent.Touched[slot])
             {
                 Array.Clear(parent.Rgb[slot], 0, parent.Rgb[slot].Length);
                 Array.Clear(parent.Covered[slot], 0, parent.Covered[slot].Length);
+                if (parent.Alpha != null && parent.Alpha[slot] != null)
+                {
+                    Array.Clear(parent.Alpha[slot], 0, parent.Alpha[slot].Length);
+                }
                 parent.Touched[slot] = true;
             }
 
-            HalveInto(rgb, covered, parent.Rgb[slot], parent.Covered[slot], tx & 1, ty & 1);
+            HalveInto(rgb, covered, maskAlpha, parent.Rgb[slot], parent.Covered[slot],
+                parent.Alpha != null ? parent.Alpha[slot] : null, tx & 1, ty & 1);
         }
 
         private static void FlushRow(Dictionary<int, LevelBuffer> byLevel, int shallowest,
@@ -452,7 +497,9 @@ namespace AeroScenery.AFS2
                 lb.Touched[slot] = false;
 
                 EmitTile(byLevel, shallowest, lb.Level, lb.WorkX0 + slot, ty,
-                    lb.Rgb[slot], lb.Covered[slot], outputDirectory, result, threads, rawDirectory,
+                    lb.Rgb[slot], lb.Covered[slot],
+                    lb.Alpha != null ? lb.Alpha[slot] : null,
+                    outputDirectory, result, threads, rawDirectory,
                     mobileDirectory, writeDxt1, writeEtc2);
             }
         }
@@ -469,8 +516,8 @@ namespace AeroScenery.AFS2
         /// the whole thing: the children sit on even boundaries, so no 2x2 block ever straddles two
         /// of them.
         /// </summary>
-        private static void HalveInto(byte[] childRgb, bool[] childCovered,
-            byte[] parentRgb, bool[] parentCovered, int quadX, int quadY)
+        private static void HalveInto(byte[] childRgb, bool[] childCovered, byte[] childAlpha,
+            byte[] parentRgb, bool[] parentCovered, byte[] parentAlpha, int quadX, int quadY)
         {
             int half = TileSize / 2;
             int rowOffset = (quadY == 1) ? 0 : half;
@@ -500,6 +547,13 @@ namespace AeroScenery.AFS2
                     int sum = (childCovered[sy0 + sx0] ? 1 : 0) + (childCovered[sy0 + sx1] ? 1 : 0)
                             + (childCovered[sy1 + sx0] ? 1 : 0) + (childCovered[sy1 + sx1] ? 1 : 0);
                     parentCovered[dy + colOffset + ox] = ((sum + 2) / 4) != 0;
+
+                    if (childAlpha != null && parentAlpha != null)
+                    {
+                        int pa = dy + colOffset + ox;
+                        parentAlpha[pa] = (byte)((childAlpha[sy0 + sx0] + childAlpha[sy0 + sx1]
+                            + childAlpha[sy1 + sx0] + childAlpha[sy1 + sx1] + 2) / 4);
+                    }
                 }
             }
         }

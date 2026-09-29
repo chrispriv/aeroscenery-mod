@@ -101,6 +101,11 @@ namespace AeroScenery.AFS2
 
         public void ReadRows(byte[] destination, long destOffset, int rowCount)
         {
+            ReadRows(destination, destOffset, null, 0, rowCount);
+        }
+
+        public void ReadRows(byte[] destination, long destOffset, byte[] alphaDestination, long alphaOffset, int rowCount)
+        {
             if (rowCount <= 0)
             {
                 return;
@@ -116,6 +121,12 @@ namespace AeroScenery.AFS2
                 throw new ArgumentException("destination is too small for " + rowCount
                     + " rows at offset " + destOffset, "destination");
             }
+            if (alphaDestination != null
+                && (alphaOffset < 0 || alphaOffset + (long)rowCount * Width > alphaDestination.Length))
+            {
+                throw new ArgumentException("alpha destination is too small for " + rowCount
+                    + " rows at offset " + alphaOffset, "alphaDestination");
+            }
 
             int srcStride = Width * bytesPerPixel;
             int chunkRows = Math.Max(1, MaxScratchBytes / Math.Max(1, srcStride));
@@ -129,7 +140,8 @@ namespace AeroScenery.AFS2
                 frame.CopyPixels(new Int32Rect(0, NextRow, Width, rows),
                     scratch, srcStride, 0);
 
-                Convert(scratch, srcStride, destination, destOffset + (long)done * Width * 3, rows);
+                Convert(scratch, srcStride, destination, destOffset + (long)done * Width * 3,
+                    alphaDestination, alphaOffset + (long)done * Width, rows);
 
                 NextRow += rows;
                 done += rows;
@@ -173,45 +185,46 @@ namespace AeroScenery.AFS2
         }
 
         /// <summary>
-        /// The single place channel order is decided. Everything above is RGB24 with no alpha.
-        ///
-        /// Dropping alpha rather than compositing matches the Python reference, whose Source.load
-        /// does im.convert('RGB'). It matters because the stitcher leaves untouched areas
-        /// transparent, and GDI+ writes those as zeroes, so a dropped alpha and a composite over
-        /// black give the same pixels. Which parts of a tile are really covered is decided from the
-        /// grid, not from alpha - see the mask in the converter.
+        /// Channel order and optional alpha. RGB24/Bgr24 have no alpha; Bgra32 uses the source
+        /// alpha; other 32-bit files report 255. Transparent stitcher pixels stay RGB 0 with
+        /// alpha 0 so GeoConvert-style _mask.ttc can be built later.
         /// </summary>
-        private void Convert(byte[] src, int srcStride, byte[] dst, long dstOffset, int rows)
+        private void Convert(byte[] src, int srcStride, byte[] dst, long dstOffset,
+            byte[] alphaDst, long alphaOffset, int rows)
         {
             bool bgr = format != PixelFormats.Rgb24;
+            bool hasAlpha = format == PixelFormats.Bgra32;
             int bpp = bytesPerPixel;
 
             for (int y = 0; y < rows; y++)
             {
                 int s = y * srcStride;
                 long d = dstOffset + (long)y * Width * 3;
+                long a = alphaOffset + (long)y * Width;
 
-                if (bgr)
+                for (int x = 0; x < Width; x++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    if (bgr)
                     {
                         dst[d] = src[s + 2];
                         dst[d + 1] = src[s + 1];
                         dst[d + 2] = src[s];
-                        s += bpp;
-                        d += 3;
                     }
-                }
-                else
-                {
-                    for (int x = 0; x < Width; x++)
+                    else
                     {
                         dst[d] = src[s];
                         dst[d + 1] = src[s + 1];
                         dst[d + 2] = src[s + 2];
-                        s += bpp;
-                        d += 3;
                     }
+
+                    if (alphaDst != null)
+                    {
+                        alphaDst[a] = hasAlpha ? src[s + 3] : (byte)255;
+                        a++;
+                    }
+
+                    s += bpp;
+                    d += 3;
                 }
             }
         }

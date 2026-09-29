@@ -71,7 +71,7 @@ namespace AeroScenery.AFS2
         public static bool Sample(List<SourceImage> sources, int level, int tx, int ty,
             byte[] rgb, bool[] covered, int size, bool positionBands = true,
             bool blackIsMissing = false, CoastlineField coast = null,
-            WaterFixField water = null)
+            WaterFixField water = null, byte[] maskAlpha = null)
         {
             Array.Clear(rgb, 0, size * size * 3);
             Array.Clear(covered, 0, size * size);
@@ -147,6 +147,11 @@ namespace AeroScenery.AFS2
             var cols = new int[size];
             int anyCovered = 0;
 
+            if (maskAlpha != null)
+            {
+                Array.Clear(maskAlpha, 0, size * size);
+            }
+
             foreach (var s in sources)
             {
                 if (!s.Covers(Math.Min(lonW, lonE), Math.Max(lonW, lonE),
@@ -199,6 +204,7 @@ namespace AeroScenery.AFS2
                 }
 
                 byte[] bandBytes = s.Band;
+                byte[] bandAlpha = s.CaptureAlpha ? s.BandAlpha : null;
                 int bandFirst = s.BandFirstRow;
                 int bandRows = s.BandRows;
                 int srcStride = s.Width * 3;
@@ -242,8 +248,28 @@ namespace AeroScenery.AFS2
 
                         long si = srcRowOffset + (long)cx * 3;
                         int di = dstRowOffset + i * 3;
+                        int pi = covRowOffset + i;
 
-                        if (blackIsMissing
+                        byte srcAlpha = 255;
+                        if (bandAlpha != null)
+                        {
+                            srcAlpha = bandAlpha[bandRow * s.Width + cx];
+                            if (srcAlpha == 0)
+                            {
+                                continue;
+                            }
+                            // Keep the colour tile from extending far past the mask: same cutoff
+                            // as _mask.ttc when a mask is being built.
+                            if (maskAlpha != null && srcAlpha <= TtcTileWriter.MaskWhiteMinAlpha)
+                            {
+                                continue;
+                            }
+                        }
+
+                        // Fully transparent-already-handled. Partial alpha still carries the
+                        // source colour; skipping it left black holes in the DXT1 tile that FS4
+                        // shows as a rim even when the mask is correct.
+                        if (blackIsMissing && srcAlpha == 255
                             && bandBytes[si] == 0 && bandBytes[si + 1] == 0 && bandBytes[si + 2] == 0)
                         {
                             // Not covered, so the next source gets its turn at this pixel. Skipping
@@ -276,6 +302,10 @@ namespace AeroScenery.AFS2
                         }
 
                         covered[covRowOffset + i] = true;
+                        if (maskAlpha != null)
+                        {
+                            maskAlpha[pi] = srcAlpha;
+                        }
                         anyCovered++;
                     }
                 }

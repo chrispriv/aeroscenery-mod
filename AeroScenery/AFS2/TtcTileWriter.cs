@@ -8,8 +8,9 @@ using System.Runtime.InteropServices;
 namespace AeroScenery.AFS2
 {
     /// <summary>
-    /// Turns one sampled tile into the files Aerofly reads: the colour .ttc, and a _mask.ttc when
-    /// the tile is not fully covered.
+    /// Turns one sampled tile into the files Aerofly reads: the colour .ttc, and an R8 (L8)
+    /// 512x512 _mask.ttc in the FS4 folder when write_images_with_mask is on. That is the same
+    /// layout GeoConvert writes (decoder: r8 512x512 mips=10). FSG never gets mask tiles.
     ///
     /// Port of write_tile in tools/ttc/convert_tmc.py.
     /// </summary>
@@ -17,6 +18,18 @@ namespace AeroScenery.AFS2
     {
         public const int TileSize = 2048;
         public const int MaskSize = 512;
+
+        /// <summary>
+        /// Alpha at or below this is black on the mask (and omitted from the colour tile when
+        /// a mask is built). 192 matches a larger GeoConvert hole than 128 did.
+        /// </summary>
+        public const int MaskWhiteMinAlpha = 192;
+
+        /// <summary>
+        /// Trial: average this many texels on a side at the centre of each 4x4 (GeoConvert is
+        /// still 512, so the cell stays 4 source pixels). 2 is sharper than a full 4x4 box.
+        /// </summary>
+        public const int MaskAverageBlock = 2;
 
         /// <summary>
         /// Writes a tile and returns the file names produced, which is empty when no source
@@ -28,7 +41,8 @@ namespace AeroScenery.AFS2
         /// </summary>
         public static List<string> Write(string outputDirectory, int level, int tileX, int tileY,
             byte[] rgb, bool[] covered, bool wantMask, int maxThreads = 1, string rawDirectory = null,
-            string mobileDirectory = null, bool writeDxt1 = true, bool writeEtc2 = false)
+            string mobileDirectory = null, bool writeDxt1 = true, bool writeEtc2 = false,
+            byte[] maskAlpha = null)
         {
             var written = new List<string>();
 
@@ -79,25 +93,19 @@ namespace AeroScenery.AFS2
                 written.Add(etcPath);
             }
 
-            if (wantMask && !allCovered)
+            if (wantMask && writeDxt1 && NeedsFs4Mask(covered, maskAlpha, allCovered))
             {
-                byte[] mask = BuildMask(covered);
+                byte[] mask = BuildMask(covered, maskAlpha);
                 int mmips;
                 byte[] mchain = TtcMipChain.Build(mask, MaskSize, MaskSize, 1, TtcFile.FormatL8, out mmips);
                 byte[] mdata = TtcFile.BuildCompressed(level, MaskSize, MaskSize, mmips, TtcFile.FormatL8,
                     mchain, TtcFile.MaskUnk24, TtcFile.MaskUnk28);
 
                 string mname = TtcTileName.ForTile(level, tileX, tileY, true);
-                if (writeDxt1)
-                {
-                    File.WriteAllBytes(Path.Combine(outputDirectory, mname), mdata);
-                    written.Add(Path.Combine(outputDirectory, mname));
-                }
-                if (writeEtc2 && !string.IsNullOrEmpty(mobileDirectory))
-                {
-                    File.WriteAllBytes(Path.Combine(mobileDirectory, mname), mdata);
-                    written.Add(Path.Combine(mobileDirectory, mname));
-                }
+                Directory.CreateDirectory(outputDirectory);
+                string maskPath = Path.Combine(outputDirectory, mname);
+                File.WriteAllBytes(maskPath, mdata);
+                written.Add(maskPath);
             }
 
             return written;
@@ -139,38 +147,66 @@ namespace AeroScenery.AFS2
         }
 
         /// <summary>
-        /// The mask is a quarter resolution and max-pooled, not averaged: a 4x4 source block counts
-        /// as covered if any of its 16 pixels was. Averaging would erode coverage by up to two
-        /// pixels at every edge of the imagery.
-        ///
-        /// Flipped here too, since it accompanies a flipped tile.
+        /// GeoConvert writes a _mask.ttc only when something is missing: a PNG alpha hole, a
+        /// coastline cut, or any other uncovered pixel. FSG never gets these files.
         /// </summary>
-        private static byte[] BuildMask(bool[] covered)
+        private static bool NeedsFs4Mask(bool[] covered, byte[] maskAlpha, bool allCovered)
+        {
+            if (maskAlpha != null)
+            {
+                for (int i = 0; i < maskAlpha.Length; i++)
+                {
+                    if (maskAlpha[i] <= TtcTileWriter.MaskWhiteMinAlpha)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            return !allCovered;
+        }
+
+        /// <summary>
+        /// 512 R8 mask: average a centred 2x2 inside each 4x4 cell, then threshold at
+        /// MaskWhiteMinAlpha. A full 4x4 box blurred the edge and left a wide white buffer.
+        /// </summary>
+        private static byte[] BuildMask(bool[] covered, byte[] maskAlpha)
         {
             var mask = new byte[MaskSize * MaskSize];
             int step = TileSize / MaskSize;
+            int block = MaskAverageBlock;
+            if (block < 1)
+            {
+                block = 1;
+            }
+            if (block > step)
+            {
+                block = step;
+            }
+            int inset = (step - block) / 2;
+            int samples = block * block;
 
             for (int my = 0; my < MaskSize; my++)
             {
-                // south edge first, matching the colour tile
                 int srcYBase = TileSize - 1 - my * step;
                 for (int mx = 0; mx < MaskSize; mx++)
                 {
-                    byte v = 0;
-                    for (int dy = 0; dy < step && v == 0; dy++)
+                    int sum = 0;
+                    for (int dy = 0; dy < block; dy++)
                     {
-                        int sy = srcYBase - dy;
-                        int rowBase = sy * TileSize + mx * step;
-                        for (int dx = 0; dx < step; dx++)
+                        int sy = srcYBase - (inset + dy);
+                        int rowBase = sy * TileSize + mx * step + inset;
+                        for (int dx = 0; dx < block; dx++)
                         {
-                            if (covered[rowBase + dx])
-                            {
-                                v = 255;
-                                break;
-                            }
+                            int i = rowBase + dx;
+                            byte p = maskAlpha != null
+                                ? maskAlpha[i]
+                                : (covered[i] ? (byte)255 : (byte)0);
+                            sum += p;
                         }
                     }
-                    mask[my * MaskSize + mx] = v;
+                    mask[my * MaskSize + mx] = (sum / samples) > MaskWhiteMinAlpha ? (byte)255 : (byte)0;
                 }
             }
             return mask;

@@ -24,6 +24,7 @@ namespace AeroScenery.AFS2
         private IScanlineSource reader;
 
         private byte[] band;
+        private byte[] bandAlpha;
         private int bandFirstRow;
         private int bandRows;
 
@@ -117,6 +118,14 @@ namespace AeroScenery.AFS2
 
         public byte[] Band { get { return band; } }
 
+        public byte[] BandAlpha { get { return bandAlpha; } }
+
+        /// <summary>
+        /// When true, EnsureBand also keeps a parallel alpha band (255 if the PNG has none).
+        /// Used only when write_images_with_mask is on, for FS4 _mask.ttc files.
+        /// </summary>
+        public bool CaptureAlpha { get; set; }
+
         public int BandFirstRow { get { return bandFirstRow; } }
 
         public int BandRows { get { return bandRows; } }
@@ -154,6 +163,14 @@ namespace AeroScenery.AFS2
             {
                 band = new byte[need];
             }
+            if (CaptureAlpha)
+            {
+                long alphaNeed = (long)rows * Width;
+                if (bandAlpha == null || bandAlpha.Length < alphaNeed)
+                {
+                    bandAlpha = new byte[alphaNeed];
+                }
+            }
 
             // Carry over whatever of the new band we already hold. This is the overlap between one
             // tile row and the next, and re-reading it would mean seeking backwards.
@@ -163,6 +180,11 @@ namespace AeroScenery.AFS2
                 keep = Math.Min(rows, bandFirstRow + bandRows - first);
                 // Array.Copy is defined for overlapping ranges; Buffer.BlockCopy is not.
                 Array.Copy(band, (long)(first - bandFirstRow) * stride, band, 0, (long)keep * stride);
+                if (CaptureAlpha && bandAlpha != null)
+                {
+                    Array.Copy(bandAlpha, (long)(first - bandFirstRow) * Width, bandAlpha, 0,
+                        (long)keep * Width);
+                }
             }
 
             int readFrom = first + keep;
@@ -182,7 +204,14 @@ namespace AeroScenery.AFS2
                     reader.SkipRows(readFrom - reader.NextRow);
                 }
 
-                reader.ReadRows(band, (long)keep * stride, toRead);
+                if (CaptureAlpha)
+                {
+                    reader.ReadRows(band, (long)keep * stride, bandAlpha, (long)keep * Width, toRead);
+                }
+                else
+                {
+                    reader.ReadRows(band, (long)keep * stride, toRead);
+                }
             }
 
             bandFirstRow = first;
@@ -214,6 +243,7 @@ namespace AeroScenery.AFS2
                 reader = null;
             }
             band = null;
+            bandAlpha = null;
             bandRows = 0;
         }
     }

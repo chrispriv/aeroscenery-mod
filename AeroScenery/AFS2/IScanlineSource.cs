@@ -47,6 +47,12 @@ namespace AeroScenery.AFS2
         void ReadRows(byte[] destination, long destOffset, int rowCount);
 
         /// <summary>
+        /// Same as <see cref="ReadRows(byte[], long, int)"/>, and when alphaDestination is not
+        /// null also writes one alpha byte per pixel (255 when the file has no alpha).
+        /// </summary>
+        void ReadRows(byte[] destination, long destOffset, byte[] alphaDestination, long alphaOffset, int rowCount);
+
+        /// <summary>
         /// Advances NextRow without copying anything out. The decoder still has to work through the
         /// skipped rows when the next read happens - this saves the copy and the conversion, not
         /// the inflate.
