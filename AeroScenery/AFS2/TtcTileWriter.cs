@@ -27,7 +27,8 @@ namespace AeroScenery.AFS2
         /// would otherwise draw from its own imagery.
         /// </summary>
         public static List<string> Write(string outputDirectory, int level, int tileX, int tileY,
-            byte[] rgb, bool[] covered, bool wantMask, int maxThreads = 1, string rawDirectory = null)
+            byte[] rgb, bool[] covered, bool wantMask, int maxThreads = 1, string rawDirectory = null,
+            string mobileDirectory = null, bool writeDxt1 = true, bool writeEtc2 = false)
         {
             var written = new List<string>();
 
@@ -44,31 +45,39 @@ namespace AeroScenery.AFS2
             }
 
             // Same north-up PNG dump GeoConvert writes when write_raw_files is on.
-            // The DXT1 payload is flipped south-up after this.
+            // The GPU payload is flipped south-up after this.
             if (!string.IsNullOrEmpty(rawDirectory))
             {
                 WriteRawPng(rawDirectory, level, tileX, tileY, rgb);
             }
 
-            // Aerofly stores tile rows bottom-up: row 0 of the texture is the SOUTH edge.
-            // Everything upstream works north-up, like the source and like GeoConvert's
-            // write_raw_files dump, so the flip happens here, once, on the way out.
-            //
-            // This cost a whole debugging session. Comparing against GeoConvert's raw PNGs never
-            // caught it, because those really are north-up - the flip lives between the raw dump
-            // and the DXT1 payload. Nor can a symmetric test pattern: a checkerboard mirrors to a
-            // checkerboard. An asymmetric one in the simulator can, and an upright F came back
-            // mirrored. See section 3 of docs/ttc-format.md.
             var flipped = FlipRows(rgb, TileSize, TileSize, 3);
-
-            int mips;
-            byte[] chain = TtcMipChain.Build(flipped, TileSize, TileSize, 3, TtcFile.FormatDxt1,
-                out mips, 0, maxThreads);
-            byte[] data = TtcFile.BuildCompressed(level, TileSize, TileSize, mips, TtcFile.FormatDxt1, chain);
-
             string name = TtcTileName.ForTile(level, tileX, tileY);
-            File.WriteAllBytes(Path.Combine(outputDirectory, name), data);
-            written.Add(name);
+
+            if (writeDxt1)
+            {
+                int mips;
+                byte[] chain = TtcMipChain.Build(flipped, TileSize, TileSize, 3, TtcFile.FormatDxt1,
+                    out mips, 0, maxThreads);
+                byte[] data = TtcFile.BuildCompressed(level, TileSize, TileSize, mips, TtcFile.FormatDxt1, chain);
+                Directory.CreateDirectory(outputDirectory);
+                string dxtPath = Path.Combine(outputDirectory, name);
+                File.WriteAllBytes(dxtPath, data);
+                written.Add(dxtPath);
+            }
+
+            if (writeEtc2 && !string.IsNullOrEmpty(mobileDirectory))
+            {
+                int emips;
+                byte[] echain = TtcMipChain.Build(flipped, TileSize, TileSize, 3, TtcFile.FormatEtc2,
+                    out emips, 0, maxThreads);
+                byte[] edata = TtcFile.BuildCompressed(level, TileSize, TileSize, emips, TtcFile.FormatEtc2,
+                    echain, 0, 0);
+                Directory.CreateDirectory(mobileDirectory);
+                string etcPath = Path.Combine(mobileDirectory, name);
+                File.WriteAllBytes(etcPath, edata);
+                written.Add(etcPath);
+            }
 
             if (wantMask && !allCovered)
             {
@@ -79,8 +88,16 @@ namespace AeroScenery.AFS2
                     mchain, TtcFile.MaskUnk24, TtcFile.MaskUnk28);
 
                 string mname = TtcTileName.ForTile(level, tileX, tileY, true);
-                File.WriteAllBytes(Path.Combine(outputDirectory, mname), mdata);
-                written.Add(mname);
+                if (writeDxt1)
+                {
+                    File.WriteAllBytes(Path.Combine(outputDirectory, mname), mdata);
+                    written.Add(Path.Combine(outputDirectory, mname));
+                }
+                if (writeEtc2 && !string.IsNullOrEmpty(mobileDirectory))
+                {
+                    File.WriteAllBytes(Path.Combine(mobileDirectory, mname), mdata);
+                    written.Add(Path.Combine(mobileDirectory, mname));
+                }
             }
 
             return written;

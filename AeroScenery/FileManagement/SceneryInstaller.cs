@@ -194,9 +194,84 @@ namespace AeroScenery.FileManagement
             return result;
         }
 
+        public DialogResult ConfirmFsgSceneryCopy(AFS2GridSquare afs2GridSquare, bool promptUser)
+        {
+            var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + afs2GridSquare.Name;
+            DialogResult result = DialogResult.No;
+
+            if (!Directory.Exists(gridSquareDirectory))
+            {
+                return result;
+            }
+
+            string fsgDirectory = DirectoryHelper.FindFsgSceneryCopyDirectory(AeroSceneryManager.Instance.Settings, false);
+            if (fsgDirectory == null)
+            {
+                log.Error("Could not find a location to copy FSG scenery to.");
+                if (promptUser)
+                {
+                    var messageBox = new CustomMessageBox(
+                        "Could not find a location to copy FSG scenery to.\nSet the FSG Scenery Working Folder in Settings.",
+                        "AeroScenery",
+                        MessageBoxIcon.Error);
+                    result = messageBox.ShowDialog();
+                }
+                return result;
+            }
+
+            if (!promptUser)
+            {
+                return DialogResult.Yes;
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine("Copy FSG Android scenery for this grid square into the FSG Scenery Working Folder?");
+            sb.AppendLine("Any existing files in the same destination folder will be overwritten.");
+            sb.AppendLine("");
+            sb.AppendLine(String.Format("Destination: {0}", fsgDirectory));
+
+            var confirmBox = new CustomMessageBox(sb.ToString(), "AeroScenery", MessageBoxIcon.Question);
+            confirmBox.SetButtons(
+                new string[] { "Yes", "No" },
+                new DialogResult[] { DialogResult.Yes, DialogResult.No });
+            return confirmBox.ShowDialog();
+        }
+
+        public DialogResult? CheckForDuplicateMobileTtcFiles(AFS2GridSquare afs2GridSquare, bool promptUser, out List<string> ttcFiles)
+        {
+            DialogResult? result = null;
+            ttcFiles = this.CollectMobileTtcFilesForCurrentImageSource(afs2GridSquare);
+
+            List<string> ttcFileNames = new List<string>();
+            foreach (var ttcFile in ttcFiles)
+            {
+                ttcFileNames.Add(Path.GetFileName(ttcFile));
+            }
+
+            if (ttcFileNames.Count != ttcFileNames.Distinct().Count())
+            {
+                log.WarnFormat("Duplicate mobile ttc file names for grid square {0}.", afs2GridSquare.Name);
+                if (!promptUser)
+                {
+                    return null;
+                }
+
+                var duplicatesMessageBox = new CustomMessageBox(
+                    String.Format("Duplicate mobile ttc files were found for grid square ({0}).", afs2GridSquare.Name),
+                    "AeroScenery",
+                    MessageBoxIcon.Warning);
+                duplicatesMessageBox.SetButtons(
+                    new string[] { "Continue", "Cancel" },
+                    new DialogResult[] { DialogResult.OK, DialogResult.Cancel });
+                result = duplicatesMessageBox.ShowDialog();
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Collects desktop GeoConvert .ttc files for the image source selected on the main window.
-        /// Mobile conversion folders (*-ttc-mobile) are skipped until FSG install is implemented.
+        /// Mobile conversion folders (*-ttc-mobile) are skipped; those go to the FSG copy action.
         /// </summary>
         private List<string> CollectTtcFilesForCurrentImageSource(AFS2GridSquare afs2GridSquare)
         {
@@ -216,6 +291,83 @@ namespace AeroScenery.FileManagement
             log.InfoFormat("Install will copy {0} ttc file(s) from {1} for grid square {2}.",
                 ttcFiles.Count, sourceDirectory, afs2GridSquare.Name);
             return ttcFiles;
+        }
+
+        private List<string> CollectMobileTtcFilesForCurrentImageSource(AFS2GridSquare afs2GridSquare)
+        {
+            var settings = AeroSceneryManager.Instance.Settings;
+            var gridSquareDirectory = settings.WorkingDirectory + afs2GridSquare.Name;
+            var sourceFolderName = OrthophotoSourceDirectoryName.GetDirectoryName(settings.OrthophotoSource.Value);
+            var sourceDirectory = Path.Combine(gridSquareDirectory, sourceFolderName);
+            var collected = new List<string>();
+
+            if (!Directory.Exists(sourceDirectory))
+            {
+                log.WarnFormat("No working folder for image source {0} ({1}) in grid square {2}.",
+                    settings.OrthophotoSource, sourceFolderName, afs2GridSquare.Name);
+                return collected;
+            }
+
+            string[] mobileFolders;
+            try
+            {
+                mobileFolders = Directory.GetDirectories(sourceDirectory, "*ttc-mobile", SearchOption.AllDirectories);
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Could not enumerate mobile ttc folders.", ex);
+                return collected;
+            }
+
+            foreach (var folder in mobileFolders)
+            {
+                if (!IsMobileTtcDirectory(folder))
+                {
+                    continue;
+                }
+
+                foreach (var file in Directory.GetFiles(folder, "*.ttc"))
+                {
+                    if (IsMaskTtcFile(file))
+                    {
+                        continue;
+                    }
+                    collected.Add(file);
+                }
+            }
+
+            log.InfoFormat("FSG copy will use {0} mobile ttc file(s) from {1} for grid square {2}.",
+                collected.Count, sourceDirectory, afs2GridSquare.Name);
+            return collected;
+        }
+
+        public async Task CopySceneryToFsgWorkingFolderAsync(AFS2GridSquare afs2GridSquare, List<string> ttcFiles)
+        {
+            var task = Task.Run(() =>
+            {
+                string imagesDirectory = DirectoryHelper.FindFsgSceneryCopyDirectory(AeroSceneryManager.Instance.Settings);
+                if (imagesDirectory == null)
+                {
+                    return;
+                }
+
+                var level9GridSquare = afs2GridSquare;
+                if (afs2GridSquare.Level != 9)
+                {
+                    level9GridSquare = this.afsGrid.GetGridSquareAtLatLon(afs2GridSquare.GetCenter().Lat, afs2GridSquare.GetCenter().Lng, 9);
+                }
+
+                var destDirectory = Path.Combine(imagesDirectory, level9GridSquare.Name);
+                Directory.CreateDirectory(destDirectory);
+
+                foreach (var ttcFilePath in ttcFiles)
+                {
+                    var destinationPath = Path.Combine(destDirectory, Path.GetFileName(ttcFilePath));
+                    File.Copy(ttcFilePath, destinationPath, true);
+                }
+            });
+
+            await task;
         }
 
         public async Task InstallSceneryAsync(AFS2GridSquare afs2GridSquare, List<string> ttcFiles)
@@ -312,6 +464,12 @@ namespace AeroScenery.FileManagement
                     yield return filename;
                 }
             }
+        }
+
+        private static bool IsMaskTtcFile(string filePath)
+        {
+            var name = Path.GetFileName(filePath);
+            return name.EndsWith("_mask.ttc", StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool IsMobileTtcDirectory(string directoryPath)

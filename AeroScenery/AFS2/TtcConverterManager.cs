@@ -23,8 +23,10 @@ namespace AeroScenery.AFS2
 
         /// <param name="rawDirectory">Optional raw PNG folder. Existing files are overwritten, not deleted first.</param>
         /// <param name="maxThreads">Built-in converter workers. Null uses <see cref="TtcConverter.DefaultThreads"/>.</param>
+        /// <param name="mobileDirectory">When writeEtc2 is set, ETC2 tiles go here (##-geoconvert-ttc-mobile).</param>
         public async Task<TtcConversionResult> ConvertAllAsync(string stitchedTilesDirectory,
-            string ttcDirectory, MainForm mainForm, string rawDirectory = null, int? maxThreads = null)
+            string ttcDirectory, MainForm mainForm, string rawDirectory = null, int? maxThreads = null,
+            string mobileDirectory = null, bool writeDxt1 = true, bool writeEtc2 = false)
         {
             var total = new TtcConversionResult();
 
@@ -124,7 +126,13 @@ namespace AeroScenery.AFS2
 
                     result = await Task.Run(() =>
                     {
-                        var converter = new TtcConverter { MaxThreads = threads };
+                        var converter = new TtcConverter
+                        {
+                            MaxThreads = threads,
+                            WriteDxt1 = writeDxt1,
+                            WriteEtc2 = writeEtc2,
+                            MobileDirectory = mobileDirectory
+                        };
                         return converter.Convert(tmcFilename, ttcDirectory, progress);
                     });
 

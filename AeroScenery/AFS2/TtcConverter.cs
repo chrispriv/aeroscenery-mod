@@ -96,10 +96,16 @@ namespace AeroScenery.AFS2
         /// </summary>
         public WaterFixField Water { get; set; }
 
+        public bool WriteDxt1 { get; set; }
+        public bool WriteEtc2 { get; set; }
+        public string MobileDirectory { get; set; }
+
         public TtcConverter()
         {
             MaxThreads = 1;
             CoastTexelKm = CoastlineField.DefaultTexelKm;
+            WriteDxt1 = true;
+            WriteEtc2 = false;
         }
 
         /// <summary>Half the logical processors, which leaves the machine usable.</summary>
@@ -212,7 +218,8 @@ namespace AeroScenery.AFS2
                         TileSampler.Sample(sources, deepest, tx, ty, rgb, covered, TileSize,
                             true, BlackIsMissing, coastField, Water);
                         EmitTile(byLevel, shallowest, deepest, tx, ty, rgb, covered,
-                            outputDirectory, result, MaxThreads, rawDirectory);
+                            outputDirectory, result, MaxThreads, rawDirectory,
+                            MobileDirectory, WriteDxt1, WriteEtc2);
 
                         progressState.TilesDone++;
                         if (progress != null)
@@ -230,7 +237,8 @@ namespace AeroScenery.AFS2
                     LevelBuffer lb;
                     if (byLevel.TryGetValue(lv, out lb))
                     {
-                        FlushRow(byLevel, shallowest, lb, outputDirectory, result, MaxThreads, rawDirectory);
+                        FlushRow(byLevel, shallowest, lb, outputDirectory, result, MaxThreads, rawDirectory,
+                            MobileDirectory, WriteDxt1, WriteEtc2);
                     }
                 }
 
@@ -366,18 +374,19 @@ namespace AeroScenery.AFS2
         /// </summary>
         private static void EmitTile(Dictionary<int, LevelBuffer> byLevel, int shallowest,
             int level, int tx, int ty, byte[] rgb, bool[] covered,
-            string outputDirectory, TtcConversionResult result, int threads, string rawDirectory)
+            string outputDirectory, TtcConversionResult result, int threads, string rawDirectory,
+            string mobileDirectory, bool writeDxt1, bool writeEtc2)
         {
             LevelBuffer lb;
             if (byLevel.TryGetValue(level, out lb)
                 && tx >= lb.OutX0 && tx < lb.OutX1 && ty >= lb.OutY0 && ty < lb.OutY1)
             {
                 var names = TtcTileWriter.Write(outputDirectory, level, tx, ty, rgb, covered,
-                    lb.WantMask, threads, rawDirectory);
+                    lb.WantMask, threads, rawDirectory, mobileDirectory, writeDxt1, writeEtc2);
                 foreach (var n in names)
                 {
-                    result.FilesWritten.Add(n);
-                    result.BytesWritten += new FileInfo(Path.Combine(outputDirectory, n)).Length;
+                    result.FilesWritten.Add(Path.GetFileName(n));
+                    result.BytesWritten += new FileInfo(n).Length;
                 }
             }
 
@@ -401,7 +410,8 @@ namespace AeroScenery.AFS2
 
             if (parent.PendingTy != pty)
             {
-                FlushRow(byLevel, shallowest, parent, outputDirectory, result, threads, rawDirectory);
+                FlushRow(byLevel, shallowest, parent, outputDirectory, result, threads, rawDirectory,
+                    mobileDirectory, writeDxt1, writeEtc2);
                 parent.PendingTy = pty;
             }
 
@@ -422,7 +432,8 @@ namespace AeroScenery.AFS2
         }
 
         private static void FlushRow(Dictionary<int, LevelBuffer> byLevel, int shallowest,
-            LevelBuffer lb, string outputDirectory, TtcConversionResult result, int threads, string rawDirectory)
+            LevelBuffer lb, string outputDirectory, TtcConversionResult result, int threads, string rawDirectory,
+            string mobileDirectory, bool writeDxt1, bool writeEtc2)
         {
             if (lb.PendingTy == Int32.MinValue)
             {
@@ -441,7 +452,8 @@ namespace AeroScenery.AFS2
                 lb.Touched[slot] = false;
 
                 EmitTile(byLevel, shallowest, lb.Level, lb.WorkX0 + slot, ty,
-                    lb.Rgb[slot], lb.Covered[slot], outputDirectory, result, threads, rawDirectory);
+                    lb.Rgb[slot], lb.Covered[slot], outputDirectory, result, threads, rawDirectory,
+                    mobileDirectory, writeDxt1, writeEtc2);
             }
         }
 

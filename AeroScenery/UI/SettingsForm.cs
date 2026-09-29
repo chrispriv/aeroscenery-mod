@@ -37,6 +37,10 @@ namespace AeroScenery.UI
         public SettingsForm()
         {
             InitializeComponent();
+            this.fsgWorkingFolderLabel.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.fsgWorkingFolderLabel.BringToFront();
+            this.fsgWorkingFolderTextBox.BringToFront();
+            this.fsgWorkingFolderButton.BringToFront();
             this.updateImagePreview = true;
             this.BuildOurAirportsSettingsGroup();
 
@@ -56,7 +60,7 @@ namespace AeroScenery.UI
             ToolTip toolTip3 = new ToolTip();
             toolTip3.IsBalloon = true;
             toolTip3.InitialDelay = 500;
-            toolTip3.SetToolTip(this.conversionForMobileHelpImage, "Aerofly FS2 Content Converter (SDK) can produce extra .ttc files for FSG Android.\nWhen this option is on, 'Generate AID / TMC Files' also creates a mobile working folder for further conversion of the raw images produced by GeoConvert.\nAfter GeoConvert finishes, right-click the generated TMC file and choose 'Run with Aerofly FS2 Content Converter' to run the extra conversion for FSG Android.\nThe FS2 Content Converter from the SDK must already be installed on the PC.");
+            toolTip3.SetToolTip(this.conversionForMobileHelpImage, "SDK GeoConvert: creates ##-geoconvert-ttc-mobile and content_converter_config_mobile.tmc under the AFS Working Scenery Folder.\nRun that TMC with Aerofly FS2 Content Converter. This is not the AFS User Folder.\nBuilt-in converter: ignore this checkbox; pick Aerofly FS4 / FSG Android on the main window instead.");
 
             ToolTip toolTip6 = new ToolTip();
             toolTip6.IsBalloon = true;
@@ -75,6 +79,7 @@ namespace AeroScenery.UI
             settingsExtraTip.SetToolTip(this.cartodbKeyTextBox, "Carto Basemaps API key used for enhanced water masking.\nUse the 'Get a Carto Basemaps API Key' link if you do not have one.");
             settingsExtraTip.SetToolTip(this.label54, "Shows 'Download OSM Data' under Actions on the main window and downloads .osm data directly from OpenStreetMap.");
             settingsExtraTip.SetToolTip(this.AllowShiftCorrectionEnabledCheckBox, "Shows Shift Correction on the main window so you can apply a north-south offset when GeoConvert runs.");
+            settingsExtraTip.SetToolTip(this.fsgWorkingFolderLabel, "Separate from the FS4 Install Folder. FSG Android scenery will be assembled here so you can zip the folder and rename it to .tme.");
         }
 
         private void closeButton_Click(object sender, EventArgs e)
@@ -90,6 +95,7 @@ namespace AeroScenery.UI
             settings.AeroSceneryDBDirectory = pathWithTrailingDirectorySeparatorChar(this.aeroSceneryDatabaseFolderTextBox.Text);
             settings.AFS2SDKDirectory = pathWithTrailingDirectorySeparatorChar(this.afsSDKFolderTextBox.Text);
             settings.AFS2UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs2UserFolderTextBox.Text);
+            settings.FsgWorkingDirectory = pathWithTrailingDirectorySeparatorChar(this.fsgWorkingFolderTextBox.Text);
             //#MOD
             //settings.AFS4UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs4UserFolderTextBox.Text);
             settings.QGISDirectory = pathWithTrailingDirectorySeparatorChar(this.qgisFolderTextBox.Text);
@@ -284,6 +290,7 @@ namespace AeroScenery.UI
             this.aeroSceneryDatabaseFolderTextBox.Text = settings.AeroSceneryDBDirectory;
             this.afsSDKFolderTextBox.Text = settings.AFS2SDKDirectory;
             this.afs2UserFolderTextBox.Text = settings.AFS2UserDirectory;
+            this.fsgWorkingFolderTextBox.Text = settings.FsgWorkingDirectory;
             //#MOD
             this.qgisFolderTextBox.Text = settings.QGISDirectory;
             this.afsSceneryFolderTextBox.Text = settings.AFSSceneryFolder;
@@ -439,6 +446,11 @@ namespace AeroScenery.UI
 
             this.useGeoConvertWrapperCheckBox.Enabled = !builtIn;
             this.multipleConcurrentSquaresWarningCheckBox.Enabled = !builtIn;
+            this.createAddForMobileCheckBox.Enabled = !builtIn;
+            if (builtIn)
+            {
+                this.createAddForMobileCheckBox.Checked = false;
+            }
 
             if (builtIn)
             {
@@ -567,8 +579,18 @@ namespace AeroScenery.UI
             if (result == DialogResult.OK)
             {
                 this.afs2UserFolderTextBox.Text = folderBrowserDialog1.SelectedPath;
-                //#FIX_f (else Cancel would not work)
-                //settings.AFS2UserDirectory = this.afsUserFolderTextBox.Text;
+            }
+        }
+
+        private void fsgWorkingFolderButton_Click(object sender, EventArgs e)
+        {
+            this.folderBrowserDialog1.SelectedPath = this.fsgWorkingFolderTextBox.Text;
+
+            DialogResult result = this.folderBrowserDialog1.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                this.fsgWorkingFolderTextBox.Text = folderBrowserDialog1.SelectedPath;
             }
         }
 

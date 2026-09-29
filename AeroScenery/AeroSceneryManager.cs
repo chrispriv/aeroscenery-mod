@@ -680,7 +680,10 @@ namespace AeroScenery
 
                     //#MOD
                     // Create additional Working Folder incl. tmc & bat file for conversion of images to ttc for mobile (to be run manually after GeoConvert process)
-                    if (this.Settings.GenerateAIDAndTMCFiles.Value && this.settings.CreateAddForMobile.Value && this.mainForm.ActionsRunning)
+                    // SDK GeoConvert only: TMC for the FS2 Content Converter. Built-in writes
+                    // ETC2 into ##-geoconvert-ttc-mobile later and must not emit this TMC.
+                    if (!UseBuiltInTtcConverter && this.Settings.GenerateAIDAndTMCFiles.Value
+                        && this.settings.CreateAddForMobile.Value && this.mainForm.ActionsRunning)
                     {
                         var afsAddForMobileWorkingDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + @"\" + this.settings.ZoomLevel + "-geoconvert-ttc-mobile";
      
@@ -985,9 +988,17 @@ namespace AeroScenery
 
                 //#MOD_k
                 // Install Scenery
+                //#MOD_k
+                // Install Scenery
                 if (this.settings.InstallScenery.Value && this.mainForm.ActionsRunning)
                 {
                     await this.InstallSceneryAsync();
+                }
+
+                if (this.settings.CopySceneryToFsgWorkingFolder.GetValueOrDefault(false)
+                    && this.mainForm.ActionsRunning)
+                {
+                    await this.CopySceneryToFsgWorkingFolderAsync();
                 }
 
                 this.ActionsComplete();
@@ -1125,12 +1136,26 @@ namespace AeroScenery
 
                             if (UseBuiltInTtcConverter)
                             {
+                                int target = this.settings.BuiltInConvertTarget.GetValueOrDefault(0);
+                                bool writeDxt1 = target != 1;
+                                bool writeEtc2 = target != 0;
+                                string mobileDirectory = null;
+                                if (writeEtc2)
+                                {
+                                    mobileDirectory = GetTileDownloadDirectory(afsGridSquareDirectory)
+                                        + this.settings.ZoomLevel + @"-geoconvert-ttc-mobile\";
+                                    Directory.CreateDirectory(mobileDirectory);
+                                }
+
                                 await this.ttcConverterManager.ConvertAllAsync(
                                     stitchedTilesDirectory,
                                     ttcDirectory,
                                     this.mainForm,
                                     this.settings.GeoConvertWriteRawFiles.GetValueOrDefault() ? rawDirectory : null,
-                                    this.settings.ConverterThreads);
+                                    this.settings.ConverterThreads,
+                                    mobileDirectory,
+                                    writeDxt1,
+                                    writeEtc2);
                             }
                             else
                             {
@@ -1301,6 +1326,25 @@ namespace AeroScenery
 
                     await this.mainForm.InstallSceneryForGridSquareAsync(afs2GridSquare, false);
 
+                    i++;
+                }
+            }
+        }
+
+        private async Task CopySceneryToFsgWorkingFolderAsync()
+        {
+            this.mainForm.UpdateChildTaskLabel("Copying scenery to FSG Working Folder");
+            log.Info("Copying scenery to FSG Working Folder");
+
+            int i = 0;
+            foreach (AFS2GridSquare afs2GridSquare in this.mainForm.SelectedAFS2GridSquares.Values.Select(x => x.AFS2GridSquare))
+            {
+                if (this.mainForm.ActionsRunning)
+                {
+                    var currentGrideSquareMessage = String.Format("Working on AFS Grid Square {0} of {1}", i + 1, this.mainForm.SelectedAFS2GridSquares.Count());
+                    this.mainForm.UpdateParentTaskLabel(currentGrideSquareMessage);
+                    log.Info(currentGrideSquareMessage);
+                    await this.mainForm.CopySceneryToFsgForGridSquareAsync(afs2GridSquare, false);
                     i++;
                 }
             }

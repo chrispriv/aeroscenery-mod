@@ -135,6 +135,27 @@
         RU5ErkJggg==
 </value>
   </data>
+  <data name="converterThreadsHelpImage.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4yMfEgaZUAAAJUSURBVDhPpZPP
+        SypRFMf7W/RPci0pkiXZSmkjWqlgYKklpaFGQiEoUuDPQBdhlJppOmrGqGUxQwVFqOXy+zgXUnwv3uK9
+        xWeGe+fczz33nDszAGb+hz8mbm9vpc1m01iv13mO4wbVanVQLpf5UqlkLBaL0t/jpwYcx8lqtZooiiKI
+        p6cnhiAI6PV6yOVy4tnZmexHwc3Njez6+nr4/PwMnueRzWYRCoVwdHSERCIBjuOYLJ1OD5PJ5FjCHldX
+        V5JCoSDQrvV6HYeHh4jH43h9fWXkcjns7++jWCzi/v4e0WhUCIfDkrHg/Pzc9PDwgLu7OxwcHGBvbw+j
+        0WiKYDAIv9+PWq2GarVKY9NYkMlkeEovmUzC6/Vid3cXLy8vuLi4QKVSYQJ6O51O2h2dTgcej4cfC2Kx
+        2BcJKM2dnR1sbW2x4MvLS/T7fby9vSGVSmFjYwNutxuUrcPh+BoLwuHw1+PjIwKBAFwuF33E5uYmPj8/
+        QUWlsc1mY9A8CaxW60QQDAb5breL4+NjJqAgu92O9fV1htVqhcViYVAtWq0WDAbD5Agej8dUKBRYq7a3
+        t8cLPz4+8P7+jrW1NYbZbGadOD09hU6nmxTR4XBI7Ha70Gg0QCI6K+0aiUQYtHh1dRWZTAblchlLS0vC
+        4uLipI2E2WyWraysDKlFFETtpDNT2j6fD/l8HqVSCQsLC0O1Wj19kb5ZXl6W6fV6kSrebDbRbrcZlNnJ
+        yQlUKpWoVCp/vsrfaLVaqUajMc7Pz/Nzc3MDlUo1UCgU/OzsrFEul//9Z/oXfgExuvfR5fqRaAAAAABJ
+        RU5ErkJggg==
+</value>
+  </data>
+  <data name="mobileWorkingFolderNoteLabel.Text" xml:space="preserve">
+    <value>No extra destination folder. FSG files stay under AFS Working Scenery Folder as ##-geoconvert-ttc-mobile, separate from the AFS User Folder. Pack that working folder as a .tme yourself.
+Built-in converter: choose Aerofly FS4 / FSG Android on the main window. Conversion for mobile is turned off (no Content Converter TMC).</value>
+  </data>
   <data name="conversionForMobileHelpImage.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO

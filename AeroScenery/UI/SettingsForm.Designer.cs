@@ -30,18 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.sdkGeoConvertHelpImage = new System.Windows.Forms.Label();
             this.label57 = new System.Windows.Forms.Label();
             this.afsSceneryFolderTextBox = new System.Windows.Forms.TextBox();
             this.label42 = new System.Windows.Forms.Label();
             this.afs2UserFolderButton = new System.Windows.Forms.Button();
             this.afs2UserFolderTextBox = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.sdkButton = new System.Windows.Forms.Button();
+            this.fsgWorkingFolderButton = new System.Windows.Forms.Button();
+            this.fsgWorkingFolderTextBox = new System.Windows.Forms.TextBox();
+            this.fsgWorkingFolderLabel = new System.Windows.Forms.Label();
             this.aerosceneryDatabaseFolderButton = new System.Windows.Forms.Button();
             this.workingFolderButton = new System.Windows.Forms.Button();
-            this.afsSDKFolderTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.aeroSceneryDatabaseFolderTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.workingFolderTextBox = new System.Windows.Forms.TextBox();
@@ -66,6 +65,10 @@
             this.maxTilesPerStitchedImageTextBox = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.sdkGeoConvertHelpImage = new System.Windows.Forms.Label();
+            this.sdkButton = new System.Windows.Forms.Button();
+            this.afsSDKFolderTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.converterThreadsHelpImage = new System.Windows.Forms.Label();
             this.converterThreadsNumeric = new System.Windows.Forms.NumericUpDown();
             this.converterThreadsAutoButton = new System.Windows.Forms.Button();
@@ -98,6 +101,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.mobileWorkingFolderNoteLabel = new System.Windows.Forms.Label();
             this.conversionForMobileHelpImage = new System.Windows.Forms.Label();
             this.label55 = new System.Windows.Forms.Label();
             this.label53 = new System.Windows.Forms.Label();
@@ -140,6 +144,10 @@
             this.imgProcBrightnessSlider = new System.Windows.Forms.TrackBar();
             this.showPreviewWindowButton = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.linkLabel6 = new System.Windows.Forms.LinkLabel();
+            this.cartodbKeyTextBox = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.linkLabel4 = new System.Windows.Forms.LinkLabel();
             this.herewegoKeyTextBox = new System.Windows.Forms.TextBox();
@@ -171,10 +179,6 @@
             this.openTopographyAPITextBox = new System.Windows.Forms.TextBox();
             this.label35 = new System.Windows.Forms.Label();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.linkLabel6 = new System.Windows.Forms.LinkLabel();
-            this.cartodbKeyTextBox = new System.Windows.Forms.TextBox();
-            this.label29 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -196,6 +200,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgProcContrastSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcBrightnessSlider)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
@@ -203,7 +208,6 @@
             this.groupBox15.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox10.SuspendLayout();
-            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -213,6 +217,9 @@
             this.groupBox1.Controls.Add(this.label57);
             this.groupBox1.Controls.Add(this.afsSceneryFolderTextBox);
             this.groupBox1.Controls.Add(this.label42);
+            this.groupBox1.Controls.Add(this.fsgWorkingFolderButton);
+            this.groupBox1.Controls.Add(this.fsgWorkingFolderTextBox);
+            this.groupBox1.Controls.Add(this.fsgWorkingFolderLabel);
             this.groupBox1.Controls.Add(this.afs2UserFolderButton);
             this.groupBox1.Controls.Add(this.afs2UserFolderTextBox);
             this.groupBox1.Controls.Add(this.label9);
@@ -222,29 +229,19 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.workingFolderTextBox);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(14, 9);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(665, 232);
+            this.groupBox1.Size = new System.Drawing.Size(665, 264);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Folders";
-            // 
-            // sdkGeoConvertHelpImage
-            // 
-            this.sdkGeoConvertHelpImage.AutoSize = true;
-            this.sdkGeoConvertHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkGeoConvertHelpImage.Image")));
-            this.sdkGeoConvertHelpImage.Location = new System.Drawing.Point(131, 83);
-            this.sdkGeoConvertHelpImage.Name = "sdkGeoConvertHelpImage";
-            this.sdkGeoConvertHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.sdkGeoConvertHelpImage.TabIndex = 17;
-            this.sdkGeoConvertHelpImage.Text = "  ";
             // 
             // label57
             // 
             this.label57.AutoSize = true;
             this.label57.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label57.Location = new System.Drawing.Point(213, 184);
+            this.label57.Location = new System.Drawing.Point(213, 216);
             this.label57.Name = "label57";
             this.label57.Size = new System.Drawing.Size(421, 17);
             this.label57.TabIndex = 22;
@@ -252,7 +249,7 @@
             // 
             // afsSceneryFolderTextBox
             // 
-            this.afsSceneryFolderTextBox.Location = new System.Drawing.Point(216, 156);
+            this.afsSceneryFolderTextBox.Location = new System.Drawing.Point(216, 188);
             this.afsSceneryFolderTextBox.Name = "afsSceneryFolderTextBox";
             this.afsSceneryFolderTextBox.Size = new System.Drawing.Size(281, 25);
             this.afsSceneryFolderTextBox.TabIndex = 21;
@@ -262,16 +259,16 @@
             // 
             this.label42.AutoSize = true;
             this.label42.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label42.Location = new System.Drawing.Point(20, 156);
+            this.label42.Location = new System.Drawing.Point(20, 188);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(184, 17);
+            this.label42.Size = new System.Drawing.Size(157, 17);
             this.label42.TabIndex = 17;
-            this.label42.Text = "AFS Working Scenery Folder *)";
+            this.label42.Text = "Working Scenery Name *)";
             // 
             // afs2UserFolderButton
             // 
             this.afs2UserFolderButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.afs2UserFolderButton.Location = new System.Drawing.Point(603, 123);
+            this.afs2UserFolderButton.Location = new System.Drawing.Point(603, 91);
             this.afs2UserFolderButton.Name = "afs2UserFolderButton";
             this.afs2UserFolderButton.Size = new System.Drawing.Size(33, 25);
             this.afs2UserFolderButton.TabIndex = 11;
@@ -281,7 +278,7 @@
             // 
             // afs2UserFolderTextBox
             // 
-            this.afs2UserFolderTextBox.Location = new System.Drawing.Point(216, 123);
+            this.afs2UserFolderTextBox.Location = new System.Drawing.Point(216, 91);
             this.afs2UserFolderTextBox.Name = "afs2UserFolderTextBox";
             this.afs2UserFolderTextBox.Size = new System.Drawing.Size(381, 25);
             this.afs2UserFolderTextBox.TabIndex = 10;
@@ -290,21 +287,40 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(20, 126);
+            this.label9.Location = new System.Drawing.Point(20, 94);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(101, 17);
+            this.label9.Size = new System.Drawing.Size(106, 17);
             this.label9.TabIndex = 9;
-            this.label9.Text = "AFS User Folder";
+            this.label9.Text = "FS4 Install Folder";
             // 
-            // sdkButton
+            // fsgWorkingFolderButton
             // 
-            this.sdkButton.Location = new System.Drawing.Point(603, 80);
-            this.sdkButton.Name = "sdkButton";
-            this.sdkButton.Size = new System.Drawing.Size(33, 25);
-            this.sdkButton.TabIndex = 8;
-            this.sdkButton.Text = "...";
-            this.sdkButton.UseVisualStyleBackColor = true;
-            this.sdkButton.Click += new System.EventHandler(this.sdkButton_Click);
+            this.fsgWorkingFolderButton.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fsgWorkingFolderButton.Location = new System.Drawing.Point(603, 128);
+            this.fsgWorkingFolderButton.Name = "fsgWorkingFolderButton";
+            this.fsgWorkingFolderButton.Size = new System.Drawing.Size(33, 25);
+            this.fsgWorkingFolderButton.TabIndex = 13;
+            this.fsgWorkingFolderButton.Text = "...";
+            this.fsgWorkingFolderButton.UseVisualStyleBackColor = true;
+            this.fsgWorkingFolderButton.Click += new System.EventHandler(this.fsgWorkingFolderButton_Click);
+            // 
+            // fsgWorkingFolderTextBox
+            // 
+            this.fsgWorkingFolderTextBox.Location = new System.Drawing.Point(216, 128);
+            this.fsgWorkingFolderTextBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fsgWorkingFolderTextBox.Name = "fsgWorkingFolderTextBox";
+            this.fsgWorkingFolderTextBox.Size = new System.Drawing.Size(381, 25);
+            this.fsgWorkingFolderTextBox.TabIndex = 12;
+            // 
+            // fsgWorkingFolderLabel
+            // 
+            this.fsgWorkingFolderLabel.AutoSize = true;
+            this.fsgWorkingFolderLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fsgWorkingFolderLabel.Location = new System.Drawing.Point(20, 131);
+            this.fsgWorkingFolderLabel.Name = "fsgWorkingFolderLabel";
+            this.fsgWorkingFolderLabel.Size = new System.Drawing.Size(175, 17);
+            this.fsgWorkingFolderLabel.TabIndex = 14;
+            this.fsgWorkingFolderLabel.Text = "FSG Scenery Working Folder";
             // 
             // aerosceneryDatabaseFolderButton
             // 
@@ -325,23 +341,6 @@
             this.workingFolderButton.Text = "...";
             this.workingFolderButton.UseVisualStyleBackColor = true;
             this.workingFolderButton.Click += new System.EventHandler(this.workingFolderButton_Click);
-            // 
-            // afsSDKFolderTextBox
-            // 
-            this.afsSDKFolderTextBox.Location = new System.Drawing.Point(216, 80);
-            this.afsSDKFolderTextBox.Name = "afsSDKFolderTextBox";
-            this.afsSDKFolderTextBox.Size = new System.Drawing.Size(381, 25);
-            this.afsSDKFolderTextBox.TabIndex = 5;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(20, 83);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(105, 17);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "AFS2 SDK Folder";
             // 
             // aeroSceneryDatabaseFolderTextBox
             // 
@@ -377,6 +376,43 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Working Folder";
             // 
+            // sdkGeoConvertHelpImage
+            // 
+            this.sdkGeoConvertHelpImage.AutoSize = true;
+            this.sdkGeoConvertHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkGeoConvertHelpImage.Image")));
+            this.sdkGeoConvertHelpImage.Location = new System.Drawing.Point(131, 83);
+            this.sdkGeoConvertHelpImage.Name = "sdkGeoConvertHelpImage";
+            this.sdkGeoConvertHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.sdkGeoConvertHelpImage.TabIndex = 17;
+            this.sdkGeoConvertHelpImage.Text = "  ";
+            // 
+            // sdkButton
+            // 
+            this.sdkButton.Location = new System.Drawing.Point(603, 80);
+            this.sdkButton.Name = "sdkButton";
+            this.sdkButton.Size = new System.Drawing.Size(33, 25);
+            this.sdkButton.TabIndex = 8;
+            this.sdkButton.Text = "...";
+            this.sdkButton.UseVisualStyleBackColor = true;
+            this.sdkButton.Click += new System.EventHandler(this.sdkButton_Click);
+            // 
+            // afsSDKFolderTextBox
+            // 
+            this.afsSDKFolderTextBox.Location = new System.Drawing.Point(216, 80);
+            this.afsSDKFolderTextBox.Name = "afsSDKFolderTextBox";
+            this.afsSDKFolderTextBox.Size = new System.Drawing.Size(381, 25);
+            this.afsSDKFolderTextBox.TabIndex = 5;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(20, 83);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(105, 17);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "AFS2 SDK Folder";
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -394,7 +430,7 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.groupBox2.Location = new System.Drawing.Point(14, 257);
+            this.groupBox2.Location = new System.Drawing.Point(14, 289);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(665, 174);
             this.groupBox2.TabIndex = 9;
@@ -470,8 +506,8 @@
             // simultaneousDownloadsComboBox
             // 
             this.simultaneousDownloadsComboBox.BackColor = System.Drawing.SystemColors.Window;
-            this.simultaneousDownloadsComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.simultaneousDownloadsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.simultaneousDownloadsComboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.simultaneousDownloadsComboBox.FormattingEnabled = true;
             this.simultaneousDownloadsComboBox.Items.AddRange(new object[] {
             "1",
@@ -545,7 +581,7 @@
             this.groupBox3.Controls.Add(this.maxTilesPerStitchedImageTextBox);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(14, 448);
+            this.groupBox3.Location = new System.Drawing.Point(14, 480);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(665, 90);
             this.groupBox3.TabIndex = 12;
@@ -626,59 +662,26 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "GeoConvert";
             // 
-            // converterModeLabel
+            // converterThreadsHelpImage
             // 
-            this.converterModeLabel.AutoSize = true;
-            this.converterModeLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.converterModeLabel.Location = new System.Drawing.Point(20, 29);
-            this.converterModeLabel.Name = "converterModeLabel";
-            this.converterModeLabel.Size = new System.Drawing.Size(70, 17);
-            this.converterModeLabel.TabIndex = 18;
-            this.converterModeLabel.Text = "Converter";
-            // 
-            // useBuiltInConverterRadioButton
-            // 
-            this.useBuiltInConverterRadioButton.AutoSize = true;
-            this.useBuiltInConverterRadioButton.Location = new System.Drawing.Point(216, 27);
-            this.useBuiltInConverterRadioButton.Name = "useBuiltInConverterRadioButton";
-            this.useBuiltInConverterRadioButton.Size = new System.Drawing.Size(250, 21);
-            this.useBuiltInConverterRadioButton.TabIndex = 19;
-            this.useBuiltInConverterRadioButton.TabStop = true;
-            this.useBuiltInConverterRadioButton.Text = "Built-in converter";
-            this.useBuiltInConverterRadioButton.UseVisualStyleBackColor = true;
-            this.useBuiltInConverterRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
-            // 
-            // useSdkGeoConvertRadioButton
-            // 
-            this.useSdkGeoConvertRadioButton.AutoSize = true;
-            this.useSdkGeoConvertRadioButton.Location = new System.Drawing.Point(216, 52);
-            this.useSdkGeoConvertRadioButton.Name = "useSdkGeoConvertRadioButton";
-            this.useSdkGeoConvertRadioButton.Size = new System.Drawing.Size(250, 21);
-            this.useSdkGeoConvertRadioButton.TabIndex = 20;
-            this.useSdkGeoConvertRadioButton.Text = "Aerofly FS2 GeoConvert (SDK)";
-            this.useSdkGeoConvertRadioButton.UseVisualStyleBackColor = true;
-            this.useSdkGeoConvertRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
-            // 
-            // converterThreadsLabel
-            // 
-            this.converterThreadsLabel.AutoSize = true;
-            this.converterThreadsLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.converterThreadsLabel.Location = new System.Drawing.Point(20, 83);
-            this.converterThreadsLabel.Name = "converterThreadsLabel";
-            this.converterThreadsLabel.Size = new System.Drawing.Size(118, 17);
-            this.converterThreadsLabel.TabIndex = 21;
-            this.converterThreadsLabel.Text = "Converter Threads";
+            this.converterThreadsHelpImage.AutoSize = true;
+            this.converterThreadsHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("converterThreadsHelpImage.Image")));
+            this.converterThreadsHelpImage.Location = new System.Drawing.Point(148, 83);
+            this.converterThreadsHelpImage.Name = "converterThreadsHelpImage";
+            this.converterThreadsHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.converterThreadsHelpImage.TabIndex = 23;
+            this.converterThreadsHelpImage.Text = "  ";
             // 
             // converterThreadsNumeric
             // 
             this.converterThreadsNumeric.Location = new System.Drawing.Point(216, 80);
-            this.converterThreadsNumeric.Minimum = new decimal(new int[] {
-            1,
+            this.converterThreadsNumeric.Maximum = new decimal(new int[] {
+            32,
             0,
             0,
             0});
-            this.converterThreadsNumeric.Maximum = new decimal(new int[] {
-            32,
+            this.converterThreadsNumeric.Minimum = new decimal(new int[] {
+            1,
             0,
             0,
             0});
@@ -708,19 +711,52 @@
             this.converterThreadsInfoLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.converterThreadsInfoLabel.Location = new System.Drawing.Point(397, 83);
             this.converterThreadsInfoLabel.Name = "converterThreadsInfoLabel";
-            this.converterThreadsInfoLabel.Size = new System.Drawing.Size(230, 17);
+            this.converterThreadsInfoLabel.Size = new System.Drawing.Size(194, 17);
             this.converterThreadsInfoLabel.TabIndex = 25;
             this.converterThreadsInfoLabel.Text = "16 of 32 logical processors (50%)";
             // 
-            // converterThreadsHelpImage
+            // converterThreadsLabel
             // 
-            this.converterThreadsHelpImage.AutoSize = true;
-            this.converterThreadsHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("sdkGeoConvertHelpImage.Image")));
-            this.converterThreadsHelpImage.Location = new System.Drawing.Point(148, 83);
-            this.converterThreadsHelpImage.Name = "converterThreadsHelpImage";
-            this.converterThreadsHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.converterThreadsHelpImage.TabIndex = 23;
-            this.converterThreadsHelpImage.Text = "  ";
+            this.converterThreadsLabel.AutoSize = true;
+            this.converterThreadsLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.converterThreadsLabel.Location = new System.Drawing.Point(20, 83);
+            this.converterThreadsLabel.Name = "converterThreadsLabel";
+            this.converterThreadsLabel.Size = new System.Drawing.Size(116, 17);
+            this.converterThreadsLabel.TabIndex = 21;
+            this.converterThreadsLabel.Text = "Converter Threads";
+            // 
+            // useSdkGeoConvertRadioButton
+            // 
+            this.useSdkGeoConvertRadioButton.AutoSize = true;
+            this.useSdkGeoConvertRadioButton.Location = new System.Drawing.Point(216, 52);
+            this.useSdkGeoConvertRadioButton.Name = "useSdkGeoConvertRadioButton";
+            this.useSdkGeoConvertRadioButton.Size = new System.Drawing.Size(200, 21);
+            this.useSdkGeoConvertRadioButton.TabIndex = 20;
+            this.useSdkGeoConvertRadioButton.Text = "Aerofly FS2 GeoConvert (SDK)";
+            this.useSdkGeoConvertRadioButton.UseVisualStyleBackColor = true;
+            this.useSdkGeoConvertRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
+            // 
+            // useBuiltInConverterRadioButton
+            // 
+            this.useBuiltInConverterRadioButton.AutoSize = true;
+            this.useBuiltInConverterRadioButton.Location = new System.Drawing.Point(216, 27);
+            this.useBuiltInConverterRadioButton.Name = "useBuiltInConverterRadioButton";
+            this.useBuiltInConverterRadioButton.Size = new System.Drawing.Size(124, 21);
+            this.useBuiltInConverterRadioButton.TabIndex = 19;
+            this.useBuiltInConverterRadioButton.TabStop = true;
+            this.useBuiltInConverterRadioButton.Text = "Built-in converter";
+            this.useBuiltInConverterRadioButton.UseVisualStyleBackColor = true;
+            this.useBuiltInConverterRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
+            // 
+            // converterModeLabel
+            // 
+            this.converterModeLabel.AutoSize = true;
+            this.converterModeLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.converterModeLabel.Location = new System.Drawing.Point(20, 29);
+            this.converterModeLabel.Name = "converterModeLabel";
+            this.converterModeLabel.Size = new System.Drawing.Size(65, 17);
+            this.converterModeLabel.TabIndex = 18;
+            this.converterModeLabel.Text = "Converter";
             // 
             // AllowShiftCorrectionEnabledCheckBox
             // 
@@ -777,7 +813,7 @@
             this.useGeoConvertWrapperCheckBox.AutoSize = true;
             this.useGeoConvertWrapperCheckBox.Location = new System.Drawing.Point(216, 227);
             this.useGeoConvertWrapperCheckBox.Name = "useGeoConvertWrapperCheckBox";
-            this.useGeoConvertWrapperCheckBox.Size = new System.Drawing.Size(430, 21);
+            this.useGeoConvertWrapperCheckBox.Size = new System.Drawing.Size(315, 21);
             this.useGeoConvertWrapperCheckBox.TabIndex = 12;
             this.useGeoConvertWrapperCheckBox.Text = "Run GeoConvert sequentially for multiple squares";
             this.useGeoConvertWrapperCheckBox.UseVisualStyleBackColor = true;
@@ -965,6 +1001,7 @@
             // 
             // groupBox12
             // 
+            this.groupBox12.Controls.Add(this.mobileWorkingFolderNoteLabel);
             this.groupBox12.Controls.Add(this.conversionForMobileHelpImage);
             this.groupBox12.Controls.Add(this.label55);
             this.groupBox12.Controls.Add(this.label53);
@@ -974,10 +1011,18 @@
             this.groupBox12.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox12.Location = new System.Drawing.Point(14, 348);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(654, 148);
+            this.groupBox12.Size = new System.Drawing.Size(654, 198);
             this.groupBox12.TabIndex = 15;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Additionally for Mobile";
+            // 
+            // mobileWorkingFolderNoteLabel
+            // 
+            this.mobileWorkingFolderNoteLabel.Location = new System.Drawing.Point(12, 122);
+            this.mobileWorkingFolderNoteLabel.Name = "mobileWorkingFolderNoteLabel";
+            this.mobileWorkingFolderNoteLabel.Size = new System.Drawing.Size(630, 64);
+            this.mobileWorkingFolderNoteLabel.TabIndex = 31;
+            this.mobileWorkingFolderNoteLabel.Text = resources.GetString("mobileWorkingFolderNoteLabel.Text");
             // 
             // conversionForMobileHelpImage
             // 
@@ -1160,7 +1205,7 @@
             this.WaterMaskingEnabledCheckBox.AutoSize = true;
             this.WaterMaskingEnabledCheckBox.Location = new System.Drawing.Point(13, 426);
             this.WaterMaskingEnabledCheckBox.Name = "WaterMaskingEnabledCheckBox";
-            this.WaterMaskingEnabledCheckBox.Size = new System.Drawing.Size(278, 21);
+            this.WaterMaskingEnabledCheckBox.Size = new System.Drawing.Size(275, 21);
             this.WaterMaskingEnabledCheckBox.TabIndex = 26;
             this.WaterMaskingEnabledCheckBox.Text = "Enhanced water masking using OSM maps";
             this.WaterMaskingEnabledCheckBox.UseVisualStyleBackColor = true;
@@ -1181,7 +1226,7 @@
             this.imageRemoveAlphaChannelCheckBox.AutoSize = true;
             this.imageRemoveAlphaChannelCheckBox.Location = new System.Drawing.Point(411, 426);
             this.imageRemoveAlphaChannelCheckBox.Name = "imageRemoveAlphaChannelCheckBox";
-            this.imageRemoveAlphaChannelCheckBox.Size = new System.Drawing.Size(254, 21);
+            this.imageRemoveAlphaChannelCheckBox.Size = new System.Drawing.Size(261, 21);
             this.imageRemoveAlphaChannelCheckBox.TabIndex = 24;
             this.imageRemoveAlphaChannelCheckBox.Text = "Replace alpha channel (for Google only)";
             this.imageRemoveAlphaChannelCheckBox.UseVisualStyleBackColor = true;
@@ -1460,6 +1505,47 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Image Sources";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.linkLabel6);
+            this.groupBox7.Controls.Add(this.cartodbKeyTextBox);
+            this.groupBox7.Controls.Add(this.label29);
+            this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox7.Location = new System.Drawing.Point(14, 430);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(654, 91);
+            this.groupBox7.TabIndex = 19;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Carto Basemaps (needed for water masking)";
+            // 
+            // linkLabel6
+            // 
+            this.linkLabel6.AutoSize = true;
+            this.linkLabel6.Location = new System.Drawing.Point(448, 57);
+            this.linkLabel6.Name = "linkLabel6";
+            this.linkLabel6.Size = new System.Drawing.Size(185, 17);
+            this.linkLabel6.TabIndex = 15;
+            this.linkLabel6.TabStop = true;
+            this.linkLabel6.Text = "Get a Carto Basemaps API Key";
+            this.linkLabel6.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel6_LinkClicked);
+            // 
+            // cartodbKeyTextBox
+            // 
+            this.cartodbKeyTextBox.Location = new System.Drawing.Point(174, 29);
+            this.cartodbKeyTextBox.Name = "cartodbKeyTextBox";
+            this.cartodbKeyTextBox.Size = new System.Drawing.Size(459, 25);
+            this.cartodbKeyTextBox.TabIndex = 7;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(20, 32);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(51, 17);
+            this.label29.TabIndex = 3;
+            this.label29.Text = "API Key";
             // 
             // groupBox11
             // 
@@ -1795,47 +1881,6 @@
             this.label35.TabIndex = 3;
             this.label35.Text = "API Key *)";
             // 
-            // groupBox7
-            // 
-            this.groupBox7.Controls.Add(this.linkLabel6);
-            this.groupBox7.Controls.Add(this.cartodbKeyTextBox);
-            this.groupBox7.Controls.Add(this.label29);
-            this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox7.Location = new System.Drawing.Point(14, 430);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(654, 91);
-            this.groupBox7.TabIndex = 19;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Carto Basemaps (needed for water masking)";
-            // 
-            // linkLabel6
-            // 
-            this.linkLabel6.AutoSize = true;
-            this.linkLabel6.Location = new System.Drawing.Point(448, 57);
-            this.linkLabel6.Name = "linkLabel6";
-            this.linkLabel6.Size = new System.Drawing.Size(185, 17);
-            this.linkLabel6.TabIndex = 15;
-            this.linkLabel6.TabStop = true;
-            this.linkLabel6.Text = "Get a Carto Basemaps API Key";
-            this.linkLabel6.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel6_LinkClicked);
-            // 
-            // cartodbKeyTextBox
-            // 
-            this.cartodbKeyTextBox.Location = new System.Drawing.Point(174, 29);
-            this.cartodbKeyTextBox.Name = "cartodbKeyTextBox";
-            this.cartodbKeyTextBox.Size = new System.Drawing.Size(459, 25);
-            this.cartodbKeyTextBox.TabIndex = 7;
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label29.Location = new System.Drawing.Point(20, 32);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(51, 17);
-            this.label29.TabIndex = 3;
-            this.label29.Text = "API Key";
-            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
@@ -1884,6 +1929,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgProcContrastSlider)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgProcBrightnessSlider)).EndInit();
             this.tabPage3.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -1897,8 +1944,6 @@
             this.groupBox13.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1929,6 +1974,9 @@
         private System.Windows.Forms.Button afs2UserFolderButton;
         private System.Windows.Forms.TextBox afs2UserFolderTextBox;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button fsgWorkingFolderButton;
+        private System.Windows.Forms.TextBox fsgWorkingFolderTextBox;
+        private System.Windows.Forms.Label fsgWorkingFolderLabel;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label maxTilesPerStitchedImageInfoLabel;
@@ -2003,6 +2051,7 @@
         private System.Windows.Forms.Label label51;
         private System.Windows.Forms.Label label53;
         private System.Windows.Forms.Label label55;
+        private System.Windows.Forms.Label mobileWorkingFolderNoteLabel;
         private System.Windows.Forms.CheckBox imageRemoveAlphaChannelCheckBox;
         private System.Windows.Forms.TextBox afsSceneryFolderTextBox;
         private System.Windows.Forms.Label label57;

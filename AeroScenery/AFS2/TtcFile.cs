@@ -19,7 +19,7 @@ namespace AeroScenery.AFS2
     ///   0x014  u32  width
     ///   0x018  u32  height
     ///   0x01C  u32  num_mips
-    ///   0x020  u32  format             0 = L8, 10 = DXT1/BC1
+    ///   0x020  u32  format             0 = L8, 10 = DXT1/BC1, 21 = ETC2 RGB
     ///   0x024  u32  unknown            FFFFFFFF colour / 00FFFFFF mask
     ///   0x028  u32  unknown            FFFFFFFF colour / 00000000 mask
     ///   0x02C..0x0FF  zero padding
@@ -37,6 +37,7 @@ namespace AeroScenery.AFS2
 
         public const uint FormatL8 = 0;
         public const uint FormatDxt1 = 10;
+        public const uint FormatEtc2 = 21;
 
         // Sentinels, not texture types: the payload is a Basis Universal file rather than a raw mip
         // chain. ...71 is stored, ...72 is wrapped in a chunk. Over half of a real Aerofly install is

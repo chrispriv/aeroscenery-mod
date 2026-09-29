@@ -17,7 +17,7 @@ namespace AeroScenery.AFS2
         /// </summary>
         /// <param name="pixels">Row-major image, channels bytes per pixel.</param>
         /// <param name="channels">3 for RGB (encoded as BC1), 1 for L8 (stored raw).</param>
-        /// <param name="format">TtcFile.FormatDxt1 or TtcFile.FormatL8.</param>
+        /// <param name="format">TtcFile.FormatDxt1, FormatEtc2 or FormatL8.</param>
         /// <param name="numMips">Levels to emit, or 0 for the full chain down to 1x1.</param>
         public static byte[] Build(byte[] pixels, int width, int height, int channels, uint format,
             out int numMips, int requestedMips = 0, int maxThreads = 1)
@@ -34,7 +34,9 @@ namespace AeroScenery.AFS2
             {
                 byte[] levelBytes = format == TtcFile.FormatL8
                     ? cur
-                    : Bc1Encoder.Encode(cur, cw, ch, maxThreads);
+                    : format == TtcFile.FormatEtc2
+                        ? Etc2Encoder.Encode(cur, cw, ch, maxThreads)
+                        : Bc1Encoder.Encode(cur, cw, ch, maxThreads);
 
                 Buffer.BlockCopy(levelBytes, 0, chain, offset, levelBytes.Length);
                 offset += levelBytes.Length;

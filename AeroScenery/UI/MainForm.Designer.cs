@@ -85,6 +85,15 @@ namespace AeroScenery
             this.childTaskLabel = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.downloadersScrollPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.downloadThreadProgress1 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress2 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress3 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress4 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress5 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress6 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress7 = new AeroScenery.UI.DownloadThreadProgressControl();
+            this.downloadThreadProgress8 = new AeroScenery.UI.DownloadThreadProgressControl();
             this.label6 = new System.Windows.Forms.Label();
             this.currentActionProgressBar = new System.Windows.Forms.ProgressBar();
             this.parentTaskLabel = new System.Windows.Forms.Label();
@@ -93,11 +102,12 @@ namespace AeroScenery
             this.sideTabControl = new System.Windows.Forms.TabControl();
             this.imagesTabPage = new System.Windows.Forms.TabPage();
             this.autoSelectAFSLevelsButton = new System.Windows.Forms.Button();
-            this.generateAFS2LevelsHelpImage = new System.Windows.Forms.Label();
             this.imageSourceHelpImage = new System.Windows.Forms.Label();
+            this.generateAFS2LevelsHelpImage = new System.Windows.Forms.Label();
             this.zoomLevelLabel = new System.Windows.Forms.Label();
             this.zoomLevelTrackBar = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.shiftCorrectionLevel = new System.Windows.Forms.NumericUpDown();
             this.label10 = new System.Windows.Forms.Label();
             this.allowShiftCorrectionCheckBox = new System.Windows.Forms.CheckBox();
@@ -108,6 +118,8 @@ namespace AeroScenery
             this.downloadOsmDataCheckBox = new System.Windows.Forms.CheckBox();
             this.actionSetComboBox = new System.Windows.Forms.ComboBox();
             this.installSceneryIntoAFSCheckBox = new System.Windows.Forms.CheckBox();
+            this.copySceneryToFsgCheckBox = new System.Windows.Forms.CheckBox();
+            this.convertTargetComboBox = new System.Windows.Forms.ComboBox();
             this.runGeoConvertCheckBox = new System.Windows.Forms.CheckBox();
             this.generateAFSFilesCheckBox = new System.Windows.Forms.CheckBox();
             this.stitchImageTilesCheckBox = new System.Windows.Forms.CheckBox();
@@ -116,6 +128,7 @@ namespace AeroScenery
             this.afsLevelsCheckBoxList = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.imageSourceComboBox = new AeroScenery.UI.ImageComboBox();
             this.movingMapTabPage = new System.Windows.Forms.TabPage();
             this.panel3DRadioButtonDLL = new System.Windows.Forms.RadioButton();
             this.panel3DRadioButtonUDP = new System.Windows.Forms.RadioButton();
@@ -147,16 +160,6 @@ namespace AeroScenery
             this.shutdownCheckbox = new System.Windows.Forms.CheckBox();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.imageSourceComboBox = new AeroScenery.UI.ImageComboBox();
-            this.downloadThreadProgress8 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress7 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress6 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress5 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress4 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress3 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress2 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadThreadProgress1 = new AeroScenery.UI.DownloadThreadProgressControl();
-            this.downloadersScrollPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.statusStrip.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.mainTabControl.SuspendLayout();
@@ -562,10 +565,10 @@ namespace AeroScenery
             this.installSceneryToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("installSceneryToolStripButton.Image")));
             this.installSceneryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.installSceneryToolStripButton.Name = "installSceneryToolStripButton";
-            this.installSceneryToolStripButton.Size = new System.Drawing.Size(85, 22);
-            this.installSceneryToolStripButton.Text = "Install Tile";
-            this.installSceneryToolStripButton.ToolTipText = "Install this tile into the Aerofly user scenery folder after GeoConvert. For all " +
-    "selected tiles, enable Install Scenery under Actions.";
+            this.installSceneryToolStripButton.Size = new System.Drawing.Size(109, 22);
+            this.installSceneryToolStripButton.Text = "Install FS4 Tile";
+            this.installSceneryToolStripButton.ToolTipText = "Install this tile into the FS4 Install Folder after conversion. For all selected " +
+    "tiles, enable Install Scenery for FS4 under Actions.";
             this.installSceneryToolStripButton.Click += new System.EventHandler(this.InstallSceneryToolStripButton_ClickAsync);
             // 
             // deleteImagesToolStripButton
@@ -742,11 +745,99 @@ namespace AeroScenery
             this.downloadersScrollPanel.Controls.Add(this.downloadThreadProgress8);
             this.downloadersScrollPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.downloadersScrollPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.downloadersScrollPanel.Location = new System.Drawing.Point(3, 19);
+            this.downloadersScrollPanel.Location = new System.Drawing.Point(3, 21);
             this.downloadersScrollPanel.Name = "downloadersScrollPanel";
-            this.downloadersScrollPanel.Size = new System.Drawing.Size(1049, 549);
+            this.downloadersScrollPanel.Size = new System.Drawing.Size(1049, 547);
             this.downloadersScrollPanel.TabIndex = 0;
             this.downloadersScrollPanel.WrapContents = false;
+            // 
+            // downloadThreadProgress1
+            // 
+            this.downloadThreadProgress1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress1.Location = new System.Drawing.Point(3, 4);
+            this.downloadThreadProgress1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.downloadThreadProgress1.Name = "downloadThreadProgress1";
+            this.downloadThreadProgress1.Size = new System.Drawing.Size(995, 48);
+            this.downloadThreadProgress1.TabIndex = 0;
+            // 
+            // downloadThreadProgress2
+            // 
+            this.downloadThreadProgress2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress2.Location = new System.Drawing.Point(3, 61);
+            this.downloadThreadProgress2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.downloadThreadProgress2.Name = "downloadThreadProgress2";
+            this.downloadThreadProgress2.Size = new System.Drawing.Size(995, 54);
+            this.downloadThreadProgress2.TabIndex = 1;
+            // 
+            // downloadThreadProgress3
+            // 
+            this.downloadThreadProgress3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress3.Location = new System.Drawing.Point(3, 127);
+            this.downloadThreadProgress3.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
+            this.downloadThreadProgress3.Name = "downloadThreadProgress3";
+            this.downloadThreadProgress3.Size = new System.Drawing.Size(995, 59);
+            this.downloadThreadProgress3.TabIndex = 2;
+            // 
+            // downloadThreadProgress4
+            // 
+            this.downloadThreadProgress4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress4.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress4.Location = new System.Drawing.Point(3, 200);
+            this.downloadThreadProgress4.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
+            this.downloadThreadProgress4.Name = "downloadThreadProgress4";
+            this.downloadThreadProgress4.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress4.TabIndex = 3;
+            // 
+            // downloadThreadProgress5
+            // 
+            this.downloadThreadProgress5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress5.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress5.Location = new System.Drawing.Point(3, 274);
+            this.downloadThreadProgress5.Margin = new System.Windows.Forms.Padding(3, 9, 3, 9);
+            this.downloadThreadProgress5.Name = "downloadThreadProgress5";
+            this.downloadThreadProgress5.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress5.TabIndex = 4;
+            // 
+            // downloadThreadProgress6
+            // 
+            this.downloadThreadProgress6.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress6.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress6.Location = new System.Drawing.Point(3, 353);
+            this.downloadThreadProgress6.Margin = new System.Windows.Forms.Padding(3, 12, 3, 12);
+            this.downloadThreadProgress6.Name = "downloadThreadProgress6";
+            this.downloadThreadProgress6.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress6.TabIndex = 5;
+            // 
+            // downloadThreadProgress7
+            // 
+            this.downloadThreadProgress7.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress7.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress7.Location = new System.Drawing.Point(3, 439);
+            this.downloadThreadProgress7.Margin = new System.Windows.Forms.Padding(3, 16, 3, 16);
+            this.downloadThreadProgress7.Name = "downloadThreadProgress7";
+            this.downloadThreadProgress7.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress7.TabIndex = 6;
+            // 
+            // downloadThreadProgress8
+            // 
+            this.downloadThreadProgress8.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.downloadThreadProgress8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress8.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.downloadThreadProgress8.Location = new System.Drawing.Point(3, 534);
+            this.downloadThreadProgress8.Margin = new System.Windows.Forms.Padding(3, 21, 3, 21);
+            this.downloadThreadProgress8.Name = "downloadThreadProgress8";
+            this.downloadThreadProgress8.Size = new System.Drawing.Size(995, 58);
+            this.downloadThreadProgress8.TabIndex = 7;
             // 
             // label6
             // 
@@ -847,6 +938,16 @@ namespace AeroScenery
             this.autoSelectAFSLevelsButton.UseVisualStyleBackColor = true;
             this.autoSelectAFSLevelsButton.Click += new System.EventHandler(this.AutoSelectAFSLevelsButton_Click);
             // 
+            // imageSourceHelpImage
+            // 
+            this.imageSourceHelpImage.AutoSize = true;
+            this.imageSourceHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("imageSourceHelpImage.Image")));
+            this.imageSourceHelpImage.Location = new System.Drawing.Point(338, 22);
+            this.imageSourceHelpImage.Name = "imageSourceHelpImage";
+            this.imageSourceHelpImage.Size = new System.Drawing.Size(16, 17);
+            this.imageSourceHelpImage.TabIndex = 12;
+            this.imageSourceHelpImage.Text = "  ";
+            // 
             // generateAFS2LevelsHelpImage
             // 
             this.generateAFS2LevelsHelpImage.AutoSize = true;
@@ -856,16 +957,6 @@ namespace AeroScenery
             this.generateAFS2LevelsHelpImage.Size = new System.Drawing.Size(16, 17);
             this.generateAFS2LevelsHelpImage.TabIndex = 10;
             this.generateAFS2LevelsHelpImage.Text = "  ";
-            // 
-            // imageSourceHelpImage
-            // 
-            this.imageSourceHelpImage.AutoSize = true;
-            this.imageSourceHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("generateAFS2LevelsHelpImage.Image")));
-            this.imageSourceHelpImage.Location = new System.Drawing.Point(338, 22);
-            this.imageSourceHelpImage.Name = "imageSourceHelpImage";
-            this.imageSourceHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.imageSourceHelpImage.TabIndex = 12;
-            this.imageSourceHelpImage.Text = "  ";
             // 
             // zoomLevelLabel
             // 
@@ -894,6 +985,7 @@ namespace AeroScenery
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.shiftCorrectionLevel);
             this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.allowShiftCorrectionCheckBox);
@@ -904,6 +996,8 @@ namespace AeroScenery
             this.groupBox2.Controls.Add(this.downloadOsmDataCheckBox);
             this.groupBox2.Controls.Add(this.actionSetComboBox);
             this.groupBox2.Controls.Add(this.installSceneryIntoAFSCheckBox);
+            this.groupBox2.Controls.Add(this.copySceneryToFsgCheckBox);
+            this.groupBox2.Controls.Add(this.convertTargetComboBox);
             this.groupBox2.Controls.Add(this.runGeoConvertCheckBox);
             this.groupBox2.Controls.Add(this.generateAFSFilesCheckBox);
             this.groupBox2.Controls.Add(this.stitchImageTilesCheckBox);
@@ -911,10 +1005,21 @@ namespace AeroScenery
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(16, 336);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(381, 298);
+            this.groupBox2.Size = new System.Drawing.Size(381, 325);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
+            this.label5.Location = new System.Drawing.Point(357, 150);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(16, 17);
+            this.label5.TabIndex = 19;
+            this.label5.Text = "  ";
+            this.label5.Visible = false;
             // 
             // shiftCorrectionLevel
             // 
@@ -991,7 +1096,7 @@ namespace AeroScenery
             this.downloadElevationDataCheckBox.Enabled = false;
             this.downloadElevationDataCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.downloadElevationDataCheckBox.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.downloadElevationDataCheckBox.Location = new System.Drawing.Point(19, 257);
+            this.downloadElevationDataCheckBox.Location = new System.Drawing.Point(19, 284);
             this.downloadElevationDataCheckBox.Name = "downloadElevationDataCheckBox";
             this.downloadElevationDataCheckBox.Size = new System.Drawing.Size(167, 21);
             this.downloadElevationDataCheckBox.TabIndex = 13;
@@ -1019,7 +1124,7 @@ namespace AeroScenery
             this.downloadOsmDataCheckBox.Enabled = false;
             this.downloadOsmDataCheckBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.downloadOsmDataCheckBox.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.downloadOsmDataCheckBox.Location = new System.Drawing.Point(19, 230);
+            this.downloadOsmDataCheckBox.Location = new System.Drawing.Point(19, 257);
             this.downloadOsmDataCheckBox.Name = "downloadOsmDataCheckBox";
             this.downloadOsmDataCheckBox.Size = new System.Drawing.Size(145, 21);
             this.downloadOsmDataCheckBox.TabIndex = 11;
@@ -1046,11 +1151,37 @@ namespace AeroScenery
             this.installSceneryIntoAFSCheckBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.installSceneryIntoAFSCheckBox.Location = new System.Drawing.Point(19, 176);
             this.installSceneryIntoAFSCheckBox.Name = "installSceneryIntoAFSCheckBox";
-            this.installSceneryIntoAFSCheckBox.Size = new System.Drawing.Size(256, 21);
+            this.installSceneryIntoAFSCheckBox.Size = new System.Drawing.Size(301, 21);
             this.installSceneryIntoAFSCheckBox.TabIndex = 5;
-            this.installSceneryIntoAFSCheckBox.Text = "Install Scenery (waiting for GeoConvert)";
+            this.installSceneryIntoAFSCheckBox.Text = "Install Scenery for FS4 (waiting for GeoConvert)";
             this.installSceneryIntoAFSCheckBox.UseVisualStyleBackColor = true;
             this.installSceneryIntoAFSCheckBox.CheckedChanged += new System.EventHandler(this.installSceneryIntoAFSCheckBox_CheckedChanged);
+            // 
+            // copySceneryToFsgCheckBox
+            // 
+            this.copySceneryToFsgCheckBox.AutoSize = true;
+            this.copySceneryToFsgCheckBox.Enabled = false;
+            this.copySceneryToFsgCheckBox.Location = new System.Drawing.Point(19, 203);
+            this.copySceneryToFsgCheckBox.Name = "copySceneryToFsgCheckBox";
+            this.copySceneryToFsgCheckBox.Size = new System.Drawing.Size(290, 21);
+            this.copySceneryToFsgCheckBox.TabIndex = 19;
+            this.copySceneryToFsgCheckBox.Text = "Copy Scenery to FSG Scenery Working Folder";
+            this.copySceneryToFsgCheckBox.UseVisualStyleBackColor = true;
+            this.copySceneryToFsgCheckBox.CheckedChanged += new System.EventHandler(this.copySceneryToFsgCheckBox_CheckedChanged);
+            // 
+            // convertTargetComboBox
+            // 
+            this.convertTargetComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.convertTargetComboBox.FormattingEnabled = true;
+            this.convertTargetComboBox.Items.AddRange(new object[] {
+            "Aerofly FS4",
+            "Aerofly FSG (Android)",
+            "FS4 and FSG (Android)"});
+            this.convertTargetComboBox.Location = new System.Drawing.Point(190, 147);
+            this.convertTargetComboBox.Name = "convertTargetComboBox";
+            this.convertTargetComboBox.Size = new System.Drawing.Size(161, 25);
+            this.convertTargetComboBox.TabIndex = 4;
+            this.convertTargetComboBox.SelectedIndexChanged += new System.EventHandler(this.convertTargetComboBox_SelectedIndexChanged);
             // 
             // runGeoConvertCheckBox
             // 
@@ -1138,6 +1269,18 @@ namespace AeroScenery
             this.label2.Size = new System.Drawing.Size(88, 17);
             this.label2.TabIndex = 2;
             this.label2.Text = "Image Source";
+            // 
+            // imageSourceComboBox
+            // 
+            this.imageSourceComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.imageSourceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.imageSourceComboBox.FormattingEnabled = true;
+            this.imageSourceComboBox.ImageList = null;
+            this.imageSourceComboBox.Location = new System.Drawing.Point(112, 19);
+            this.imageSourceComboBox.Name = "imageSourceComboBox";
+            this.imageSourceComboBox.Size = new System.Drawing.Size(220, 26);
+            this.imageSourceComboBox.TabIndex = 1;
+            this.imageSourceComboBox.SelectedIndexChanged += new System.EventHandler(this.imageSourceComboBox_SelectedIndexChanged);
             // 
             // movingMapTabPage
             // 
@@ -1499,106 +1642,6 @@ namespace AeroScenery
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 23);
             // 
-            // imageSourceComboBox
-            // 
-            this.imageSourceComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.imageSourceComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.imageSourceComboBox.FormattingEnabled = true;
-            this.imageSourceComboBox.ImageList = null;
-            this.imageSourceComboBox.Location = new System.Drawing.Point(112, 19);
-            this.imageSourceComboBox.Name = "imageSourceComboBox";
-            this.imageSourceComboBox.Size = new System.Drawing.Size(220, 26);
-            this.imageSourceComboBox.TabIndex = 1;
-            this.imageSourceComboBox.SelectedIndexChanged += new System.EventHandler(this.imageSourceComboBox_SelectedIndexChanged);
-            // 
-            // downloadThreadProgress8
-            // 
-            this.downloadThreadProgress8.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress8.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress8.Location = new System.Drawing.Point(6, 477);
-            this.downloadThreadProgress8.Margin = new System.Windows.Forms.Padding(3, 21, 3, 21);
-            this.downloadThreadProgress8.Name = "downloadThreadProgress8";
-            this.downloadThreadProgress8.Size = new System.Drawing.Size(995, 58);
-            this.downloadThreadProgress8.TabIndex = 7;
-            // 
-            // downloadThreadProgress7
-            // 
-            this.downloadThreadProgress7.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress7.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress7.Location = new System.Drawing.Point(6, 413);
-            this.downloadThreadProgress7.Margin = new System.Windows.Forms.Padding(3, 16, 3, 16);
-            this.downloadThreadProgress7.Name = "downloadThreadProgress7";
-            this.downloadThreadProgress7.Size = new System.Drawing.Size(995, 58);
-            this.downloadThreadProgress7.TabIndex = 6;
-            // 
-            // downloadThreadProgress6
-            // 
-            this.downloadThreadProgress6.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress6.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress6.Location = new System.Drawing.Point(6, 350);
-            this.downloadThreadProgress6.Margin = new System.Windows.Forms.Padding(3, 12, 3, 12);
-            this.downloadThreadProgress6.Name = "downloadThreadProgress6";
-            this.downloadThreadProgress6.Size = new System.Drawing.Size(995, 58);
-            this.downloadThreadProgress6.TabIndex = 5;
-            // 
-            // downloadThreadProgress5
-            // 
-            this.downloadThreadProgress5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress5.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress5.Location = new System.Drawing.Point(6, 286);
-            this.downloadThreadProgress5.Margin = new System.Windows.Forms.Padding(3, 9, 3, 9);
-            this.downloadThreadProgress5.Name = "downloadThreadProgress5";
-            this.downloadThreadProgress5.Size = new System.Drawing.Size(995, 58);
-            this.downloadThreadProgress5.TabIndex = 4;
-            // 
-            // downloadThreadProgress4
-            // 
-            this.downloadThreadProgress4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress4.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress4.Location = new System.Drawing.Point(7, 222);
-            this.downloadThreadProgress4.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.downloadThreadProgress4.Name = "downloadThreadProgress4";
-            this.downloadThreadProgress4.Size = new System.Drawing.Size(995, 58);
-            this.downloadThreadProgress4.TabIndex = 3;
-            // 
-            // downloadThreadProgress3
-            // 
-            this.downloadThreadProgress3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress3.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress3.Location = new System.Drawing.Point(7, 156);
-            this.downloadThreadProgress3.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
-            this.downloadThreadProgress3.Name = "downloadThreadProgress3";
-            this.downloadThreadProgress3.Size = new System.Drawing.Size(995, 59);
-            this.downloadThreadProgress3.TabIndex = 2;
-            // 
-            // downloadThreadProgress2
-            // 
-            this.downloadThreadProgress2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress2.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress2.Location = new System.Drawing.Point(7, 93);
-            this.downloadThreadProgress2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.downloadThreadProgress2.Name = "downloadThreadProgress2";
-            this.downloadThreadProgress2.Size = new System.Drawing.Size(995, 54);
-            this.downloadThreadProgress2.TabIndex = 1;
-            // 
-            // downloadThreadProgress1
-            // 
-            this.downloadThreadProgress1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.downloadThreadProgress1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.downloadThreadProgress1.Location = new System.Drawing.Point(7, 31);
-            this.downloadThreadProgress1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.downloadThreadProgress1.Name = "downloadThreadProgress1";
-            this.downloadThreadProgress1.Size = new System.Drawing.Size(995, 48);
-            this.downloadThreadProgress1.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1628,8 +1671,8 @@ namespace AeroScenery
             this.toolStrip2.PerformLayout();
             this.progressTabPage.ResumeLayout(false);
             this.progressTabPage.PerformLayout();
-            this.downloadersScrollPanel.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.downloadersScrollPanel.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
             this.sideTabControl.ResumeLayout(false);
@@ -1684,6 +1727,7 @@ namespace AeroScenery
         private UI.DownloadThreadProgressControl downloadThreadProgress8;
         private UI.DownloadThreadProgressControl downloadThreadProgress7;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox convertTargetComboBox;
         private System.Windows.Forms.CheckBox runGeoConvertCheckBox;
         private System.Windows.Forms.CheckBox generateAFSFilesCheckBox;
         private System.Windows.Forms.CheckBox stitchImageTilesCheckBox;
@@ -1693,6 +1737,7 @@ namespace AeroScenery
         private System.Windows.Forms.Label label2;
         private ImageComboBox imageSourceComboBox;
         private System.Windows.Forms.CheckBox installSceneryIntoAFSCheckBox;
+        private System.Windows.Forms.CheckBox copySceneryToFsgCheckBox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton deleteImagesToolStripButton;
@@ -1777,6 +1822,7 @@ namespace AeroScenery
         private System.Windows.Forms.Label stepElapsedLabel;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusStripElapsedLabel;
+        private System.Windows.Forms.Label label5;
     }
 }
 

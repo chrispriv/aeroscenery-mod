@@ -66,5 +66,43 @@ namespace AeroScenery.Common
 
             return afsSceneryInstallDirectory;
         }
+
+        /// <summary>
+        /// Images directory for FSG Android copy:
+        /// {FsgWorkingDirectory}\fsg_scenery_{name}\fsg_scenery_{name}_images\scenery\images\
+        /// The user later zips the _images folder and renames it to .tme.
+        /// </summary>
+        public static string FindFsgSceneryCopyDirectory(Settings settings, bool createDirectories = true)
+        {
+            if (String.IsNullOrWhiteSpace(settings.FsgWorkingDirectory))
+            {
+                return null;
+            }
+
+            string root = settings.FsgWorkingDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (!Directory.Exists(root))
+            {
+                if (!createDirectories)
+                {
+                    return null;
+                }
+                Directory.CreateDirectory(root);
+            }
+
+            string sceneryName = (settings.AFSSceneryFolder ?? "myscenery").TrimEnd('\\', '/');
+            if (String.IsNullOrEmpty(sceneryName))
+            {
+                sceneryName = "myscenery";
+            }
+
+            string packRoot = Path.Combine(root, "fsg_scenery_" + sceneryName);
+            string imagesPack = Path.Combine(packRoot, "fsg_scenery_" + sceneryName + "_images");
+            string imagesDir = Path.Combine(imagesPack, "scenery", "images");
+            if (createDirectories)
+            {
+                Directory.CreateDirectory(imagesDir);
+            }
+            return imagesDir;
+        }
     }
 }

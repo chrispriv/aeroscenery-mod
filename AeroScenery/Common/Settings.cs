@@ -85,6 +85,12 @@ namespace AeroScenery.Common
         /// </summary>
         public int? ConverterThreads { get; set; }
 
+        /// <summary>
+        /// Built-in converter output. Ignored when using SDK GeoConvert.
+        /// 0 = Aerofly FS4 (DXT1), 1 = FSG Android (ETC2), 2 = both.
+        /// </summary>
+        public int? BuiltInConvertTarget { get; set; }
+
         public bool? ShowMultipleConcurrentSquaresWarning { get; set; }
 
         public string USGSUsername { get; set; }
@@ -109,7 +115,15 @@ namespace AeroScenery.Common
         public double? ShrinkTMCGridSquareCoords { get; set; }
         public string AFS2UserDirectory { get; set; }
 
-        //#MOD
+        //#MOD_l
+        /// <summary>
+        /// Folder where FSG Android scenery is assembled for the user to zip as a .tme.
+        /// Not the Aerofly FS4 addons path.
+        /// </summary>
+        public string FsgWorkingDirectory { get; set; }
+
+        public bool? CopySceneryToFsgWorkingFolder { get; set; }
+
         public string QGISDirectory { get; set; }
         public string GeoTiffElevationMapFilename { get; set; }
         public string AFSSceneryFolder { get; set; }

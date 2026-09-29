@@ -138,6 +138,7 @@ namespace AeroScenery.Data
             log.Info(String.Format("AFS2SDKDirectory: {0}", settings.AFS2SDKDirectory));
             log.Info(String.Format("AFS2Directory: {0}", settings.AFS2Directory));
             log.Info(String.Format("AFS2UserDirectory: {0}", settings.AFS2UserDirectory));
+            log.Info(String.Format("FsgWorkingDirectory: {0}", settings.FsgWorkingDirectory));
             //#MOD
             log.Info(String.Format("AFSSceneryFolder: {0}", settings.AFSSceneryFolder));
             log.Info(String.Format("WorkingDirectory: {0}", settings.WorkingDirectory));
@@ -154,6 +155,7 @@ namespace AeroScenery.Data
             log.Info(String.Format("RunTreesDetectionDetection: {0}", settings.RunTreesDetectionDetection));
 
             log.Info(String.Format("InstallScenery: {0}", settings.InstallScenery));
+            log.Info(String.Format("CopySceneryToFsgWorkingFolder: {0}", settings.CopySceneryToFsgWorkingFolder));
             log.Info(String.Format("ActionSet: {0}", settings.ActionSet));
             log.Info(String.Format("AFSLevelsToGenerate: {0}", afsLevelsCsv));
             log.Info(String.Format("UserAgent: {0}", settings.UserAgent));
@@ -166,6 +168,7 @@ namespace AeroScenery.Data
             log.Info(String.Format("GeoConvertDoMultipleSmallerRuns: {0}", settings.GeoConvertDoMultipleSmallerRuns));
             log.Info(String.Format("UseBuiltInTtcConverter: {0}", settings.UseBuiltInTtcConverter));
             log.Info(String.Format("ConverterThreads: {0}", settings.ConverterThreads));
+            log.Info(String.Format("BuiltInConvertTarget: {0}", settings.BuiltInConvertTarget));
             log.Info(String.Format("ShowMultipleConcurrentSquaresWarning: {0}", settings.ShowMultipleConcurrentSquaresWarning));
             //#MOD_k
             log.Info(String.Format("WaterMaskingEnable: {0}", settings.WaterMaskingEnable));
@@ -325,8 +328,18 @@ namespace AeroScenery.Data
             if (settings.UseBuiltInTtcConverter == null)
                 settings.UseBuiltInTtcConverter = true;
 
+            if (settings.UseBuiltInTtcConverter == true)
+                settings.CreateAddForMobile = false;
+
             if (settings.ConverterThreads == null || settings.ConverterThreads < 1)
                 settings.ConverterThreads = TtcConverter.DefaultThreads();
+
+            if (settings.BuiltInConvertTarget == null
+                || settings.BuiltInConvertTarget < 0
+                || settings.BuiltInConvertTarget > 2)
+            {
+                settings.BuiltInConvertTarget = 0;
+            }
 
             int maxConverterThreads = Math.Max(1, Environment.ProcessorCount);
             if (settings.ConverterThreads > maxConverterThreads)
@@ -381,6 +394,12 @@ namespace AeroScenery.Data
 
             if (settings.AFS2UserDirectory == null)
                 settings.AFS2UserDirectory = "";
+
+            if (settings.FsgWorkingDirectory == null)
+                settings.FsgWorkingDirectory = "";
+
+            if (settings.CopySceneryToFsgWorkingFolder == null)
+                settings.CopySceneryToFsgWorkingFolder = false;
 
             if (settings.EnableImageProcessing == null)
                 settings.EnableImageProcessing = false;

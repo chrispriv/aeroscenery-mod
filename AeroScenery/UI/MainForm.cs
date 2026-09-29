@@ -264,7 +264,9 @@ namespace AeroScenery
             actionsTip.SetToolTip(this.waterMaskingCheckBox, "Applies extra coastline/water masking from Carto Basemaps (OpenStreetMap).\nTurn this on in Settings (Carto API key + enhanced water masking) before it appears here.");
             actionsTip.SetToolTip(this.allowShiftCorrectionCheckBox, "Optional north-south pixel shift applied when GeoConvert runs, for stitched images that sit slightly off the grid.\nEnable the feature in Settings (GeoConvert tab), then set the offset here if a tile is misaligned.");
             actionsTip.SetToolTip(this.shiftCorrectionLevel, "North-south shift in GeoConvert levels (negative = south, positive = north).\nOnly used when Shift Correction is enabled.");
-            actionsTip.SetToolTip(this.installSceneryIntoAFSCheckBox, "After GeoConvert finishes, copy every selected square into the Aerofly user scenery folder from Settings.\nNeeds sequential GeoConvert if several squares run in one job. The toolbar Install Tile button still installs only the current square.");
+            actionsTip.SetToolTip(this.installSceneryIntoAFSCheckBox, "After conversion finishes, copy FS4 (DXT1) tiles into the FS4 Install Folder from Settings.\nThe toolbar Install FS4 Tile button still installs only the current square.");
+            actionsTip.SetToolTip(this.copySceneryToFsgCheckBox, "After conversion finishes, copy FSG Android (ETC2) tiles from *-geoconvert-ttc-mobile into the FSG Scenery Working Folder.\nLayout: fsg_scenery_<name>\\fsg_scenery_<name>_images\\scenery\\images\\<level-9 map>\\*.ttc\nZip the _images folder yourself, rename the zip to .tme, then copy it to the device.");
+            actionsTip.SetToolTip(this.convertTargetComboBox, "Built-in converter only. Aerofly FS4 writes DXT1 tiles as now. FSG Android will write ETC2 tiles into ##-geoconvert-ttc-mobile under the AFS Working Scenery Folder.\nHidden when SDK GeoConvert is selected.");
             actionsTip.SetToolTip(this.fixMissingTilesCheckBox, "Generates a PowerShell script that re-downloads only missing or empty image tiles instead of the whole square.");
             actionsTip.SetToolTip(this.shutdownCheckbox, "When sequential GeoConvert is enabled, shut down Windows after every selected action (including Install Scenery) has finished.\nDisabled for parallel GeoConvert because jobs may still be running.");
 
@@ -535,6 +537,7 @@ namespace AeroScenery
             this.runGeoConvertCheckBox.Checked = true;
             //#MOD_k
             this.installSceneryIntoAFSCheckBox.Checked = true;
+            this.copySceneryToFsgCheckBox.Checked = false;
 
             //#MOD
             this.fixMissingTilesCheckBox.Checked = false;
@@ -547,6 +550,7 @@ namespace AeroScenery
             this.runGeoConvertCheckBox.Enabled = false;
             //#MOD_k
             this.installSceneryIntoAFSCheckBox.Enabled = false;
+            this.copySceneryToFsgCheckBox.Enabled = false;
 
             //#MOD
             this.fixMissingTilesCheckBox.Enabled = false;
@@ -561,6 +565,7 @@ namespace AeroScenery
             this.waterMaskingCheckBox.Enabled = false;
             this.allowShiftCorrectionCheckBox.Enabled = false;
             this.shiftCorrectionLevel.Enabled = false;
+            this.UpdateBuiltInConvertTargetUi();
 
         }
 
@@ -574,6 +579,7 @@ namespace AeroScenery
             this.runGeoConvertCheckBox.Checked = settings.RunGeoConvert.Value;
             //@MOD_k
             this.installSceneryIntoAFSCheckBox.Checked = settings.InstallScenery.Value;
+            this.copySceneryToFsgCheckBox.Checked = settings.CopySceneryToFsgWorkingFolder.GetValueOrDefault(false);
 
             //#MOD
             this.fixMissingTilesCheckBox.Checked = settings.FixMissingTilesProcessing.Value;
@@ -589,6 +595,7 @@ namespace AeroScenery
             this.runGeoConvertCheckBox.Enabled = true;
             //#MOD_k
             this.installSceneryIntoAFSCheckBox.Enabled = true;
+            this.copySceneryToFsgCheckBox.Enabled = true;
 
             //#MOD
             this.fixMissingTilesCheckBox.Enabled = true;
@@ -598,7 +605,8 @@ namespace AeroScenery
             //#MOD_k
             this.waterMaskingCheckBox.Enabled = true;
             this.allowShiftCorrectionCheckBox.Enabled = true;
-            this.shiftCorrectionLevel.Enabled = true;   
+            this.shiftCorrectionLevel.Enabled = true;
+            this.UpdateBuiltInConvertTargetUi();   
 
 
 
@@ -672,10 +680,12 @@ namespace AeroScenery
             this.downloadOsmDataCheckBox.Enabled = false;
             this.downloadElevationDataCheckBox.Enabled = false;
             this.installSceneryIntoAFSCheckBox.Enabled = false;
+            this.copySceneryToFsgCheckBox.Enabled = false;
             //#MOD_k
             this.waterMaskingCheckBox.Enabled = false;
             this.allowShiftCorrectionCheckBox.Enabled = false;
             this.shiftCorrectionLevel.Enabled = false;
+            this.convertTargetComboBox.Enabled = false;
 
         }
 
@@ -700,12 +710,15 @@ namespace AeroScenery
                 this.downloadOsmDataCheckBox.Enabled = true;
                 this.downloadElevationDataCheckBox.Enabled = true;
                 this.installSceneryIntoAFSCheckBox.Enabled = true;
+                this.copySceneryToFsgCheckBox.Enabled = true;
                 //#MOD_k
                 this.waterMaskingCheckBox.Enabled = true;
                 this.allowShiftCorrectionCheckBox.Enabled = true;
                 this.shiftCorrectionLevel.Enabled = true;
 
             }
+
+            this.UpdateBuiltInConvertTargetUi();
         }
 
         private void ResetProgress()
@@ -1096,12 +1109,60 @@ namespace AeroScenery
             this.UpdateDownloadProgressBarsFromSettings();
             this.UpdateShowAirportsToolbar();
             this.UpdateConverterActionLabel();
+            this.UpdateBuiltInConvertTargetUi();
         }
 
         private void UpdateConverterActionLabel()
         {
             bool builtIn = AeroSceneryManager.Instance.Settings.UseBuiltInTtcConverter.GetValueOrDefault(true);
             this.runGeoConvertCheckBox.Text = builtIn ? "Run Built-in converter" : "Run GeoConvert";
+            this.UpdateBuiltInConvertTargetUi();
+        }
+
+        private void UpdateBuiltInConvertTargetUi()
+        {
+            if (this.convertTargetComboBox == null)
+            {
+                return;
+            }
+
+            var settings = AeroSceneryManager.Instance.Settings;
+            bool builtIn = settings.UseBuiltInTtcConverter.GetValueOrDefault(true);
+            this.convertTargetComboBox.Visible = builtIn;
+            this.convertTargetComboBox.Enabled = builtIn && !this.ActionsRunning;
+            this.runGeoConvertCheckBox.AutoSize = !builtIn;
+            if (builtIn)
+            {
+                this.runGeoConvertCheckBox.Width = 168;
+            }
+
+            int target = settings.BuiltInConvertTarget.GetValueOrDefault(0);
+            if (target < 0 || target > 2)
+            {
+                target = 0;
+            }
+
+            if (this.convertTargetComboBox.SelectedIndex != target)
+            {
+                this.convertTargetComboBox.SelectedIndex = target;
+            }
+        }
+
+        private void convertTargetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!this.uiSetFromSettings)
+            {
+                return;
+            }
+
+            int index = this.convertTargetComboBox.SelectedIndex;
+            if (index < 0)
+            {
+                index = 0;
+            }
+
+            AeroSceneryManager.Instance.Settings.BuiltInConvertTarget = index;
+            AeroSceneryManager.Instance.SaveSettings();
         }
 
         private void DownloadersScrollPanel_SizeChanged(object sender, EventArgs e)
@@ -1666,7 +1727,7 @@ namespace AeroScenery
         {
             AeroSceneryManager.Instance.Settings.AllowShiftCorrectionLevel = (int)shiftCorrectionLevel.Value;
 
-            AeroSceneryManager.Instance.SaveSettings(); 
+            AeroSceneryManager.Instance.SaveSettings();
         }
 
         private void generateAFSFilesCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -1680,6 +1741,12 @@ namespace AeroScenery
                 AeroSceneryManager.Instance.Settings.GenerateAIDAndTMCFiles = false;
             }
 
+            AeroSceneryManager.Instance.SaveSettings();
+        }
+
+        private void copySceneryToFsgCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            AeroSceneryManager.Instance.Settings.CopySceneryToFsgWorkingFolder = this.copySceneryToFsgCheckBox.Checked;
             AeroSceneryManager.Instance.SaveSettings();
         }
 
@@ -2524,6 +2591,65 @@ namespace AeroScenery
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Copies ETC2 ttc files from *-geoconvert-ttc-mobile into the FSG Scenery Working Folder.
+        /// Mask tiles are skipped. Zip/rename to .tme is left to the user.
+        /// </summary>
+        public async Task CopySceneryToFsgForGridSquareAsync(AFS2GridSquare afs2GridSquare, bool confirmWithUser)
+        {
+            var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + afs2GridSquare.Name;
+
+            if (Directory.Exists(gridSquareDirectory))
+            {
+                var result = this.sceneryInstaller.ConfirmFsgSceneryCopy(afs2GridSquare, confirmWithUser);
+
+                if (result == DialogResult.Yes)
+                {
+                    var ttcFiles = new List<string>();
+                    var duplicateResult = this.sceneryInstaller.CheckForDuplicateMobileTtcFiles(afs2GridSquare, confirmWithUser, out ttcFiles);
+
+                    if (duplicateResult == null || duplicateResult == DialogResult.OK)
+                    {
+                        if (ttcFiles.Count == 0)
+                        {
+                            log.WarnFormat("No mobile ttc files to copy for grid square {0} and the current image source.", afs2GridSquare.Name);
+
+                            if (confirmWithUser)
+                            {
+                                var noFilesMessageBox = new CustomMessageBox(
+                                    String.Format("No FSG (ETC2) ttc files were found for grid square {0} and the current image source.", afs2GridSquare.Name),
+                                    "AeroScenery",
+                                    MessageBoxIcon.Information);
+                                noFilesMessageBox.ShowDialog();
+                            }
+                        }
+                        else
+                        {
+                            var copyTask = this.sceneryInstaller.CopySceneryToFsgWorkingFolderAsync(afs2GridSquare, ttcFiles);
+                            var fileOperationProgressForm = new FileOperationProgressForm();
+                            fileOperationProgressForm.MessageText = "Copying scenery to FSG Working Folder";
+                            fileOperationProgressForm.Title = "Copying scenery to FSG Working Folder";
+                            fileOperationProgressForm.FileOperationTask = copyTask;
+                            await fileOperationProgressForm.DoTaskAsync();
+                            fileOperationProgressForm = null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                log.WarnFormat("There is no image folder yet for grid square {0}", afs2GridSquare.Name);
+
+                if (confirmWithUser)
+                {
+                    var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", afs2GridSquare.Name),
+                        "AeroScenery",
+                        MessageBoxIcon.Information);
+                    messageBox.ShowDialog();
+                }
+            }
         }
 
         private void openMapToolStripDropDownButton_Click(object sender, EventArgs e)
