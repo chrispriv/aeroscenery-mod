@@ -5,6 +5,15 @@ namespace AeroScenery.Common
 {
     public static class DirectoryHelper
     {
+        public static string DefaultFs4InstallDirectory()
+        {
+            return Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                "Aerofly FS 4",
+                "addons",
+                "scenery") + Path.DirectorySeparatorChar;
+        }
+
         /// <summary>
         /// Gets and checks the existence of the configured directory to install scenery into
         /// </summary>
@@ -67,6 +76,17 @@ namespace AeroScenery.Common
             return afsSceneryInstallDirectory;
         }
 
+        public static string GetWorkingSceneryName(Settings settings)
+        {
+            string sceneryName = (settings.AFSSceneryFolder ?? "myscenery").TrimEnd('\\', '/');
+            if (String.IsNullOrEmpty(sceneryName))
+            {
+                sceneryName = "myscenery";
+            }
+
+            return sceneryName;
+        }
+
         /// <summary>
         /// Images directory for FSG Android copy:
         /// {FsgWorkingDirectory}\fsg_scenery_{name}\fsg_scenery_{name}_images\scenery\images\
@@ -89,11 +109,7 @@ namespace AeroScenery.Common
                 Directory.CreateDirectory(root);
             }
 
-            string sceneryName = (settings.AFSSceneryFolder ?? "myscenery").TrimEnd('\\', '/');
-            if (String.IsNullOrEmpty(sceneryName))
-            {
-                sceneryName = "myscenery";
-            }
+            string sceneryName = GetWorkingSceneryName(settings);
 
             string packRoot = Path.Combine(root, "fsg_scenery_" + sceneryName);
             string imagesPack = Path.Combine(packRoot, "fsg_scenery_" + sceneryName + "_images");

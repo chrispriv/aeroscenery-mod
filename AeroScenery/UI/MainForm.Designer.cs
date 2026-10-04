@@ -35,13 +35,12 @@ namespace AeroScenery
             this.mainMap = new GMap.NET.WindowsForms.GMapControl();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusStripLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStripSceneryLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStripElapsedLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.getSDKToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openUserFolderToolstripButton = new System.Windows.Forms.ToolStripButton();
-            this.openSceneryEditorToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.showAirportsToolstripButton = new System.Windows.Forms.ToolStripButton();
             this.mapTypeToolStripDropDown = new System.Windows.Forms.ToolStripDropDownButton();
@@ -107,9 +106,7 @@ namespace AeroScenery
             this.zoomLevelLabel = new System.Windows.Forms.Label();
             this.zoomLevelTrackBar = new System.Windows.Forms.TrackBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.shiftCorrectionLevel = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
             this.allowShiftCorrectionCheckBox = new System.Windows.Forms.CheckBox();
             this.waterMaskingCheckBox = new System.Windows.Forms.CheckBox();
             this.chooseActionsToRunHelpImage = new System.Windows.Forms.Label();
@@ -219,6 +216,7 @@ namespace AeroScenery
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusStripLabel1,
+            this.statusStripSceneryLabel,
             this.statusStripElapsedLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 839);
             this.statusStrip.Name = "statusStrip";
@@ -230,6 +228,13 @@ namespace AeroScenery
             // 
             this.statusStripLabel1.Name = "statusStripLabel1";
             this.statusStripLabel1.Size = new System.Drawing.Size(0, 17);
+            // 
+            // statusStripSceneryLabel
+            // 
+            this.statusStripSceneryLabel.Name = "statusStripSceneryLabel";
+            this.statusStripSceneryLabel.Size = new System.Drawing.Size(1569, 17);
+            this.statusStripSceneryLabel.Spring = true;
+            this.statusStripSceneryLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // statusStripElapsedLabel
             // 
@@ -243,9 +248,7 @@ namespace AeroScenery
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.settingsButton,
             this.helpToolStripButton,
-            this.getSDKToolStripButton,
             this.openUserFolderToolstripButton,
-            this.openSceneryEditorToolStripButton,
             this.toolStripSeparator4,
             this.showAirportsToolstripButton,
             this.mapTypeToolStripDropDown,
@@ -282,18 +285,6 @@ namespace AeroScenery
             this.helpToolStripButton.ToolTipText = "Open the AeroScenery Community Mod repository on GitHub";
             this.helpToolStripButton.Click += new System.EventHandler(this.helpToolStripButton_Click);
             // 
-            // getSDKToolStripButton
-            // 
-            this.getSDKToolStripButton.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.getSDKToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("getSDKToolStripButton.Image")));
-            this.getSDKToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.getSDKToolStripButton.Name = "getSDKToolStripButton";
-            this.getSDKToolStripButton.Size = new System.Drawing.Size(145, 29);
-            this.getSDKToolStripButton.Text = "Get Aerofly FS2 SDK";
-            this.getSDKToolStripButton.ToolTipText = "IPACS GeoConvert (Aerofly FS2 SDK) is required. Download the SDK, then set its fo" +
-    "lder under Settings";
-            this.getSDKToolStripButton.Click += new System.EventHandler(this.getSDKToolStripButton_Click);
-            // 
             // openUserFolderToolstripButton
             // 
             this.openUserFolderToolstripButton.Image = ((System.Drawing.Image)(resources.GetObject("openUserFolderToolstripButton.Image")));
@@ -303,16 +294,6 @@ namespace AeroScenery
             this.openUserFolderToolstripButton.Text = "Open User Folder";
             this.openUserFolderToolstripButton.ToolTipText = "Open the Aerofly user scenery folder set in Settings";
             this.openUserFolderToolstripButton.Click += new System.EventHandler(this.openUserFolderToolstripButton_Click);
-            // 
-            // openSceneryEditorToolStripButton
-            // 
-            this.openSceneryEditorToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("openSceneryEditorToolStripButton.Image")));
-            this.openSceneryEditorToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.openSceneryEditorToolStripButton.Name = "openSceneryEditorToolStripButton";
-            this.openSceneryEditorToolStripButton.Size = new System.Drawing.Size(134, 29);
-            this.openSceneryEditorToolStripButton.Text = "Open Scenery Editor";
-            this.openSceneryEditorToolStripButton.ToolTipText = "Open the FS2/FS4 Cultivation Editor by Nabeel (web)";
-            this.openSceneryEditorToolStripButton.Click += new System.EventHandler(this.openSceneryEditorToolStripButton_Click);
             // 
             // toolStripSeparator4
             // 
@@ -985,9 +966,7 @@ namespace AeroScenery
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.shiftCorrectionLevel);
-            this.groupBox2.Controls.Add(this.label10);
             this.groupBox2.Controls.Add(this.allowShiftCorrectionCheckBox);
             this.groupBox2.Controls.Add(this.waterMaskingCheckBox);
             this.groupBox2.Controls.Add(this.chooseActionsToRunHelpImage);
@@ -1010,17 +989,6 @@ namespace AeroScenery
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Actions";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Image = ((System.Drawing.Image)(resources.GetObject("label5.Image")));
-            this.label5.Location = new System.Drawing.Point(357, 150);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(16, 17);
-            this.label5.TabIndex = 19;
-            this.label5.Text = "  ";
-            this.label5.Visible = false;
-            // 
             // shiftCorrectionLevel
             // 
             this.shiftCorrectionLevel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -1040,17 +1008,6 @@ namespace AeroScenery
             this.shiftCorrectionLevel.TabIndex = 18;
             this.shiftCorrectionLevel.Visible = false;
             this.shiftCorrectionLevel.ValueChanged += new System.EventHandler(this.shiftCorrectionLevel_ValueChanged);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Image = ((System.Drawing.Image)(resources.GetObject("label10.Image")));
-            this.label10.Location = new System.Drawing.Point(357, 126);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(16, 17);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "  ";
-            this.label10.Visible = false;
             // 
             // allowShiftCorrectionCheckBox
             // 
@@ -1708,7 +1665,6 @@ namespace AeroScenery
         private System.Windows.Forms.Button startStopButton;
         private System.Windows.Forms.CheckBox downloadImageTileCheckBox;
         private System.Windows.Forms.ToolStripButton helpToolStripButton;
-        private System.Windows.Forms.ToolStripButton getSDKToolStripButton;
         private System.Windows.Forms.ProgressBar currentActionProgressBar;
         private System.Windows.Forms.Label parentTaskLabel;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -1758,6 +1714,7 @@ namespace AeroScenery
         private System.Windows.Forms.Label imageSourceHelpImage;
         private System.Windows.Forms.CheckBox shutdownCheckbox;
         private System.Windows.Forms.ToolStripStatusLabel statusStripLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel statusStripSceneryLabel;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
@@ -1793,7 +1750,6 @@ namespace AeroScenery
         private System.Windows.Forms.ToolStripMenuItem openInGoogleEarthToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem googleTerrainMapToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton openUserFolderToolstripButton;
-        private System.Windows.Forms.ToolStripButton openSceneryEditorToolStripButton;
         private System.Windows.Forms.ToolStripButton toolStripSearchTileButton;
         private System.Windows.Forms.CheckBox downloadOsmDataCheckBox;
         private System.Windows.Forms.CheckBox fixMissingTilesCheckBox;
@@ -1816,13 +1772,11 @@ namespace AeroScenery
         private System.Windows.Forms.RadioButton panel3DRadioButtonUDP;
         private System.Windows.Forms.CheckBox waterMaskingCheckBox;
         private System.Windows.Forms.CheckBox allowShiftCorrectionCheckBox;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown shiftCorrectionLevel;
         private System.Windows.Forms.Label runElapsedLabel;
         private System.Windows.Forms.Label stepElapsedLabel;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusStripElapsedLabel;
-        private System.Windows.Forms.Label label5;
     }
 }
 

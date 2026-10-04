@@ -28,7 +28,7 @@ namespace AeroScenery.UI
         private ToolTip converterHelpToolTip;
         private ToolTip sequentialGeoConvertToolTip;
         private const string SdkFolderToolTip =
-            "Aerofly FS2 GeoConvert (Aerofly FS2 SDK) converts stitched images when the SDK converter is selected.\nUse 'Get Aerofly FS2 SDK' in the toolbar for the download.\nSet this to the SDK root that contains the 'aerofly_fs_2_geoconvert\\' folder. Elevation mesh conversion also uses this path.";
+            "Aerofly FS2 GeoConvert converts stitched images when the SDK converter is selected.\nUse the 'Get Aerofly FS2 SDK' link next to that option to download it.\nSet this to aerofly_fs_2_geoconvert.exe (not the SDK root and not only the aerofly_fs_2_geoconvert folder).\nIf you paste a folder path, AeroScenery fills in the executable. Elevation mesh conversion uses the same file.";
         private const string SequentialGeoConvertToolTipText =
             "When several grid squares are selected, run GeoConvert one square after another instead of all at once.\nThis is built into AeroScenery (the old GeoConvert Wrapper EXE is no longer used).\nEnable this if you also want 'Install Scenery' or 'Shut down PC when finished' to wait until every GeoConvert job has ended.";
         private const string BuiltInSequentialToolTipText =
@@ -49,18 +49,16 @@ namespace AeroScenery.UI
             this.converterHelpToolTip.InitialDelay = 500;
             this.converterHelpToolTip.SetToolTip(this.converterThreadsHelpImage, "How many CPU threads the built-in converter may use.\nAutomatic sets half the logical processors so the PC stays usable while a square converts.");
             this.converterHelpToolTip.SetToolTip(this.useBuiltInConverterRadioButton, "Converts TMC files to TTC in this process. No Aerofly SDK GeoConvert is launched.");
-            this.converterHelpToolTip.SetToolTip(this.useSdkGeoConvertRadioButton, "Runs the original Aerofly FS2 GeoConvert from the SDK folder below.");
+            this.converterHelpToolTip.SetToolTip(this.useSdkGeoConvertRadioButton, "Runs aerofly_fs_2_geoconvert.exe from the path below.");
             this.converterHelpToolTip.SetToolTip(this.sdkGeoConvertHelpImage, SdkFolderToolTip);
+            this.converterHelpToolTip.SetToolTip(this.label3, SdkFolderToolTip);
+            this.converterHelpToolTip.SetToolTip(this.afsSDKFolderTextBox, SdkFolderToolTip);
+            this.afsSDKFolderTextBox.Leave += this.afsSDKFolderTextBox_Leave;
 
             ToolTip toolTip2 = new ToolTip();
             toolTip2.IsBalloon = true;
             toolTip2.InitialDelay = 500;
             toolTip2.SetToolTip(this.elevationMapHelpImage, "A free OpenTopography.org API key is required to download elevation data.\nWhen a key is set, 'Download Elevation Data (30m)' appears for the selected area.\nAfter the GeoTIFF images have downloaded, run mesh_conv.bat to convert them with GeoConvert into .tth files for Aerofly.");
-
-            ToolTip toolTip3 = new ToolTip();
-            toolTip3.IsBalloon = true;
-            toolTip3.InitialDelay = 500;
-            toolTip3.SetToolTip(this.conversionForMobileHelpImage, "SDK GeoConvert: creates ##-geoconvert-ttc-mobile and content_converter_config_mobile.tmc under the AFS Working Scenery Folder.\nRun that TMC with Aerofly FS2 Content Converter. This is not the AFS User Folder.\nBuilt-in converter: ignore this checkbox; pick Aerofly FS4 / FSG Android on the main window instead.");
 
             ToolTip toolTip6 = new ToolTip();
             toolTip6.IsBalloon = true;
@@ -93,7 +91,8 @@ namespace AeroScenery.UI
 
             settings.WorkingDirectory = pathWithTrailingDirectorySeparatorChar(this.workingFolderTextBox.Text);
             settings.AeroSceneryDBDirectory = pathWithTrailingDirectorySeparatorChar(this.aeroSceneryDatabaseFolderTextBox.Text);
-            settings.AFS2SDKDirectory = pathWithTrailingDirectorySeparatorChar(this.afsSDKFolderTextBox.Text);
+            settings.AFS2SDKDirectory = GeoConvertSdkPath.NormalizeToExe(this.afsSDKFolderTextBox.Text);
+            this.afsSDKFolderTextBox.Text = settings.AFS2SDKDirectory;
             settings.AFS2UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs2UserFolderTextBox.Text);
             settings.FsgWorkingDirectory = pathWithTrailingDirectorySeparatorChar(this.fsgWorkingFolderTextBox.Text);
             //#MOD
@@ -115,15 +114,6 @@ namespace AeroScenery.UI
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace(":", "");
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace(";", "");
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace("__", "_");
-
-            if (settings.AFS2SDKDirectory.Contains("aerofly_fs_2_geoconvert"))
-            {
-                settings.AFS2SDKDirectory = settings.AFS2SDKDirectory.Replace("aerofly_fs_2_geoconvert.exe", "");
-                settings.AFS2SDKDirectory = settings.AFS2SDKDirectory.Replace("aerofly_fs_2_geoconvert", "");
-                settings.AFS2SDKDirectory = settings.AFS2SDKDirectory.Replace("\\\\", "");
-                settings.AFS2SDKDirectory = pathWithTrailingDirectorySeparatorChar(settings.AFS2SDKDirectory);
-            }
-
 
             settings.UserAgent = this.userAgentTextBox.Text;
 
@@ -217,8 +207,6 @@ namespace AeroScenery.UI
             //#MOD_k
             settings.CartoDBApiKey = this.cartodbKeyTextBox.Text.Trim();
 
-            //#MOD
-            settings.CreateAddForMobile = createAddForMobileCheckBox.Checked;
             settings.DownloadOSMDataEnable = enableDownloadOsmDataCheckBox.Checked;
             if (settings.DownloadOSMDataEnable == false)
             {
@@ -288,7 +276,7 @@ namespace AeroScenery.UI
 
             this.workingFolderTextBox.Text = settings.WorkingDirectory;
             this.aeroSceneryDatabaseFolderTextBox.Text = settings.AeroSceneryDBDirectory;
-            this.afsSDKFolderTextBox.Text = settings.AFS2SDKDirectory;
+            this.afsSDKFolderTextBox.Text = GeoConvertSdkPath.NormalizeToExe(settings.AFS2SDKDirectory);
             this.afs2UserFolderTextBox.Text = settings.AFS2UserDirectory;
             this.fsgWorkingFolderTextBox.Text = settings.FsgWorkingDirectory;
             //#MOD
@@ -358,8 +346,6 @@ namespace AeroScenery.UI
             //#MOD_k
             this.cartodbKeyTextBox.Text = settings.CartoDBApiKey;
 
-            //#MOD
-            this.createAddForMobileCheckBox.Checked = settings.CreateAddForMobile.Value;
             this.enableDownloadOsmDataCheckBox.Checked = settings.DownloadOSMDataEnable.Value;
 
             this.shrinkTMCGridSquaresTextBox.Text = Convert.ToString(settings.ShrinkTMCGridSquareCoords, CultureInfo.InvariantCulture);
@@ -446,11 +432,6 @@ namespace AeroScenery.UI
 
             this.useGeoConvertWrapperCheckBox.Enabled = !builtIn;
             this.multipleConcurrentSquaresWarningCheckBox.Enabled = !builtIn;
-            this.createAddForMobileCheckBox.Enabled = !builtIn;
-            if (builtIn)
-            {
-                this.createAddForMobileCheckBox.Checked = false;
-            }
 
             if (builtIn)
             {
@@ -554,18 +535,39 @@ namespace AeroScenery.UI
 
         private void sdkButton_Click(object sender, EventArgs e)
         {
-            var settings = AeroSceneryManager.Instance.Settings;
-            //#MOD
-            this.folderBrowserDialog1.SelectedPath = this.afsSDKFolderTextBox.Text;
-
-            DialogResult result = this.folderBrowserDialog1.ShowDialog();
-            if (result == DialogResult.OK)
+            using (var dialog = new OpenFileDialog())
             {
-                this.afsSDKFolderTextBox.Text = folderBrowserDialog1.SelectedPath;
-                //#FIX_f (else Cancel would not work)
-                //settings.AFS2SDKDirectory = this.afsSDKFolderTextBox.Text;
-            }
+                dialog.Title = "Select aerofly_fs_2_geoconvert.exe";
+                dialog.Filter = "Aerofly FS2 GeoConvert|aerofly_fs_2_geoconvert.exe|Executable files (*.exe)|*.exe|All files (*.*)|*.*";
+                dialog.CheckFileExists = true;
+                dialog.CheckPathExists = true;
 
+                string current = GeoConvertSdkPath.NormalizeToExe(this.afsSDKFolderTextBox.Text);
+                if (File.Exists(current))
+                {
+                    dialog.InitialDirectory = Path.GetDirectoryName(current);
+                    dialog.FileName = Path.GetFileName(current);
+                }
+                else if (Directory.Exists(this.afsSDKFolderTextBox.Text))
+                {
+                    dialog.InitialDirectory = this.afsSDKFolderTextBox.Text;
+                    dialog.FileName = GeoConvertSdkPath.ExeFileName;
+                }
+                else
+                {
+                    dialog.FileName = GeoConvertSdkPath.ExeFileName;
+                }
+
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    this.afsSDKFolderTextBox.Text = GeoConvertSdkPath.NormalizeToExe(dialog.FileName);
+                }
+            }
+        }
+
+        private void afsSDKFolderTextBox_Leave(object sender, EventArgs e)
+        {
+            this.afsSDKFolderTextBox.Text = GeoConvertSdkPath.NormalizeToExe(this.afsSDKFolderTextBox.Text);
         }
 
         private void afsUserFolderButton_Click(object sender, EventArgs e)
@@ -1021,6 +1023,11 @@ namespace AeroScenery.UI
         private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://carto.com/basemaps/apikey/");
+        }
+
+        private void getAeroflySdkLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.aerofly-sim.de/aerofly_fs_2_sdk/");
         }
 
         //#MOD_k

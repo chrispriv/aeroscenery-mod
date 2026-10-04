@@ -199,6 +199,7 @@
     <Compile Include="AFS2\CoastlineField.cs" />
     <Compile Include="AFS2\ZlibCodec.cs" />
     <Compile Include="AFS2\GeoConvertManager.cs" />
+    <Compile Include="AFS2\GeoConvertSdkPath.cs" />
     <Compile Include="AFS2\GridSquareNameFixer.cs" />
     <Compile Include="AFS2\IScanlineSource.cs" />
     <Compile Include="AFS2\SourceImage.cs" />

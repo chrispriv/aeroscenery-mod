@@ -678,28 +678,20 @@ namespace AeroScenery
 
                     }
 
-                    //#MOD
-                    // Create additional Working Folder incl. tmc & bat file for conversion of images to ttc for mobile (to be run manually after GeoConvert process)
-                    // SDK GeoConvert only: TMC for the FS2 Content Converter. Built-in writes
-                    // ETC2 into ##-geoconvert-ttc-mobile later and must not emit this TMC.
+                    // SDK GeoConvert: TMC for the FS2 Content Converter plus ##-geoconvert-ttc-mobile.
+                    // Built-in writes ETC2 into that folder later and must not emit this TMC.
                     if (!UseBuiltInTtcConverter && this.Settings.GenerateAIDAndTMCFiles.Value
-                        && this.settings.CreateAddForMobile.Value && this.mainForm.ActionsRunning)
+                        && this.mainForm.ActionsRunning)
                     {
                         var afsAddForMobileWorkingDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + @"\" + this.settings.ZoomLevel + "-geoconvert-ttc-mobile";
-     
-                        if (!Directory.Exists(afsAddForMobileWorkingDirectory))
-                        {
-                            Directory.CreateDirectory(afsAddForMobileWorkingDirectory);
+                        Directory.CreateDirectory(afsAddForMobileWorkingDirectory);
 
-                            //#MOD_k
-                            string inputFolderImages = $"./{this.settings.ZoomLevel}-geoconvert-raw/";
-                            string outputFolderTTC = $"./{this.settings.ZoomLevel}-geoconvert-ttc-mobile/";
+                        string inputFolderImages = $"./{this.settings.ZoomLevel}-geoconvert-raw/";
+                        string outputFolderTTC = $"./{this.settings.ZoomLevel}-geoconvert-ttc-mobile/";
 
-                            var textTMCImages = new TMCImagesFile(inputFolderImages, outputFolderTTC);
-                            string outputFilePath = $@"{GetTileDownloadDirectory(afsGridSquareDirectory)}\content_converter_config_mobile.tmc";
-                            File.WriteAllText(outputFilePath, textTMCImages.GeneratedContent);
-
-                        }
+                        var textTMCImages = new TMCImagesFile(inputFolderImages, outputFolderTTC);
+                        string outputFilePath = $@"{GetTileDownloadDirectory(afsGridSquareDirectory)}\content_converter_config_mobile.tmc";
+                        File.WriteAllText(outputFilePath, textTMCImages.GeneratedContent);
                     }
 
                     //#MOD_k
@@ -820,9 +812,10 @@ namespace AeroScenery
                         }
 
                         //...
-                        if (String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
+                        if (String.IsNullOrEmpty(this.settings.AFS2SDKDirectory)
+                            || !File.Exists(GeoConvertSdkPath.NormalizeToExe(this.settings.AFS2SDKDirectory)))
                         {
-                            var messageBox = new CustomMessageBox("Please set the location of the Aerofly SDK in Settings to be able to use Geoconvert for converting Meshes",
+                            var messageBox = new CustomMessageBox("Please set the path to aerofly_fs_2_geoconvert.exe in Settings to convert elevation meshes with GeoConvert.",
                                 "AeroScenery",
                                 MessageBoxIcon.Warning);
 
@@ -830,21 +823,25 @@ namespace AeroScenery
                         }
                         else
                         {
+                            string geoConvertDirectory = GeoConvertSdkPath.GetDirectory(this.settings.AFS2SDKDirectory);
+                            string shaderSource = Path.Combine(geoConvertDirectory, "shader_dx11");
+                            string textureSource = Path.Combine(geoConvertDirectory, "texture");
+
                             // Creates and Copy subfolders 'shader_dx11\' & 'texures\' from the GeoConvert, else GeoCDonvert wil not work outside of the installation-path 
                             if (!Directory.Exists(elevationDirectory + "/shader_dx11"))
                             {
                                 Directory.CreateDirectory(elevationDirectory + "/shader_dx11");
-                                foreach (string newPath in Directory.GetFiles(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/shader_dx11", "*.*", SearchOption.AllDirectories))
+                                foreach (string newPath in Directory.GetFiles(shaderSource, "*.*", SearchOption.AllDirectories))
                                 {
-                                    File.Copy(newPath, newPath.Replace(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/shader_dx11", elevationDirectory + "/shader_dx11"), true);
+                                    File.Copy(newPath, newPath.Replace(shaderSource, elevationDirectory + "/shader_dx11"), true);
                                 }
                             }
                             if (!Directory.Exists(outputDirectory + "/texture"))
                             {
                                 Directory.CreateDirectory(elevationDirectory + "/texture");
-                                foreach (string newPath in Directory.GetFiles(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/texture", "*.*", SearchOption.AllDirectories))
+                                foreach (string newPath in Directory.GetFiles(textureSource, "*.*", SearchOption.AllDirectories))
                                 {
-                                    File.Copy(newPath, newPath.Replace(Settings.AFS2SDKDirectory + "aerofly_fs_2_geoconvert/texture", elevationDirectory + "/texture"), true);
+                                    File.Copy(newPath, newPath.Replace(textureSource, elevationDirectory + "/texture"), true);
                                 }
                             }
                         }
@@ -893,8 +890,8 @@ namespace AeroScenery
                         // Creates *.bat File for starting GeoConvert-Process (elevation data processing)
                         using (StreamWriter textBatConvert = new StreamWriter($@"{elevationDirectory}/mesh_conv.bat"))
                         {
-                            //text.WriteLine($@"start /D {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\ aerofly_fs_2_geoconvert.exe {Settings.WorkingDirectory}map_00_area_data/mesh_conv.tmc");
-                            textBatConvert.WriteLine($@"start {Settings.AFS2SDKDirectory}aerofly_fs_2_geoconvert\aerofly_fs_2_geoconvert.exe mesh_conv.tmc");
+                            string geoConvertExe = GeoConvertSdkPath.NormalizeToExe(Settings.AFS2SDKDirectory);
+                            textBatConvert.WriteLine("start \"\" \"" + geoConvertExe + "\" mesh_conv.tmc");
                         }
 
                         // Creates *.tmc File needed for the GeoConvert-Process (depending of meshresolution and gridSquareLevel)
@@ -966,8 +963,8 @@ namespace AeroScenery
                 */
                 if (this.settings.RunGeoConvert.Value && this.mainForm.ActionsRunning)
                 {
-                    // Always wait. If this is fire-and-forget, ActionsComplete() stops the elapsed
-                    // clocks while the converter is still running.
+                    // SDK GeoConvert without sequential/install: start the EXE and return so Start
+                    // is available again. Sequential mode and Install/FSG copy wait for completion.
                     await this.StartGeoConvertProcessAsync();
                 }
 
@@ -990,12 +987,14 @@ namespace AeroScenery
                 // Install Scenery
                 //#MOD_k
                 // Install Scenery
-                if (this.settings.InstallScenery.Value && this.mainForm.ActionsRunning)
+                if (this.mainForm.InstallSceneryForFs4IsApplicable()
+                    && this.settings.InstallScenery.Value && this.mainForm.ActionsRunning)
                 {
                     await this.InstallSceneryAsync();
                 }
 
-                if (this.settings.CopySceneryToFsgWorkingFolder.GetValueOrDefault(false)
+                if (this.mainForm.CopySceneryToFsgIsApplicable()
+                    && this.settings.CopySceneryToFsgWorkingFolder.GetValueOrDefault(false)
                     && this.mainForm.ActionsRunning)
                 {
                     await this.CopySceneryToFsgWorkingFolderAsync();
@@ -1040,7 +1039,7 @@ namespace AeroScenery
             {
                 if (!UseBuiltInTtcConverter && String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
                 {
-                    var messageBox = new CustomMessageBox("Please set the location of the Aerofly SDK in Settings before running Geoconvert",
+                    var messageBox = new CustomMessageBox("Please set the path to aerofly_fs_2_geoconvert.exe in Settings before running GeoConvert",
                         "AeroScenery",
                         MessageBoxIcon.Warning);
 
@@ -1096,8 +1095,8 @@ namespace AeroScenery
                 ? "Starting built-in TTC converter"
                 : "Starting GeoConvert Process");
 
-            // Without the wrapper the grid squares convert in parallel, so their processes are
-            // collected here and waited for once they have all been started
+            // Without sequential processing the grid squares convert in parallel; processes are
+            // collected here and waited on only when a later step needs the TTC files.
             var pendingRuns = new List<GeoConvertRun>();
 
             int i = 0;
@@ -1181,10 +1180,28 @@ namespace AeroScenery
                 }
             }
 
-            if (pendingRuns.Count > 0)
+            if (pendingRuns.Count > 0 && ShouldWaitForExternalGeoConvert())
             {
                 await this.geoConvertManager.WaitForRunsAsync(pendingRuns, this.mainForm);
             }
+            else if (pendingRuns.Count > 0)
+            {
+                this.mainForm.UpdateChildTaskLabel("GeoConvert started");
+            }
+        }
+
+        private bool ShouldWaitForExternalGeoConvert()
+        {
+            if (UseBuiltInTtcConverter)
+            {
+                return true;
+            }
+
+            return this.settings.GeoConvertUseWrapper.GetValueOrDefault(false)
+                || (this.mainForm.InstallSceneryForFs4IsApplicable()
+                    && this.settings.InstallScenery.GetValueOrDefault(false))
+                || (this.mainForm.CopySceneryToFsgIsApplicable()
+                    && this.settings.CopySceneryToFsgWorkingFolder.GetValueOrDefault(false));
         }
 
         /*
@@ -1194,7 +1211,7 @@ namespace AeroScenery
             {
                 if (String.IsNullOrEmpty(this.settings.AFS2SDKDirectory))
                 {
-                    var messageBox = new CustomMessageBox("Please set the location of the Aerofly SDK in Settings before running Geoconvert",
+                    var messageBox = new CustomMessageBox("Please set the path to aerofly_fs_2_geoconvert.exe in Settings before running GeoConvert",
                         "AeroScenery",
                         MessageBoxIcon.Warning);
 

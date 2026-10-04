@@ -260,7 +260,7 @@ namespace AeroScenery.AFS2
                             }
                             // Keep the colour tile from extending far past the mask: same cutoff
                             // as _mask.ttc when a mask is being built.
-                            if (maskAlpha != null && srcAlpha <= TtcTileWriter.MaskWhiteMinAlpha)
+                            if (maskAlpha != null && srcAlpha <= TtcTileWriter.MaskColorMinAlpha)
                             {
                                 continue;
                             }

@@ -524,6 +524,7 @@ namespace AeroScenery
             this.UpdateDownloadProgressBarsFromSettings();
 
             this.UpdateConverterActionLabel();
+            this.UpdateWorkingSceneryStatus();
 
             this.uiSetFromSettings = true;
 
@@ -594,8 +595,8 @@ namespace AeroScenery
             this.generateAFSFilesCheckBox.Enabled = true;
             this.runGeoConvertCheckBox.Enabled = true;
             //#MOD_k
-            this.installSceneryIntoAFSCheckBox.Enabled = true;
-            this.copySceneryToFsgCheckBox.Enabled = true;
+            this.installSceneryIntoAFSCheckBox.Enabled = this.InstallSceneryForFs4IsApplicable();
+            this.copySceneryToFsgCheckBox.Enabled = this.CopySceneryToFsgIsApplicable();
 
             //#MOD
             this.fixMissingTilesCheckBox.Enabled = true;
@@ -709,8 +710,8 @@ namespace AeroScenery
                 this.fixMissingTilesCheckBox.Enabled = true;
                 this.downloadOsmDataCheckBox.Enabled = true;
                 this.downloadElevationDataCheckBox.Enabled = true;
-                this.installSceneryIntoAFSCheckBox.Enabled = true;
-                this.copySceneryToFsgCheckBox.Enabled = true;
+                this.installSceneryIntoAFSCheckBox.Enabled = this.InstallSceneryForFs4IsApplicable();
+                this.copySceneryToFsgCheckBox.Enabled = this.CopySceneryToFsgIsApplicable();
                 //#MOD_k
                 this.waterMaskingCheckBox.Enabled = true;
                 this.allowShiftCorrectionCheckBox.Enabled = true;
@@ -938,6 +939,19 @@ namespace AeroScenery
                 this.startStopButton.Enabled = false;
             }
 
+            this.UpdateWorkingSceneryStatus();
+        }
+
+        private void UpdateWorkingSceneryStatus()
+        {
+            if (this.statusStripSceneryLabel == null)
+            {
+                return;
+            }
+
+            var settings = AeroSceneryManager.Instance.Settings;
+            this.statusStripSceneryLabel.Text = String.Format("/ Working scenery: {0}",
+                DirectoryHelper.GetWorkingSceneryName(settings));
         }
 
         private void UpdateToolStrip()
@@ -1109,7 +1123,7 @@ namespace AeroScenery
             this.UpdateDownloadProgressBarsFromSettings();
             this.UpdateShowAirportsToolbar();
             this.UpdateConverterActionLabel();
-            this.UpdateBuiltInConvertTargetUi();
+            this.UpdateWorkingSceneryStatus();
         }
 
         private void UpdateConverterActionLabel()
@@ -1146,6 +1160,76 @@ namespace AeroScenery
             {
                 this.convertTargetComboBox.SelectedIndex = target;
             }
+
+            this.UpdateCopySceneryToFsgVisibility();
+            this.UpdateInstallSceneryForFs4Visibility();
+        }
+
+        public bool CopySceneryToFsgIsApplicable()
+        {
+            var settings = AeroSceneryManager.Instance.Settings;
+            if (!settings.UseBuiltInTtcConverter.GetValueOrDefault(true))
+            {
+                return false;
+            }
+
+            int target = settings.BuiltInConvertTarget.GetValueOrDefault(0);
+            return target == 1 || target == 2;
+        }
+
+        private void UpdateCopySceneryToFsgVisibility()
+        {
+            if (this.copySceneryToFsgCheckBox == null)
+            {
+                return;
+            }
+
+            bool show = this.CopySceneryToFsgIsApplicable();
+            this.copySceneryToFsgCheckBox.Visible = show;
+            if (!show)
+            {
+                return;
+            }
+
+            if (!this.ActionsRunning
+                && AeroSceneryManager.Instance.Settings.ActionSet == ActionSet.Custom)
+            {
+                this.copySceneryToFsgCheckBox.Enabled = true;
+            }
+        }
+
+        public bool InstallSceneryForFs4IsApplicable()
+        {
+            var settings = AeroSceneryManager.Instance.Settings;
+            if (!settings.UseBuiltInTtcConverter.GetValueOrDefault(true))
+            {
+                return true;
+            }
+
+            int target = settings.BuiltInConvertTarget.GetValueOrDefault(0);
+            return target != 1;
+        }
+
+        private void UpdateInstallSceneryForFs4Visibility()
+        {
+            if (this.installSceneryIntoAFSCheckBox == null)
+            {
+                return;
+            }
+
+            bool show = this.InstallSceneryForFs4IsApplicable();
+            this.installSceneryIntoAFSCheckBox.Visible = show;
+            this.UpdateShutdownComputerWhenDoneState();
+            if (!show)
+            {
+                return;
+            }
+
+            if (!this.ActionsRunning
+                && AeroSceneryManager.Instance.Settings.ActionSet == ActionSet.Custom)
+            {
+                this.installSceneryIntoAFSCheckBox.Enabled = true;
+            }
         }
 
         private void convertTargetComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1163,6 +1247,8 @@ namespace AeroScenery
 
             AeroSceneryManager.Instance.Settings.BuiltInConvertTarget = index;
             AeroSceneryManager.Instance.SaveSettings();
+            this.UpdateCopySceneryToFsgVisibility();
+            this.UpdateInstallSceneryForFs4Visibility();
         }
 
         private void DownloadersScrollPanel_SizeChanged(object sender, EventArgs e)
@@ -1787,6 +1873,7 @@ namespace AeroScenery
         {
             bool allowed =
                 this.runGeoConvertCheckBox.Checked &&
+                this.InstallSceneryForFs4IsApplicable() &&
                 this.installSceneryIntoAFSCheckBox.Checked;
 
             this.shutdownCheckbox.Enabled = allowed;
@@ -1828,14 +1915,6 @@ namespace AeroScenery
         private void helpToolStripButton_Click(object sender, EventArgs e)
         {
             var url = "https://github.com/chrispriv/aeroscenery-mod";
-            System.Diagnostics.Process.Start(url);
-        }
-
-        private void getSDKToolStripButton_Click(object sender, EventArgs e)
-        {
-            //#MOD
-            //var url = "https://www.aerofly.com/community/filebase/index.php?file/2-sdk-tools/";
-            var url = "https://www.aerofly-sim.de/aerofly_fs_2_sdk/";
             System.Diagnostics.Process.Start(url);
         }
 
@@ -2691,14 +2770,6 @@ namespace AeroScenery
                     messageBox.ShowDialog();
                 }
             }
-        }
-
-        private void openSceneryEditorToolStripButton_Click(object sender, EventArgs e)
-        {
-            var afs2EditorUrl = "https://afs2-editor.nabeelamjad.co.uk/";
-
-            System.Diagnostics.Process.Start(afs2EditorUrl);
-
         }
 
         private void toolStripSearchTileButton_Click(object sender, EventArgs e)

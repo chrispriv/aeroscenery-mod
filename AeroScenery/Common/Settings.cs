@@ -16,6 +16,9 @@ namespace AeroScenery.Common
             this.OrthophotoSourceSettings = new OrthophotoSourceSettings();
         }
 
+        /// <summary>
+        /// Path to aerofly_fs_2_geoconvert.exe. Older settings may still hold the SDK root.
+        /// </summary>
         public string AFS2SDKDirectory { get; set; }
 
         public string AFS2Directory { get; set; }
@@ -155,9 +158,6 @@ namespace AeroScenery.Common
         public bool? GridSquareNamesFixed { get; set; }
 
         public OrthophotoSourceSettings OrthophotoSourceSettings { get; set; }
-
-        //#MOD
-        public bool? CreateAddForMobile { get; set; }
 
     }
 }

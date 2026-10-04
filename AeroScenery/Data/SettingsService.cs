@@ -199,9 +199,6 @@ namespace AeroScenery.Data
             //#MOD
             log.Info(String.Format("RemoveAlphaChannelAdjustment: {0}", settings.RemoveAlphaChannelAdjustment));
 
-            //#MOD
-            log.Info(String.Format("CreateAddForMobile: {0}", settings.CreateAddForMobile));
-
         }
 
         private void SetDefaultSettingsWhereNull(Settings settings)
@@ -328,9 +325,6 @@ namespace AeroScenery.Data
             if (settings.UseBuiltInTtcConverter == null)
                 settings.UseBuiltInTtcConverter = true;
 
-            if (settings.UseBuiltInTtcConverter == true)
-                settings.CreateAddForMobile = false;
-
             if (settings.ConverterThreads == null || settings.ConverterThreads < 1)
                 settings.ConverterThreads = TtcConverter.DefaultThreads();
 
@@ -392,8 +386,8 @@ namespace AeroScenery.Data
             if (settings.ShrinkTMCGridSquareCoords == null)
                 settings.ShrinkTMCGridSquareCoords = 0.01;
 
-            if (settings.AFS2UserDirectory == null)
-                settings.AFS2UserDirectory = "";
+            if (string.IsNullOrEmpty(settings.AFS2UserDirectory))
+                settings.AFS2UserDirectory = DirectoryHelper.DefaultFs4InstallDirectory();
 
             if (settings.FsgWorkingDirectory == null)
                 settings.FsgWorkingDirectory = "";
@@ -453,10 +447,6 @@ namespace AeroScenery.Data
 
             if (settings.DownloadElevationData == null)
                 settings.DownloadElevationData = false;
-
-            //#MOD
-            if (settings.CreateAddForMobile == null)
-                settings.CreateAddForMobile = false;
 
             //#MOD_k
             if (settings.WaterMaskingEnable == null)
@@ -528,16 +518,23 @@ namespace AeroScenery.Data
                     messageBox.ShowDialog();
                 }
 
-                // If the SDK directory isn't blank but doesn't exist show a warning
-                if (!string.IsNullOrEmpty(settings.AFS2SDKDirectory) && !Directory.Exists(settings.AFS2SDKDirectory))
+                if (!string.IsNullOrEmpty(settings.AFS2SDKDirectory))
                 {
-                    settings.AFS2SDKDirectory = "";
+                    string geoConvertExe = GeoConvertSdkPath.NormalizeToExe(settings.AFS2SDKDirectory);
+                    if (!File.Exists(geoConvertExe))
+                    {
+                        settings.AFS2SDKDirectory = "";
 
-                    var messageBox = new CustomMessageBox("The configured Aerofly FS2 SDK directory does not exist. It will be reset as blank.",
-                        "AeroScenery",
-                        MessageBoxIcon.Warning);
+                        var messageBox = new CustomMessageBox("The configured aerofly_fs_2_geoconvert.exe path does not exist. It will be reset as blank.",
+                            "AeroScenery",
+                            MessageBoxIcon.Warning);
 
-                    messageBox.ShowDialog();
+                        messageBox.ShowDialog();
+                    }
+                    else
+                    {
+                        settings.AFS2SDKDirectory = geoConvertExe;
+                    }
                 }
 
                 this.SaveSettings(settings);

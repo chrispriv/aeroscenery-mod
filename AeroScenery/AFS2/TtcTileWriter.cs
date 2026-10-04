@@ -20,16 +20,22 @@ namespace AeroScenery.AFS2
         public const int MaskSize = 512;
 
         /// <summary>
-        /// Alpha at or below this is black on the mask (and omitted from the colour tile when
-        /// a mask is built). 192 matches a larger GeoConvert hole than 128 did.
+        /// Alpha at or below this is black on the mask. Colour tiles use a lower cutoff so a
+        /// little extra source imagery remains in the fade and FS4 does not show a black rim.
         /// </summary>
         public const int MaskWhiteMinAlpha = 192;
 
         /// <summary>
-        /// Trial: average this many texels on a side at the centre of each 4x4 (GeoConvert is
-        /// still 512, so the cell stays 4 source pixels). 2 is sharper than a full 4x4 box.
+        /// When a mask is built, colour pixels at or below this are omitted. Must stay below
+        /// MaskWhiteMinAlpha so the DXT1 fade is slightly wider than the white mask.
         /// </summary>
-        public const int MaskAverageBlock = 2;
+        public const int MaskColorMinAlpha = 128;
+
+        /// <summary>
+        /// Average this many texels on a side in each 4x4 source cell (mask is 512 from 2048).
+        /// 4 is a full box; 2 was a centred subset.
+        /// </summary>
+        public const int MaskAverageBlock = 4;
 
         /// <summary>
         /// Writes a tile and returns the file names produced, which is empty when no source
@@ -168,8 +174,8 @@ namespace AeroScenery.AFS2
         }
 
         /// <summary>
-        /// 512 R8 mask: average a centred 2x2 inside each 4x4 cell, then threshold at
-        /// MaskWhiteMinAlpha. A full 4x4 box blurred the edge and left a wide white buffer.
+        /// 512 R8 mask: average MaskAverageBlock x MaskAverageBlock inside each 4x4 cell,
+        /// then threshold at MaskWhiteMinAlpha.
         /// </summary>
         private static byte[] BuildMask(bool[] covered, byte[] maskAlpha)
         {

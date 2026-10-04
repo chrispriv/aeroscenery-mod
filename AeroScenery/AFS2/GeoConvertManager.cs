@@ -125,34 +125,32 @@ namespace AeroScenery.AFS2
                     tmcFiles.Count);
             }
 
+            string geoconvertFilename = GeoConvertSdkPath.NormalizeToExe(
+                AeroSceneryManager.Instance.Settings.AFS2SDKDirectory);
+            string geoconvertPath = GeoConvertSdkPath.GetDirectory(
+                AeroSceneryManager.Instance.Settings.AFS2SDKDirectory);
+
+            if (!File.Exists(geoconvertFilename))
+            {
+                log.Error(String.Format(
+                    "Could not find GeoConvert in {0}",
+                    geoconvertFilename));
+
+                var messageBox = new CustomMessageBox(
+                    String.Format(
+                        "Could not find GeoConvert at {0} \n\n" +
+                        "Set the path to aerofly_fs_2_geoconvert.exe under Settings, GeoConvert tab.",
+                        geoconvertFilename),
+                    "AeroScenery",
+                    MessageBoxIcon.Error);
+
+                messageBox.ShowDialog();
+
+                return pendingRuns;
+            }
+
             foreach (string tmcFilename in tmcFiles)
             {
-                string geoconvertPath = String.Format(
-                    "{0}aerofly_fs_2_geoconvert",
-                    AeroSceneryManager.Instance.Settings.AFS2SDKDirectory);
-
-                string geoconvertFilename = String.Format(
-                    "{0}\\aerofly_fs_2_geoconvert.exe",
-                    geoconvertPath);
-
-                if (!File.Exists(geoconvertFilename))
-                {
-                    log.Error(String.Format(
-                        "Could not find GeoConvert in {0}",
-                        geoconvertFilename));
-
-                    var messageBox = new CustomMessageBox(
-                        String.Format(
-                            "Could not find GeoConvert in {0} \n\n" +
-                            "Please check the path of the Aerofly FS2 SDK containing the GeoConvert App under Settings.",
-                            geoconvertFilename),
-                        "AeroScenery",
-                        MessageBoxIcon.Error);
-
-                    messageBox.ShowDialog();
-
-                    continue;
-                }
 
                 // GeoConvert itself is now always started directly.
                 // The external GeoConvertWrapper is no longer required.

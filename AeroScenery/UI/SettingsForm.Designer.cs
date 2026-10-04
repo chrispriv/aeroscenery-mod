@@ -75,6 +75,7 @@
             this.converterThreadsInfoLabel = new System.Windows.Forms.Label();
             this.converterThreadsLabel = new System.Windows.Forms.Label();
             this.useSdkGeoConvertRadioButton = new System.Windows.Forms.RadioButton();
+            this.getAeroflySdkLinkLabel = new System.Windows.Forms.LinkLabel();
             this.useBuiltInConverterRadioButton = new System.Windows.Forms.RadioButton();
             this.converterModeLabel = new System.Windows.Forms.Label();
             this.AllowShiftCorrectionEnabledCheckBox = new System.Windows.Forms.CheckBox();
@@ -100,14 +101,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox12 = new System.Windows.Forms.GroupBox();
-            this.mobileWorkingFolderNoteLabel = new System.Windows.Forms.Label();
-            this.conversionForMobileHelpImage = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label51 = new System.Windows.Forms.Label();
-            this.createAddForMobileCheckBox = new System.Windows.Forms.CheckBox();
-            this.label52 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label65 = new System.Windows.Forms.Label();
             this.waterReplaceThresholdTextBox = new System.Windows.Forms.TextBox();
@@ -188,7 +181,6 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox12.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.waterReplaceThresholdSlider)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.waterFadeThresholdSlider)).BeginInit();
@@ -411,7 +403,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(105, 17);
             this.label3.TabIndex = 4;
-            this.label3.Text = "AFS2 SDK Folder";
+            this.label3.Text = "GeoConvert EXE";
             // 
             // groupBox2
             // 
@@ -637,6 +629,7 @@
             this.groupBox4.Controls.Add(this.converterThreadsAutoButton);
             this.groupBox4.Controls.Add(this.converterThreadsInfoLabel);
             this.groupBox4.Controls.Add(this.converterThreadsLabel);
+            this.groupBox4.Controls.Add(this.getAeroflySdkLinkLabel);
             this.groupBox4.Controls.Add(this.useSdkGeoConvertRadioButton);
             this.groupBox4.Controls.Add(this.useBuiltInConverterRadioButton);
             this.groupBox4.Controls.Add(this.converterModeLabel);
@@ -735,6 +728,17 @@
             this.useSdkGeoConvertRadioButton.Text = "Aerofly FS2 GeoConvert (SDK)";
             this.useSdkGeoConvertRadioButton.UseVisualStyleBackColor = true;
             this.useSdkGeoConvertRadioButton.CheckedChanged += new System.EventHandler(this.ConverterModeRadioButton_CheckedChanged);
+            // 
+            // getAeroflySdkLinkLabel
+            // 
+            this.getAeroflySdkLinkLabel.AutoSize = true;
+            this.getAeroflySdkLinkLabel.Location = new System.Drawing.Point(430, 54);
+            this.getAeroflySdkLinkLabel.Name = "getAeroflySdkLinkLabel";
+            this.getAeroflySdkLinkLabel.Size = new System.Drawing.Size(145, 17);
+            this.getAeroflySdkLinkLabel.TabIndex = 26;
+            this.getAeroflySdkLinkLabel.TabStop = true;
+            this.getAeroflySdkLinkLabel.Text = "Get Aerofly FS2 SDK";
+            this.getAeroflySdkLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.getAeroflySdkLinkLabel_LinkClicked);
             // 
             // useBuiltInConverterRadioButton
             // 
@@ -989,7 +993,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.groupBox12);
             this.tabPage2.Controls.Add(this.groupBox4);
             this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Name = "tabPage2";
@@ -998,91 +1001,6 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "GeoConvert";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // groupBox12
-            // 
-            this.groupBox12.Controls.Add(this.mobileWorkingFolderNoteLabel);
-            this.groupBox12.Controls.Add(this.conversionForMobileHelpImage);
-            this.groupBox12.Controls.Add(this.label55);
-            this.groupBox12.Controls.Add(this.label53);
-            this.groupBox12.Controls.Add(this.label51);
-            this.groupBox12.Controls.Add(this.createAddForMobileCheckBox);
-            this.groupBox12.Controls.Add(this.label52);
-            this.groupBox12.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox12.Location = new System.Drawing.Point(14, 348);
-            this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(654, 198);
-            this.groupBox12.TabIndex = 15;
-            this.groupBox12.TabStop = false;
-            this.groupBox12.Text = "Additionally for Mobile";
-            // 
-            // mobileWorkingFolderNoteLabel
-            // 
-            this.mobileWorkingFolderNoteLabel.Location = new System.Drawing.Point(12, 122);
-            this.mobileWorkingFolderNoteLabel.Name = "mobileWorkingFolderNoteLabel";
-            this.mobileWorkingFolderNoteLabel.Size = new System.Drawing.Size(630, 64);
-            this.mobileWorkingFolderNoteLabel.TabIndex = 31;
-            this.mobileWorkingFolderNoteLabel.Text = resources.GetString("mobileWorkingFolderNoteLabel.Text");
-            // 
-            // conversionForMobileHelpImage
-            // 
-            this.conversionForMobileHelpImage.AutoSize = true;
-            this.conversionForMobileHelpImage.Image = ((System.Drawing.Image)(resources.GetObject("conversionForMobileHelpImage.Image")));
-            this.conversionForMobileHelpImage.Location = new System.Drawing.Point(155, 33);
-            this.conversionForMobileHelpImage.Name = "conversionForMobileHelpImage";
-            this.conversionForMobileHelpImage.Size = new System.Drawing.Size(16, 17);
-            this.conversionForMobileHelpImage.TabIndex = 16;
-            this.conversionForMobileHelpImage.Text = "  ";
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label55.Location = new System.Drawing.Point(12, 97);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(474, 17);
-            this.label55.TabIndex = 30;
-            this.label55.Text = "7, 9, 10, 11 using Zoom Level 14 (9.555m) + add. 12 using Zoom Level 15 (4.777m)";
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label53.Location = new System.Drawing.Point(11, 82);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(297, 17);
-            this.label53.TabIndex = 28;
-            this.label53.Text = "You have to choose the following Levels for Images: ";
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label51.Location = new System.Drawing.Point(11, 65);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(40, 17);
-            this.label51.TabIndex = 26;
-            this.label51.Text = "Note:";
-            // 
-            // createAddForMobileCheckBox
-            // 
-            this.createAddForMobileCheckBox.AutoSize = true;
-            this.createAddForMobileCheckBox.Location = new System.Drawing.Point(216, 32);
-            this.createAddForMobileCheckBox.Name = "createAddForMobileCheckBox";
-            this.createAddForMobileCheckBox.Size = new System.Drawing.Size(415, 21);
-            this.createAddForMobileCheckBox.TabIndex = 12;
-            this.createAddForMobileCheckBox.Text = "Creates an additional working folder for conversion (Android only)";
-            this.createAddForMobileCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label52.Location = new System.Drawing.Point(11, 32);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(138, 17);
-            this.label52.TabIndex = 11;
-            this.label52.Text = "Conversion for mobile";
             // 
             // tabPage4
             // 
@@ -1915,8 +1833,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.groupBox12.ResumeLayout(false);
-            this.groupBox12.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.waterReplaceThresholdSlider)).EndInit();
@@ -2045,21 +1961,14 @@
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.Label label42;
-        private System.Windows.Forms.GroupBox groupBox12;
-        private System.Windows.Forms.CheckBox createAddForMobileCheckBox;
-        private System.Windows.Forms.Label label52;
-        private System.Windows.Forms.Label label51;
-        private System.Windows.Forms.Label label53;
-        private System.Windows.Forms.Label label55;
-        private System.Windows.Forms.Label mobileWorkingFolderNoteLabel;
         private System.Windows.Forms.CheckBox imageRemoveAlphaChannelCheckBox;
         private System.Windows.Forms.TextBox afsSceneryFolderTextBox;
         private System.Windows.Forms.Label label57;
-        private System.Windows.Forms.Label conversionForMobileHelpImage;
         private System.Windows.Forms.Label sdkGeoConvertHelpImage;
         private System.Windows.Forms.Label converterModeLabel;
         private System.Windows.Forms.RadioButton useBuiltInConverterRadioButton;
         private System.Windows.Forms.RadioButton useSdkGeoConvertRadioButton;
+        private System.Windows.Forms.LinkLabel getAeroflySdkLinkLabel;
         private System.Windows.Forms.Label converterThreadsLabel;
         private System.Windows.Forms.NumericUpDown converterThreadsNumeric;
         private System.Windows.Forms.Button converterThreadsAutoButton;
