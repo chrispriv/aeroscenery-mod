@@ -92,9 +92,23 @@ namespace AeroScenery.Common
         /// {FsgWorkingDirectory}\fsg_scenery_{name}\fsg_scenery_{name}_images\scenery\images\
         /// The user later zips the _images folder and renames it to .tme.
         /// </summary>
-        public static string FindFsgSceneryCopyDirectory(Settings settings, bool createDirectories = true)
+        public static string GetFsgSceneryCopyDirectoryPath(Settings settings)
         {
             if (String.IsNullOrWhiteSpace(settings.FsgWorkingDirectory))
+            {
+                return null;
+            }
+
+            string root = settings.FsgWorkingDirectory.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            string sceneryName = GetWorkingSceneryName(settings);
+            return Path.Combine(root, "fsg_scenery_" + sceneryName, "fsg_scenery_" + sceneryName + "_images", "scenery", "images")
+                + Path.DirectorySeparatorChar;
+        }
+
+        public static string FindFsgSceneryCopyDirectory(Settings settings, bool createDirectories = true)
+        {
+            string imagesDir = GetFsgSceneryCopyDirectoryPath(settings);
+            if (imagesDir == null)
             {
                 return null;
             }
@@ -109,11 +123,6 @@ namespace AeroScenery.Common
                 Directory.CreateDirectory(root);
             }
 
-            string sceneryName = GetWorkingSceneryName(settings);
-
-            string packRoot = Path.Combine(root, "fsg_scenery_" + sceneryName);
-            string imagesPack = Path.Combine(packRoot, "fsg_scenery_" + sceneryName + "_images");
-            string imagesDir = Path.Combine(imagesPack, "scenery", "images");
             if (createDirectories)
             {
                 Directory.CreateDirectory(imagesDir);

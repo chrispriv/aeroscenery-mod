@@ -524,7 +524,7 @@ namespace AeroScenery
             this.UpdateDownloadProgressBarsFromSettings();
 
             this.UpdateConverterActionLabel();
-            this.UpdateWorkingSceneryStatus();
+            this.UpdateStatusStrip();
 
             this.uiSetFromSettings = true;
 
@@ -536,9 +536,6 @@ namespace AeroScenery
             this.stitchImageTilesCheckBox.Checked = true;
             this.generateAFSFilesCheckBox.Checked = true;
             this.runGeoConvertCheckBox.Checked = true;
-            //#MOD_k
-            this.installSceneryIntoAFSCheckBox.Checked = true;
-            this.copySceneryToFsgCheckBox.Checked = false;
 
             //#MOD
             this.fixMissingTilesCheckBox.Checked = false;
@@ -567,6 +564,7 @@ namespace AeroScenery
             this.allowShiftCorrectionCheckBox.Enabled = false;
             this.shiftCorrectionLevel.Enabled = false;
             this.UpdateBuiltInConvertTargetUi();
+            this.ApplyDefaultInstallAndCopyActions();
 
         }
 
@@ -647,8 +645,7 @@ namespace AeroScenery
                             this.mainTabControl.SelectedIndex = 1;
                             this.ActionsRunning = true;
                             this.LockUI();
-                            //#MOD_k    
-                            this.StartElapsedClock();
+                            this.ResetProgress();
                         }
 
                     }
@@ -730,6 +727,8 @@ namespace AeroScenery
             }
 
             this.currentActionProgressBar.Value = 0;
+            this.parentTaskLabel.Text = "Working On AFS Grid Square - of -";
+            this.childTaskLabel.Text = "";
         }
 
         public DownloadThreadProgressControl GetDownloadThreadProgressControl(int downloadThread)
@@ -921,13 +920,19 @@ namespace AeroScenery
 
         private void UpdateStatusStrip()
         {
-            if (this.SelectedAFS2GridSquares.Count == 1)
+            this.UpdateWorkingSceneryStatus();
+
+            if (this.statusStripSceneryLabel != null)
             {
-                this.statusStripLabel1.Text = String.Format("1 Grid Square Selected");
-            }
-            else
-            {
-                this.statusStripLabel1.Text = String.Format("{0} Grid Squares Selected", this.SelectedAFS2GridSquares.Count);
+                if (this.SelectedAFS2GridSquares.Count == 1)
+                {
+                    this.statusStripSceneryLabel.Text = "/ 1 Grid Square Selected";
+                }
+                else
+                {
+                    this.statusStripSceneryLabel.Text = String.Format("/ {0} Grid Squares Selected",
+                        this.SelectedAFS2GridSquares.Count);
+                }
             }
 
             if (this.SelectedAFS2GridSquares.Count > 0)
@@ -938,19 +943,17 @@ namespace AeroScenery
             {
                 this.startStopButton.Enabled = false;
             }
-
-            this.UpdateWorkingSceneryStatus();
         }
 
         private void UpdateWorkingSceneryStatus()
         {
-            if (this.statusStripSceneryLabel == null)
+            if (this.statusStripLabel1 == null)
             {
                 return;
             }
 
             var settings = AeroSceneryManager.Instance.Settings;
-            this.statusStripSceneryLabel.Text = String.Format("/ Working scenery: {0}",
+            this.statusStripLabel1.Text = String.Format("Working scenery: {0}",
                 DirectoryHelper.GetWorkingSceneryName(settings));
         }
 
@@ -1161,7 +1164,7 @@ namespace AeroScenery
             this.UpdateDownloadProgressBarsFromSettings();
             this.UpdateShowAirportsToolbar();
             this.UpdateConverterActionLabel();
-            this.UpdateWorkingSceneryStatus();
+            this.UpdateStatusStrip();
         }
 
         private void UpdateConverterActionLabel()
@@ -1287,6 +1290,20 @@ namespace AeroScenery
             AeroSceneryManager.Instance.SaveSettings();
             this.UpdateCopySceneryToFsgVisibility();
             this.UpdateInstallSceneryForFs4Visibility();
+            this.ApplyDefaultInstallAndCopyActions();
+        }
+
+        private void ApplyDefaultInstallAndCopyActions()
+        {
+            if (AeroSceneryManager.Instance.Settings.ActionSet != Common.ActionSet.Default)
+            {
+                return;
+            }
+
+            this.installSceneryIntoAFSCheckBox.Checked = this.InstallSceneryForFs4IsApplicable();
+            this.copySceneryToFsgCheckBox.Checked = this.CopySceneryToFsgIsApplicable();
+            this.installSceneryIntoAFSCheckBox.Enabled = false;
+            this.copySceneryToFsgCheckBox.Enabled = false;
         }
 
         private void DownloadersScrollPanel_SizeChanged(object sender, EventArgs e)
@@ -1433,7 +1450,7 @@ namespace AeroScenery
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                this.ShowGridSquareInfoPopup(e.X, e.Y);
+                this.OpenGridSquareFolderAtMapPoint(e.X, e.Y);
                 return;
             }
 
@@ -1493,7 +1510,7 @@ namespace AeroScenery
 
         }
 
-        private void ShowGridSquareInfoPopup(int x, int y)
+        private void OpenGridSquareFolderAtMapPoint(int x, int y)
         {
             double lat = this.mainMap.FromLocalToLatLng(x, y).Lat;
             double lon = this.mainMap.FromLocalToLatLng(x, y).Lng;
@@ -1503,11 +1520,20 @@ namespace AeroScenery
                 return;
             }
 
+            this.OpenGridSquareFolder(gridSquare);
+        }
+
+        private void ShowGridSquareInfo(AFS2GridSquare gridSquare)
+        {
+            if (gridSquare == null || String.IsNullOrEmpty(gridSquare.Name))
+            {
+                return;
+            }
+
             var record = this.dataRepository.FindGridSquare(gridSquare.Name);
             using (var form = new GridSquareInfoForm(gridSquare.Name, record))
             {
-                var screen = this.mainMap.PointToScreen(new System.Drawing.Point(x, y));
-                form.Location = screen;
+                form.StartPosition = FormStartPosition.CenterParent;
                 form.ShowDialog(this);
             }
         }
@@ -1599,32 +1625,36 @@ namespace AeroScenery
 
         private void openImageFolderToolstripButton_Click(object sender, EventArgs e)
         {
-            if (this.SelectedAFS2GridSquare != null)
+            this.ShowGridSquareInfo(this.SelectedAFS2GridSquare);
+        }
+
+        private void OpenGridSquareFolder(AFS2GridSquare gridSquare)
+        {
+            if (gridSquare == null)
             {
-                var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + this.SelectedAFS2GridSquare.Name;
+                return;
+            }
 
-                //#MOD_k
-                // Additionally copy the name of the selected gridsquare to the clipboard, before opening the folder (even if it doesn't exist)
-                Clipboard.SetData(DataFormats.Text, (Object)this.SelectedAFS2GridSquare.Name);
+            var gridSquareDirectory = AeroSceneryManager.Instance.Settings.WorkingDirectory + gridSquare.Name;
 
-                if (Directory.Exists(gridSquareDirectory))
+            Clipboard.SetData(DataFormats.Text, (Object)gridSquare.Name);
+
+            if (Directory.Exists(gridSquareDirectory))
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
                 {
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
-                    {
-                        FileName = gridSquareDirectory,
-                        UseShellExecute = true,
-                        Verb = "open"
-                    });
+                    FileName = gridSquareDirectory,
+                    UseShellExecute = true,
+                    Verb = "open"
+                });
+            }
+            else
+            {
+                var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", gridSquare.Name),
+                    "AeroScenery",
+                    MessageBoxIcon.Information);
 
-                }
-                else
-                {
-                    var messageBox = new CustomMessageBox(String.Format("There is no image folder yet for grid square {0}", this.SelectedAFS2GridSquare.Name),
-                        "AeroScenery",
-                        MessageBoxIcon.Information);
-
-                    messageBox.ShowDialog();
-                }
+                messageBox.ShowDialog();
             }
         }
 
@@ -2025,7 +2055,7 @@ namespace AeroScenery
         /// Starts the clocks for a new run. Both the run and its current step are timed, and the
         /// labels are refreshed once a second so that a long step still looks alive.
         /// </summary>
-        private void StartElapsedClock()
+        public void StartElapsedClock()
         {
             this.currentStepName = null;
             this.runStopwatch.Restart();

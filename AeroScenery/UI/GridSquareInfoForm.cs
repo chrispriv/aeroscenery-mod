@@ -11,7 +11,7 @@ namespace AeroScenery.UI
         {
             this.Text = "Tile " + tileName;
             this.FormBorderStyle = FormBorderStyle.FixedDialog;
-            this.StartPosition = FormStartPosition.Manual;
+            this.StartPosition = FormStartPosition.CenterParent;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.ShowInTaskbar = false;

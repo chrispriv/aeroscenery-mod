@@ -194,17 +194,30 @@ namespace AeroScenery
                 if (this.mainForm.ActionsRunning)
                 {
 
-                    //#MOD_k
-                    if (this.settings.InstallScenery.Value == true)
-                    {
-                        //#MOD_k
-                        // Do we have an Aerofly folder to install into?
-                        string afsSceneryInstallDirectory = DirectoryHelper.FindAFSSceneryInstallDirectory(AeroSceneryManager.Instance.Settings);
+                    bool installFs4 = this.mainForm.InstallSceneryForFs4IsApplicable()
+                        && this.settings.InstallScenery.GetValueOrDefault(false);
+                    bool copyFsg = this.mainForm.CopySceneryToFsgIsApplicable()
+                        && this.settings.CopySceneryToFsgWorkingFolder.GetValueOrDefault(false);
 
-                        string message = "AeroScenery waits for the GeoConvert process to terminate and then installs the scenery automatically.\n";
-                        message += "Any existing files in the same destination user scenery folder will be overwritten.\n";
+                    if (installFs4 || copyFsg)
+                    {
+                        string message = "AeroScenery waits for the conversion process to finish and then installs the scenery automatically.\n";
+                        message += "Any existing files in the same destination folder will be overwritten.\n";
                         message += "...\n";
-                        message += String.Format("Destination: {0}", afsSceneryInstallDirectory) + "\n";
+
+                        if (installFs4)
+                        {
+                            string fs4Directory = DirectoryHelper.FindAFSSceneryInstallDirectory(this.settings)
+                                ?? "(FS4 scenery folder not set)";
+                            message += "FS4 install: " + fs4Directory + "\n";
+                        }
+
+                        if (copyFsg)
+                        {
+                            string fsgDirectory = DirectoryHelper.GetFsgSceneryCopyDirectoryPath(this.settings)
+                                ?? "(FSG working folder not set)";
+                            message += "FSG copy: " + fsgDirectory + "\n";
+                        }
 
                         var messageBox = new CustomMessageBox(message,
                             "AeroScenery",
@@ -216,11 +229,12 @@ namespace AeroScenery
 
                         var result = messageBox.ShowDialog();
 
-                        if (result == DialogResult.Cancel)
+                        if (result != DialogResult.OK)
                         {
-                            StopSceneryGenerationProcess(sender, eventArgs);
+                            this.mainForm.ActionsRunning = false;
+                            this.mainForm.ActionsComplete();
+                            return;
                         }
-
                     }
 
                     //#MOD
@@ -354,6 +368,8 @@ namespace AeroScenery
         {
             try
             {
+                this.mainForm.StartElapsedClock();
+
                 // Set settings on orthophoto sources
                 this.linzOrthophotoSource.ApiKey = settings.LinzApiKey;
                 //#MOD

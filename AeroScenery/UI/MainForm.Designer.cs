@@ -535,9 +535,9 @@ namespace AeroScenery
             this.openImageFolderToolstripButton.Image = ((System.Drawing.Image)(resources.GetObject("openImageFolderToolstripButton.Image")));
             this.openImageFolderToolstripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openImageFolderToolstripButton.Name = "openImageFolderToolstripButton";
-            this.openImageFolderToolstripButton.Size = new System.Drawing.Size(101, 22);
-            this.openImageFolderToolstripButton.Text = "Open Folder";
-            this.openImageFolderToolstripButton.ToolTipText = "Open the folder for this grid square";
+            this.openImageFolderToolstripButton.Size = new System.Drawing.Size(78, 22);
+            this.openImageFolderToolstripButton.Text = "Tile Info";
+            this.openImageFolderToolstripButton.ToolTipText = "Show stored details for this grid square";
             this.openImageFolderToolstripButton.Click += new System.EventHandler(this.openImageFolderToolstripButton_Click);
             // 
             // installSceneryToolStripButton
