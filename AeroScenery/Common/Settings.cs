@@ -155,8 +155,6 @@ namespace AeroScenery.Common
         public int? AllowShiftCorrectionLevel { get; set; }    
 
 
-        public bool? GridSquareNamesFixed { get; set; }
-
         public OrthophotoSourceSettings OrthophotoSourceSettings { get; set; }
 
     }

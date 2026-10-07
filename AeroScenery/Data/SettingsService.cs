@@ -423,9 +423,6 @@ namespace AeroScenery.Data
             if (settings.RemoveAlphaChannelAdjustment == null)
                 settings.RemoveAlphaChannelAdjustment = false;
 
-            if (settings.GridSquareNamesFixed == null)
-                settings.GridSquareNamesFixed = false;
-
             if (settings.OrthophotoSourceSettings.GM_OrthophotoSourceUrlTemplate == null)
                 settings.OrthophotoSourceSettings.GM_OrthophotoSourceUrlTemplate = GoogleOrthophotoSource.DefaultUrlTemplate;
 

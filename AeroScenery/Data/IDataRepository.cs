@@ -56,6 +56,12 @@ namespace AeroScenery.Data
         /// <returns></returns>
         GridSquare FindGridSquare(string key);
 
+        void SaveBuiltInConversion(GridSquare gridSquare);
+
+        void SetOsmDownloaded(string gridSquareName);
+
+        void SetElevationDownloaded(string gridSquareName);
+
         /// <summary>
         /// 
         /// </summary>

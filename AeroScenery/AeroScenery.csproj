@@ -200,7 +200,6 @@
     <Compile Include="AFS2\ZlibCodec.cs" />
     <Compile Include="AFS2\GeoConvertManager.cs" />
     <Compile Include="AFS2\GeoConvertSdkPath.cs" />
-    <Compile Include="AFS2\GridSquareNameFixer.cs" />
     <Compile Include="AFS2\IScanlineSource.cs" />
     <Compile Include="AFS2\SourceImage.cs" />
     <Compile Include="AFS2\TileSampler.cs" />
@@ -361,6 +360,9 @@
     </Compile>
     <Compile Include="UI\GetAeroflySDKForm.Designer.cs">
       <DependentUpon>GetAeroflySDKForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GridSquareInfoForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\GMapControlManager.cs" />
     <Compile Include="UI\GridSquareDisplayType.cs" />

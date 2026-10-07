@@ -1000,12 +1000,10 @@ namespace AeroScenery
             foreach (GridSquare gridSquare in gridSquares)
             {
                 var afs2GridSqure = this.gridSquareMapper.ToAFS2GridSquare(gridSquare);
-                //#MOD_k
-                var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Downloaded);
-                if (gridSquare.Fixed == 0)
-                {
-                    polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Data);
-                }
+                var displayType = IsElevationOnlyGridSquare(gridSquare)
+                    ? GridSquareDisplayType.Data
+                    : GridSquareDisplayType.Downloaded;
+                var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, displayType);
 
                 var gridSquareViewModel = new GridSquareViewModel();
                 gridSquareViewModel.GMapOverlay = polygonOverlay;
@@ -1018,6 +1016,12 @@ namespace AeroScenery
 
         public void AddDownloadedGridSquare(AFS2GridSquare afs2GridSqure)
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => this.AddDownloadedGridSquare(afs2GridSqure)));
+                return;
+            }
+
             var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Downloaded);
 
             var gridSquareViewModel = new GridSquareViewModel();
@@ -1030,6 +1034,12 @@ namespace AeroScenery
         //#MOD_k
         public void AddDataGridSquare(AFS2GridSquare afs2GridSqure)
         {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(() => this.AddDataGridSquare(afs2GridSqure)));
+                return;
+            }
+
             var polygonOverlay = this.gMapControlManager.DrawGridSquare(afs2GridSqure, GridSquareDisplayType.Data);
 
             var gridSquareViewModel = new GridSquareViewModel();
@@ -1037,7 +1047,35 @@ namespace AeroScenery
             gridSquareViewModel.AFS2GridSquare = afs2GridSqure;
 
             this.DownloadedAFS2GridSquares[afs2GridSqure.Name] = gridSquareViewModel;
+        }
 
+        public void PromoteElevationOnlySquareToDownloaded(AFS2GridSquare afs2GridSquare)
+        {
+            GridSquareViewModel existing;
+            if (this.DownloadedAFS2GridSquares.TryGetValue(afs2GridSquare.Name, out existing)
+                && existing.GMapOverlay != null)
+            {
+                this.RemoveMapOverlay(existing.GMapOverlay);
+            }
+
+            this.AddDownloadedGridSquare(afs2GridSquare);
+        }
+
+        private void RemoveMapOverlay(GMapOverlay overlay)
+        {
+            if (overlay == null)
+            {
+                return;
+            }
+
+            this.mainMap.Overlays.Remove(overlay);
+            overlay.Clear();
+            overlay.Dispose();
+        }
+
+        private static bool IsElevationOnlyGridSquare(GridSquare gridSquare)
+        {
+            return gridSquare != null && gridSquare.ElevationDownloaded == 1 && gridSquare.Fixed == 0;
         }
 
         private void settingsButton_Click(object sender, EventArgs e)
@@ -1393,6 +1431,12 @@ namespace AeroScenery
 
         private void MainMap_MouseUp(object sender, MouseEventArgs e)
         {
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                this.ShowGridSquareInfoPopup(e.X, e.Y);
+                return;
+            }
+
             if (this.mapMouseDownLocation != null)
             {
                 // Are we showing an airport popup
@@ -1447,6 +1491,25 @@ namespace AeroScenery
 
             }
 
+        }
+
+        private void ShowGridSquareInfoPopup(int x, int y)
+        {
+            double lat = this.mainMap.FromLocalToLatLng(x, y).Lat;
+            double lon = this.mainMap.FromLocalToLatLng(x, y).Lng;
+            var gridSquare = this.afs2Grid.GetGridSquareAtLatLon(lat, lon, this.afsGridSquareSelectionSize);
+            if (gridSquare == null || String.IsNullOrEmpty(gridSquare.Name))
+            {
+                return;
+            }
+
+            var record = this.dataRepository.FindGridSquare(gridSquare.Name);
+            using (var form = new GridSquareInfoForm(gridSquare.Name, record))
+            {
+                var screen = this.mainMap.PointToScreen(new System.Drawing.Point(x, y));
+                form.Location = screen;
+                form.ShowDialog(this);
+            }
         }
 
         private void mainMap_DoubleClick(object sender, EventArgs e)
@@ -2108,21 +2171,18 @@ namespace AeroScenery
                     {
                         ResetGridSquare(this, this.SelectedAFS2GridSquare.Name);
 
-                        var downloadedGridSquare = this.DownloadedAFS2GridSquares[this.SelectedAFS2GridSquare.Name];
-                        downloadedGridSquare.GMapOverlay.Clear();
-                        downloadedGridSquare.GMapOverlay.Dispose();
+                        var squareName = this.SelectedAFS2GridSquare.Name;
+                        var downloadedGridSquare = this.DownloadedAFS2GridSquares[squareName];
+                        this.RemoveMapOverlay(downloadedGridSquare.GMapOverlay);
+                        this.DownloadedAFS2GridSquares.Remove(squareName);
 
-                        this.DownloadedAFS2GridSquares.Remove(this.SelectedAFS2GridSquare.Name);
-
-                        var selectedGridSquare = this.SelectedAFS2GridSquares[this.SelectedAFS2GridSquare.Name];
-
-                        if (selectedGridSquare != null)
+                        GridSquareViewModel selectedGridSquare;
+                        if (this.SelectedAFS2GridSquares.TryGetValue(squareName, out selectedGridSquare)
+                            && selectedGridSquare != null)
                         {
-                            selectedGridSquare.GMapOverlay.Clear();
-                            selectedGridSquare.GMapOverlay.Dispose();
+                            this.RemoveMapOverlay(selectedGridSquare.GMapOverlay);
                             selectedGridSquare.GMapOverlay = null;
-
-                            this.SelectedAFS2GridSquares.Remove(this.SelectedAFS2GridSquare.Name);
+                            this.SelectedAFS2GridSquares.Remove(squareName);
                         }
 
                         this.SelectedAFS2GridSquare = null;
@@ -2130,11 +2190,12 @@ namespace AeroScenery
                         //#MOD
                         gridSquareBoundaryBox.Text = "";
 
-                        this.activeGridSquareOverlay.Clear();
-                        this.activeGridSquareOverlay.Dispose();
+                        this.RemoveMapOverlay(this.activeGridSquareOverlay);
                         this.activeGridSquareOverlay = null;
 
+                        this.mainMap.Refresh();
                         this.UpdateStatusStrip();
+                        this.UpdateToolStrip();
 
                     }
                 }
@@ -3318,7 +3379,7 @@ namespace AeroScenery
         }
 
 
-        private async void movingMapStartStopButton_Click(object sender, EventArgs e)
+        private void movingMapStartStopButton_Click(object sender, EventArgs e)
         {
             if (this.ActionsRunning == false) //Start
             {

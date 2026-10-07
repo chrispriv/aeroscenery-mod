@@ -3,6 +3,7 @@ using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.Data;
 using AeroScenery.Data.Mappers;
+using AeroScenery.Data.Models;
 using AeroScenery.Download;
 using AeroScenery.Extensions.Models;
 using AeroScenery.Extensions.Services;
@@ -161,9 +162,6 @@ namespace AeroScenery
 
             this.dataRepository.Settings = settings;
             this.dataRepository.UpgradeDatabase();
-
-            var gridSquareNameFixer = new GridSquareNameFixer(settings, this.dataRepository, this.settingsService);
-            gridSquareNameFixer.FixGridSquareNames();
 
             bingOrthophotoSource = new BingOrthophotoSource(settings.OrthophotoSourceSettings.BN_OrthophotoSourceUrlTemplate);
             googleOrthophotoSource = new GoogleOrthophotoSource(settings.OrthophotoSourceSettings.GM_OrthophotoSourceUrlTemplate);
@@ -609,10 +607,11 @@ namespace AeroScenery
                                 this.mainForm.AddDownloadedGridSquare(afs2GridSquare);
                             }
                             //MOD_k
-                            else if (existingGridSquare.Fixed == 0)
+                            else if (existingGridSquare.ElevationDownloaded == 1 || existingGridSquare.Fixed == 0)
                             {
                                 existingGridSquare.Fixed = 1;
                                 dataRepository.UpdateGridSquare(existingGridSquare);
+                                this.mainForm.PromoteElevationOnlySquareToDownloaded(afs2GridSquare);
                             }
                         }
 
@@ -675,6 +674,11 @@ namespace AeroScenery
                         // Generate AID files for the image tiles
                         
                         await afsFileGenerator.GenerateAFSFilesAsync(afs2GridSquare, stitchedTilesDirectory, GetTileDownloadDirectory(afsGridSquareDirectory), afsFileGeneratorProgress);
+
+                        if (this.mainForm.ActionsRunning)
+                        {
+                            this.SaveGenerateAidTmcRecord(afs2GridSquare);
+                        }
 
                     }
 
@@ -750,6 +754,11 @@ namespace AeroScenery
                                     this.dataRepository.CreateGridSquare(this.gridSquareMapper.ToModel(afs2GridSquare));
                                     this.mainForm.AddDownloadedGridSquare(afs2GridSquare);
                                 }
+                            }
+
+                            if (this.mainForm.ActionsRunning)
+                            {
+                                this.dataRepository.SetOsmDownloaded(afs2GridSquare.Name);
                             }
                         }
                         catch (Exception ex)
@@ -938,6 +947,12 @@ namespace AeroScenery
                             {
                                 this.dataRepository.CreateDataSquare(this.gridSquareMapper.ToModel(afs2GridSquare));
                                 this.mainForm.AddDataGridSquare(afs2GridSquare);
+                            }
+
+                            this.dataRepository.SetElevationDownloaded(afs2GridSquare.Name);
+                            if (this.settings.DownloadOsmData.GetValueOrDefault(false))
+                            {
+                                this.dataRepository.SetOsmDownloaded(afs2GridSquare.Name);
                             }
 
                         }
@@ -1319,6 +1334,46 @@ namespace AeroScenery
             }
         }
         */
+
+        private void SaveGenerateAidTmcRecord(AFS2GridSquare afs2GridSquare)
+        {
+            bool waterMasking = this.settings.WaterMaskingProcessing.GetValueOrDefault(false);
+            bool imageProcessing = this.settings.EnableImageProcessing.GetValueOrDefault(false);
+            bool shiftCorrection = this.settings.AllowShiftCorrectionProcessing.GetValueOrDefault(false);
+
+            var record = this.gridSquareMapper.ToModel(afs2GridSquare);
+            record.ConvertedUtc = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            record.ImageSource = this.settings.OrthophotoSource.HasValue
+                ? this.settings.OrthophotoSource.Value.ToString()
+                : "";
+            record.ImageZoomLevel = this.settings.ZoomLevel;
+            record.WaterMasking = waterMasking ? 1 : 0;
+            record.WaterMaskingParams = waterMasking
+                ? String.Format(CultureInfo.InvariantCulture, "{0} / {1}",
+                    this.settings.WaterFadeThresholdDistance.GetValueOrDefault(2),
+                    this.settings.WaterReplaceThresholdDistance.GetValueOrDefault(5))
+                : "";
+            record.ImageProcessing = imageProcessing ? 1 : 0;
+            record.ImageProcessingParams = imageProcessing
+                ? String.Format(CultureInfo.InvariantCulture, "{0} / {1} / {2} / {3}",
+                    this.settings.BrightnessAdjustment.GetValueOrDefault(0),
+                    this.settings.ContrastAdjustment.GetValueOrDefault(0),
+                    this.settings.SaturationAdjustment.GetValueOrDefault(0),
+                    this.settings.SharpnessAdjustment.GetValueOrDefault(0))
+                : "";
+            record.ImageProcessingRgb = imageProcessing
+                ? String.Format(CultureInfo.InvariantCulture, "{0} / {1} / {2}",
+                    this.settings.RedAdjustment.GetValueOrDefault(0),
+                    this.settings.GreenAdjustment.GetValueOrDefault(0),
+                    this.settings.BlueAdjustment.GetValueOrDefault(0))
+                : "";
+            record.ShiftCorrection = shiftCorrection ? 1 : 0;
+            record.ShiftCorrectionLevel = shiftCorrection
+                ? this.settings.AllowShiftCorrectionLevel
+                : (int?)null;
+
+            this.dataRepository.SaveBuiltInConversion(record);
+        }
 
         //#MOD_k
         /// <summary>

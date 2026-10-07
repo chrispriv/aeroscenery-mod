@@ -47,12 +47,13 @@ namespace AeroScenery.Data
         //#MOD_k
         public void CreateDataSquare(GridSquare gridSquare)
         {
-            gridSquare.Fixed = 0;
+                gridSquare.Fixed = 0;
+                gridSquare.ElevationDownloaded = 1;
 
-            using (var con = DbConnection())
-            {
-                var query = @"INSERT INTO GridSquares (Name, NorthLatitude, EastLongitude, WestLongitude, SouthLatitude, Level, Fixed) VALUES 
-                            (@Name, @NorthLatitude, @EastLongitude, @WestLongitude, @SouthLatitude, @Level, @Fixed);
+                using (var con = DbConnection())
+                {
+                    var query = @"INSERT INTO GridSquares (Name, NorthLatitude, EastLongitude, WestLongitude, SouthLatitude, Level, Fixed, ElevationDownloaded) VALUES 
+                            (@Name, @NorthLatitude, @EastLongitude, @WestLongitude, @SouthLatitude, @Level, @Fixed, @ElevationDownloaded);
                             SELECT last_insert_rowid();";
 
                 con.Open();
@@ -112,6 +113,82 @@ namespace AeroScenery.Data
                 con.Open();
                 GridSquare result = con.Query<GridSquare>(query, new { name }).FirstOrDefault();
                 return result;
+            }
+        }
+
+        public void SaveBuiltInConversion(GridSquare gridSquare)
+        {
+            if (gridSquare == null || String.IsNullOrEmpty(gridSquare.Name))
+            {
+                return;
+            }
+
+            int updated;
+            using (var con = DbConnection())
+            {
+                var query = @"UPDATE GridSquares SET
+                            ConvertedUtc=@ConvertedUtc,
+                            ImageSource=@ImageSource,
+                            ImageZoomLevel=@ImageZoomLevel,
+                            WaterMasking=@WaterMasking,
+                            WaterMaskingParams=@WaterMaskingParams,
+                            ImageProcessing=@ImageProcessing,
+                            ImageProcessingParams=@ImageProcessingParams,
+                            ImageProcessingRgb=@ImageProcessingRgb,
+                            ShiftCorrection=@ShiftCorrection,
+                            ShiftCorrectionLevel=@ShiftCorrectionLevel
+                            WHERE Name=@Name";
+
+                con.Open();
+                updated = con.Execute(query, gridSquare);
+            }
+
+            if (updated == 0)
+            {
+                this.CreateGridSquare(gridSquare);
+                using (var con = DbConnection())
+                {
+                    var query = @"UPDATE GridSquares SET
+                                ConvertedUtc=@ConvertedUtc,
+                                ImageSource=@ImageSource,
+                                ImageZoomLevel=@ImageZoomLevel,
+                                WaterMasking=@WaterMasking,
+                                WaterMaskingParams=@WaterMaskingParams,
+                                ImageProcessing=@ImageProcessing,
+                                ImageProcessingParams=@ImageProcessingParams,
+                                ImageProcessingRgb=@ImageProcessingRgb,
+                                ShiftCorrection=@ShiftCorrection,
+                                ShiftCorrectionLevel=@ShiftCorrectionLevel
+                                WHERE Name=@Name";
+                    con.Open();
+                    con.Execute(query, gridSquare);
+                }
+            }
+        }
+
+        public void SetOsmDownloaded(string gridSquareName)
+        {
+            this.SetDownloadFlag(gridSquareName, "OsmDownloaded");
+        }
+
+        public void SetElevationDownloaded(string gridSquareName)
+        {
+            this.SetDownloadFlag(gridSquareName, "ElevationDownloaded");
+        }
+
+        private void SetDownloadFlag(string gridSquareName, string columnName)
+        {
+            if (String.IsNullOrEmpty(gridSquareName))
+            {
+                return;
+            }
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                con.Execute(
+                    "UPDATE GridSquares SET " + columnName + " = 1 WHERE Name = @gridSquareName;",
+                    new { gridSquareName });
             }
         }
 

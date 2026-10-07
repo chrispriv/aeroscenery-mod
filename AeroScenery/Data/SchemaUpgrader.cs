@@ -44,6 +44,15 @@ namespace AeroScenery.Data
                     this.UpgradeToVersion8();
                     break;
                 case 8:
+                    this.UpgradeToVersion9();
+                    break;
+                case 9:
+                    this.UpgradeToVersion10();
+                    break;
+                case 10:
+                    this.UpgradeToVersion11();
+                    break;
+                case 11:
                     break;
             }
         }
@@ -241,6 +250,61 @@ namespace AeroScenery.Data
             }
 
             this.SaveNewSchemaVersion(8);
+            this.UpgradeToVersion9();
+        }
+
+        private void UpgradeToVersion9()
+        {
+            log.Info("Updating database to version 9");
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ConvertedUtc TEXT;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ImageSource TEXT;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ImageZoomLevel INTEGER;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN WaterMasking INTEGER DEFAULT 0;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN WaterMaskingParams TEXT;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ImageProcessing INTEGER DEFAULT 0;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ImageProcessingParams TEXT;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ImageProcessingRgb TEXT;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN OsmDownloaded INTEGER DEFAULT 0;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ElevationDownloaded INTEGER DEFAULT 0;");
+                con.Close();
+            }
+
+            this.SaveNewSchemaVersion(9);
+            this.UpgradeToVersion10();
+        }
+
+        private void UpgradeToVersion10()
+        {
+            log.Info("Updating database to version 10");
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ShiftCorrection INTEGER DEFAULT 0;");
+                con.Execute(@"ALTER TABLE GridSquares ADD COLUMN ShiftCorrectionLevel INTEGER;");
+                con.Close();
+            }
+
+            this.SaveNewSchemaVersion(10);
+            this.UpgradeToVersion11();
+        }
+
+        private void UpgradeToVersion11()
+        {
+            log.Info("Updating database to version 11");
+
+            using (var con = DbConnection())
+            {
+                con.Open();
+                con.Execute(@"UPDATE GridSquares SET ElevationDownloaded = 1 WHERE Fixed = 0 AND IFNULL(ElevationDownloaded, 0) = 0;");
+                con.Close();
+            }
+
+            this.SaveNewSchemaVersion(11);
         }
 
         private SQLiteConnection DbConnection()
