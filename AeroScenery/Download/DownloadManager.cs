@@ -1,4 +1,4 @@
-﻿using AeroScenery.Common;
+using AeroScenery.Common;
 using AeroScenery.OrthophotoSources;
 using AeroScenery.OrthoPhotoSources;
 using log4net;
@@ -20,10 +20,8 @@ namespace AeroScenery.Download
     {
         private int downloadThreads = 4; // = Default Value (without override from Settings)
 
-        //#MOD_l
         public const int MaxSimultaneousDownloads = 16;
 
-        //#MOD
         private int maxDownloadRetryAttempts = 10;  // 10 attempts instead of 5 for a better reliability
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
 
@@ -39,13 +37,11 @@ namespace AeroScenery.Download
             cancellationTokenSource.Cancel();
         }
 
-        //#MOD
 //        public async Task DownloadImageTiles(OrthophotoSource orthophotoSource, List<ImageTile> imageTiles, IProgress<DownloadThreadProgress> threadProgress, 
 //            string downloadDirectory, GenericOrthophotoSource orthophotoSourceInstance)
         public async Task DownloadImageTiles(OrthophotoSource orthophotoSource, List<ImageTile> imageTiles, IProgress<DownloadThreadProgress> threadProgress,
             string downloadDirectory, GenericOrthophotoSource orthophotoSourceInstance, int downloadThreads)
         {
-            //#MOD
             //Override numbers of Simultaneous Downloads from Settings
             this.downloadThreads = downloadThreads;
             if (this.downloadThreads < 1)
@@ -57,7 +53,6 @@ namespace AeroScenery.Download
                 this.downloadThreads = MaxSimultaneousDownloads;
             }
 
-            //#MOD_l
             // GetAsync(...).Result holds a thread-pool thread for the whole request. The default
             // pool does not grow fast enough, so raising Simultaneous Downloads above the core
             // count used to starve workers instead of speeding the run up. Size the pool for the
@@ -73,13 +68,11 @@ namespace AeroScenery.Download
             // Reset cancellation token status
             cancellationTokenSource = new CancellationTokenSource();
 
-            //#MOD_l
             // StopDownloads replaces this token. Workers must keep the token from this run.
             var token = cancellationTokenSource.Token;
 
             if (imageTiles.Count > 0)
             {
-                //#MOD
                 // Writes in addition a PowerShell Script containing a cataolg of all tiles do be downloaded, that allows to download missing tiles manually by running the script
                 log.InfoFormat("Writing catalog of tiles as PowerShell Script for manual download of {0} image tiles from {1}", imageTiles.Count, orthophotoSource.ToString());
                 using (StreamWriter text = new StreamWriter($@"{downloadDirectory}/_imagetiles_download_catalog.ps1"))
@@ -87,7 +80,6 @@ namespace AeroScenery.Download
                     text.WriteLine("Set-ExecutionPolicy Bypass -scope Process -Force");
                     text.WriteLine();
                     text.WriteLine("$client = new-object System.Net.WebClient");
-                    //#MOD
                     text.WriteLine("$client.Headers['User-Agent'] = 'myUserAgentString'");
                     
                     text.WriteLine();
@@ -95,7 +87,6 @@ namespace AeroScenery.Download
                     for (int i = 0; i < imageTiles.Count; i++)
                     {
                         text.WriteLine($@"Write-Host 'Download missing tiles {i + 1} / {imageTiles.Count}: { imageTiles[i].FileName}.{ imageTiles[i].ImageExtension}'");
-                        //#MOD
                         //text.WriteLine($@"if (-not(Test-path '{imageTiles[i].FileName}.{imageTiles[i].ImageExtension}' -PathType leaf))");
                         text.WriteLine($@"if ((-not(Test-path '{imageTiles[i].FileName}.{imageTiles[i].ImageExtension}' -PathType leaf)) -or ([int]$(Get-Item '{imageTiles[i].FileName}.{imageTiles[i].ImageExtension}').length -eq 0))");
                         text.WriteLine("{");
@@ -104,7 +95,6 @@ namespace AeroScenery.Download
                     }
 
                     text.WriteLine($@"Write-Host ''");
-                    //#MOD
                     //text.WriteLine($@"Read-Host -Prompt 'Download of missing image tiles finsihed - Press ENTER to quit'");
                     text.WriteLine($@"Write-Host 'Download of missing image tiles finsihed'");
                 }
@@ -112,7 +102,6 @@ namespace AeroScenery.Download
 
                 log.InfoFormat("Beginning download of {0} image tiles from {1}", imageTiles.Count, orthophotoSource.ToString());
 
-                //#MOD_l
                 // Stop clears the caller's list. Workers use this copy so indexes stay valid.
                 imageTiles = new List<ImageTile>(imageTiles);
 
@@ -133,7 +122,6 @@ namespace AeroScenery.Download
 
                             var maxWait = AeroSceneryManager.Instance.Settings.DownloadWaitMs.Value + AeroSceneryManager.Instance.Settings.DownloadWaitRandomMs.Value;
                             var minWait = AeroSceneryManager.Instance.Settings.DownloadWaitMs.Value - AeroSceneryManager.Instance.Settings.DownloadWaitRandomMs.Value;
-                            //#MOD_l
                             // One seed per worker so the wait jitter does not lock-step.
                             Random random = new Random(Guid.NewGuid().GetHashCode());
 
@@ -171,7 +159,6 @@ namespace AeroScenery.Download
                                         var waitTimeSpan = new TimeSpan(waitTime * TimeSpan.TicksPerMillisecond);
                                         await Task.Delay(waitTimeSpan);
 
-                                        //#MOD
                                         // For speed up first check if the Image tile already exists or if the tile is empty before proceeding with the Download and Saving of the Image (for the last tile no check will be implemented)
                                         //if (!File.Exists(downloadDirectory + imageTiles[j].FileName + "." + imageTiles[j].ImageExtension))
                                         if ((!File.Exists(downloadDirectory + imageTiles[j].FileName + "." + imageTiles[j].ImageExtension)) || (new FileInfo(downloadDirectory + imageTiles[j].FileName + "." + imageTiles[j].ImageExtension).Length == 0))
@@ -259,7 +246,6 @@ namespace AeroScenery.Download
             string fullFilePath = path + imageTile.FileName + "." + imageTile.ImageExtension;
 
 
-
             cookieContainer = new CookieContainer();
             cookieContainer.Add(new Uri(imageTile.URL), new Cookie("APISID", Guid.NewGuid().ToString()));
             cookieContainer.Add(new Uri(imageTile.URL), new Cookie("NID", "119=" + Guid.NewGuid().ToString()));
@@ -342,7 +328,6 @@ namespace AeroScenery.Download
                         }
 
                         break;
-                    //#MOD
                     case OrthophotoSource.ArcGIS:
 
                         // Added to fix this error
@@ -355,7 +340,8 @@ namespace AeroScenery.Download
                         {
                             log.DebugFormat("Invalid ArcGIS tile {0}. Status is {1}", imageTile.FileName, responseResult.Result.StatusCode);
 
-                            for (int i = 0; i < maxDownloadRetryAttempts * 3; i++) //#MOD: triples the number of attempts for ArcGIS to avoid missing tiles / Add. recommendation for settings:  increase the "Waiting time between Downloads" at least to 15 (instead of 10) and the "randomize" at least to 5 (instead of 3)
+                            // ArcGIS throttles; retry more often than other sources (also raise wait/randomize in Settings).
+                            for (int i = 0; i < maxDownloadRetryAttempts * 3; i++)
                             {
                                 await Task.Delay(retryWaitTimeSpan);
 
@@ -373,7 +359,6 @@ namespace AeroScenery.Download
                         }
 
                         break;
-                    //#MOD
                     case OrthophotoSource.CH_Geoportal:
 
                         // Added to fix this error
@@ -405,7 +390,6 @@ namespace AeroScenery.Download
 
                         break;
 
-                    //#MOD
                     case OrthophotoSource.HereWeGo:
 
                         // Added to fix this error
@@ -418,7 +402,8 @@ namespace AeroScenery.Download
                         {
                             log.DebugFormat("Invalid HereWeGo tile {0}. Status is {1}", imageTile.FileName, responseResult.Result.StatusCode);
 
-                            for (int i = 0; i < maxDownloadRetryAttempts * 3; i++) //#MOD: triples the number of attempts for HereWeGo to avoid missing tiles / Add. recommendation for settings:  increase the "Waiting time between Downloads" at least to 15 (instead of 10) and the "randomize" at least to 5 (instead of 3)
+                            // HereWeGo throttles; retry more often than other sources (also raise wait/randomize in Settings).
+                            for (int i = 0; i < maxDownloadRetryAttempts * 3; i++)
                             {
                                 await Task.Delay(retryWaitTimeSpan);
 

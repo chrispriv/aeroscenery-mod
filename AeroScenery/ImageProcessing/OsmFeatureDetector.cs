@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace AeroScenery.ImageProcessing
 {
-    //#MOD_k
     internal class OsmFeatureDetector
     {
         private Dictionary<OsmFeatureType, Color> featureColors;

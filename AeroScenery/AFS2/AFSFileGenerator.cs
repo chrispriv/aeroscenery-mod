@@ -1,4 +1,4 @@
-﻿using AeroScenery.Common;
+using AeroScenery.Common;
 using AeroScenery.Controls;
 using log4net;
 using System;
@@ -56,7 +56,6 @@ namespace AeroScenery.AFS2
             return shift;
         }
 
-        //#MOD_k
         // A new option for shift correction based on the user shift level has been added via the GUI to correct incorrect positioning along the north–south axis
         // The user shift level is referenced based on grid size tile level 9 (level 13 and 14 tiles are not shifted, as their position is correct)
         public async Task GenerateAFSFilesAsync(AFS2GridSquare afs2GridSquare, string stitchedTilesDirectory, string afsGridSquareDirectory, IProgress<AFSFileGeneratorProgress> progress)

@@ -1,4 +1,4 @@
-﻿using AeroScenery.Common;
+using AeroScenery.Common;
 using AeroScenery.Data.Models;
 using CsQuery;
 using log4net;
@@ -16,11 +16,9 @@ namespace AeroScenery.FSCloudPort
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
 
 
-
         public async Task<IList<FSCloudPortAirport>> ScrapeAirportsAsync()
         {
 
-            //#MOD
             //var urlTemplate = "http://www.fscloudport.com/phdi/p1.nsf/aeroscenery?OpenView&Start={0}&Count={1}";
             var urlTemplate = "https://www.fscloudport.com/atk/fscp.nsf/aeroscenery?OpenView&Start={0}&Count={1}"; 
 
@@ -48,8 +46,6 @@ namespace AeroScenery.FSCloudPort
                         startIndex += 1000;
                     }
                     while (dataAvailable);
-
-
 
 
                 }
@@ -140,14 +136,10 @@ namespace AeroScenery.FSCloudPort
                     }
 
 
-
-
-
                 }
 
                 ix++;
             }
-
 
 
         }

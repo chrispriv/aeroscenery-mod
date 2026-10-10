@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace AeroScenery.Common
@@ -32,7 +32,6 @@ namespace AeroScenery.Common
                 if (Directory.Exists(afsUserDirectoryPath))
                 {
                     // If no scenery sub-directory exists, create one
-                    //#MOD
                     //string afsUserDirectorySceneryPath = afsUserDirectoryPath + @"scenery\";
                     string afsUserDirectorySceneryPath = afsUserDirectoryPath + settings.AFSSceneryFolder;
 
@@ -105,6 +104,7 @@ namespace AeroScenery.Common
                 + Path.DirectorySeparatorChar;
         }
 
+        /// <summary>Same as <see cref="GetFsgSceneryCopyDirectoryPath"/>, optionally creating the folders.</summary>
         public static string FindFsgSceneryCopyDirectory(Settings settings, bool createDirectories = true)
         {
             string imagesDir = GetFsgSceneryCopyDirectoryPath(settings);

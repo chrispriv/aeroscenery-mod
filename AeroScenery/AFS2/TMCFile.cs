@@ -1,4 +1,4 @@
-﻿using AeroScenery.Common;
+using AeroScenery.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -112,7 +112,6 @@ namespace AeroScenery.AFS2
 
     }
 
-    //#MOD_k
     public class TMCElevationFile
     {
         public string InputFolderImages { get; set; }
@@ -228,7 +227,6 @@ namespace AeroScenery.AFS2
         }
     }
 
-    //#MOD_k
     public class TMCImagesFile 
     {
         public string InputFolderImages { get; set; }

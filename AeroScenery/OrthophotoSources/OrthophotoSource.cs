@@ -1,4 +1,4 @@
-﻿namespace AeroScenery.OrthoPhotoSources
+namespace AeroScenery.OrthoPhotoSources
 {
     public enum OrthophotoSource
     {
@@ -17,7 +17,6 @@
         SE_Hitta,
         HereWeGo,
         NO_GuleSider,
-        //#MOD
         Mapbox,
         GoogleMaps,
         GoogleRoads,
@@ -41,7 +40,6 @@
         public static readonly string SE_Hitta = "se_hitta";
         public static readonly string HereWeGo = "hwg";
         public static readonly string NO_GuleSider = "no_gus";
-        //#MOD
         public static readonly string Mapbox = "mapb";
         public static readonly string GoogleMaps = "g-mask";
         public static readonly string GoogleRoads = "r-mask";

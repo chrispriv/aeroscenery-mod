@@ -735,7 +735,8 @@ namespace AeroScenery
             // downloadThreadProgress1
             // 
             this.downloadThreadProgress1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress1.AutoSize = false;
+            this.downloadThreadProgress1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress1.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress1.Location = new System.Drawing.Point(3, 4);
             this.downloadThreadProgress1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -746,7 +747,8 @@ namespace AeroScenery
             // downloadThreadProgress2
             // 
             this.downloadThreadProgress2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress2.AutoSize = false;
+            this.downloadThreadProgress2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress2.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress2.Location = new System.Drawing.Point(3, 61);
             this.downloadThreadProgress2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
@@ -757,7 +759,8 @@ namespace AeroScenery
             // downloadThreadProgress3
             // 
             this.downloadThreadProgress3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress3.AutoSize = false;
+            this.downloadThreadProgress3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress3.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress3.Location = new System.Drawing.Point(3, 127);
             this.downloadThreadProgress3.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
@@ -768,7 +771,8 @@ namespace AeroScenery
             // downloadThreadProgress4
             // 
             this.downloadThreadProgress4.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress4.AutoSize = false;
+            this.downloadThreadProgress4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress4.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress4.Location = new System.Drawing.Point(3, 200);
             this.downloadThreadProgress4.Margin = new System.Windows.Forms.Padding(3, 7, 3, 7);
@@ -779,7 +783,8 @@ namespace AeroScenery
             // downloadThreadProgress5
             // 
             this.downloadThreadProgress5.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress5.AutoSize = false;
+            this.downloadThreadProgress5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress5.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress5.Location = new System.Drawing.Point(3, 274);
             this.downloadThreadProgress5.Margin = new System.Windows.Forms.Padding(3, 9, 3, 9);
@@ -790,7 +795,8 @@ namespace AeroScenery
             // downloadThreadProgress6
             // 
             this.downloadThreadProgress6.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress6.AutoSize = false;
+            this.downloadThreadProgress6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress6.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress6.Location = new System.Drawing.Point(3, 353);
             this.downloadThreadProgress6.Margin = new System.Windows.Forms.Padding(3, 12, 3, 12);
@@ -801,7 +807,8 @@ namespace AeroScenery
             // downloadThreadProgress7
             // 
             this.downloadThreadProgress7.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress7.AutoSize = false;
+            this.downloadThreadProgress7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress7.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress7.Location = new System.Drawing.Point(3, 439);
             this.downloadThreadProgress7.Margin = new System.Windows.Forms.Padding(3, 16, 3, 16);
@@ -812,7 +819,8 @@ namespace AeroScenery
             // downloadThreadProgress8
             // 
             this.downloadThreadProgress8.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.downloadThreadProgress8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.downloadThreadProgress8.AutoSize = false;
+            this.downloadThreadProgress8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowOnly;
             this.downloadThreadProgress8.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.downloadThreadProgress8.Location = new System.Drawing.Point(3, 534);
             this.downloadThreadProgress8.Margin = new System.Windows.Forms.Padding(3, 21, 3, 21);
@@ -1110,7 +1118,7 @@ namespace AeroScenery
             this.installSceneryIntoAFSCheckBox.Name = "installSceneryIntoAFSCheckBox";
             this.installSceneryIntoAFSCheckBox.Size = new System.Drawing.Size(301, 21);
             this.installSceneryIntoAFSCheckBox.TabIndex = 5;
-            this.installSceneryIntoAFSCheckBox.Text = "Install Scenery for FS4 (waiting for GeoConvert)";
+            this.installSceneryIntoAFSCheckBox.Text = "Install Scenery for FS4";
             this.installSceneryIntoAFSCheckBox.UseVisualStyleBackColor = true;
             this.installSceneryIntoAFSCheckBox.CheckedChanged += new System.EventHandler(this.installSceneryIntoAFSCheckBox_CheckedChanged);
             // 

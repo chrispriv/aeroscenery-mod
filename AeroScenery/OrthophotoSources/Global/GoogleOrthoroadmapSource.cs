@@ -1,13 +1,12 @@
-﻿using AeroScenery.OrthoPhotoSources;
+using AeroScenery.OrthoPhotoSources;
 
-namespace AeroScenery.OrthophotoSources //#MOD
+namespace AeroScenery.OrthophotoSources
 {
     public class GoogleOrthoroadmapSource : GenericOrthophotoSource
     {
 
-        //#MOD
         public static string  DefaultUrlTemplate = "http://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={zoom}"; //lyrs=t for Terrain & lyrs=r for Roads
-        //#TRY
+        // Just to try out a different Map
         //public static string DefaultUrlTemplate = "https://wprd02.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={zoom}";
 
         public GoogleOrthoroadmapSource()

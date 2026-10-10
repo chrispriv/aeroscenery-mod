@@ -41,12 +41,26 @@ namespace AeroScenery.UI
         public void SetImageTileCount(int imageTilesDone, int totalImageTiles)
         {
             this.imageTileCountLabel.Text = String.Format("{0} of {1} Image Tiles Downloaded", imageTilesDone, totalImageTiles);
+            this.imageTileCountLabel.Left = this.progressBar.Left
+                + Math.Max(0, (this.progressBar.Width - this.imageTileCountLabel.Width) / 2);
         }
 
         public void Reset()
         {
             this.SetProgressPercentage(0);
             this.imageTileCountLabel.Text = "- of - Image Tiles Downloaded";
+        }
+
+        public void FitToWidth(int totalWidth)
+        {
+            this.AutoSize = false;
+            this.Width = totalWidth;
+            int rightPad = 8;
+            int barWidth = Math.Max(100, totalWidth - this.progressBar.Left - rightPad);
+            this.progressBar.Width = barWidth;
+            this.label2.Left = this.progressBar.Right - this.label2.Width;
+            this.imageTileCountLabel.Left = this.progressBar.Left
+                + Math.Max(0, (barWidth - this.imageTileCountLabel.Width) / 2);
         }
     }
 }

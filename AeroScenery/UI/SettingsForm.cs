@@ -1,4 +1,4 @@
-﻿using log4net;
+using log4net;
 using System;
 using System.Data;
 using System.Linq;
@@ -20,7 +20,6 @@ namespace AeroScenery.UI
         private ImageProcessingPreviewForm imageProcessingPreviewForm;
 
         private bool updateImagePreview;
-        //#MOD
         private bool showMessageStartAppAgain = false;
 
         private Label ourAirportsStatusLabel;
@@ -95,11 +94,9 @@ namespace AeroScenery.UI
             this.afsSDKFolderTextBox.Text = settings.AFS2SDKDirectory;
             settings.AFS2UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs2UserFolderTextBox.Text);
             settings.FsgWorkingDirectory = pathWithTrailingDirectorySeparatorChar(this.fsgWorkingFolderTextBox.Text);
-            //#MOD
             //settings.AFS4UserDirectory = pathWithTrailingDirectorySeparatorChar(this.afs4UserFolderTextBox.Text);
             settings.QGISDirectory = pathWithTrailingDirectorySeparatorChar(this.qgisFolderTextBox.Text);
 
-            //#MOD
             settings.AFSSceneryFolder = pathWithTrailingDirectorySeparatorChar(this.afsSceneryFolderTextBox.Text);
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace(" ", "");
             settings.AFSSceneryFolder = settings.AFSSceneryFolder.Replace("#", "");
@@ -127,7 +124,6 @@ namespace AeroScenery.UI
                 settings.DownloadWaitRandomMs = int.Parse(this.downloadWaitRandomTextBox.Text);
             }
 
-            //#MOD
             if (Convert.ToInt32(this.simultaneousDownloadsComboBox.Text) != settings.SimultaneousDownloads)
             {
                 int simultaneous = Convert.ToInt32(this.simultaneousDownloadsComboBox.Text);
@@ -197,14 +193,11 @@ namespace AeroScenery.UI
             settings.USGSPassword = this.usgsPasswordTextBox.Text.Trim();
             settings.USGSUsername = this.usgsUsernameTextBox.Text.Trim();
             settings.LinzApiKey = this.linzKeyTextBox.Text.Trim();
-            //#MOD
             settings.MapboxApiKey = this.mapboxKeyTextBox.Text.Trim();
 
-            //#MOD
             settings.OpenTopographyApiKey = this.openTopographyAPITextBox.Text.Trim();
             settings.OpenTopographyDataSet = this.openTopographyDataSetTextBox.Text;
             settings.HereWeGoApiKey = this.herewegoKeyTextBox.Text.Trim();
-            //#MOD_k
             settings.CartoDBApiKey = this.cartodbKeyTextBox.Text.Trim();
 
             settings.DownloadOSMDataEnable = enableDownloadOsmDataCheckBox.Checked;
@@ -213,7 +206,6 @@ namespace AeroScenery.UI
                 settings.DownloadOsmData = false;
             }
 
-            //#MOD_k
             settings.FixMissingTilesEnable = this.FixMissingTilesEnabledCheckBox.Checked;
             if (this.FixMissingTilesEnabledCheckBox.Checked == false)
             {
@@ -231,10 +223,8 @@ namespace AeroScenery.UI
             settings.RedAdjustment = this.imgProcRedSlider.Value;
             settings.GreenAdjustment = this.imgProcGreenSlider.Value;
             settings.BlueAdjustment = this.imgProcBlueSlider.Value;
-            //#MOD
             settings.RemoveAlphaChannelAdjustment = this.imageRemoveAlphaChannelCheckBox.Checked;
 
-            //#MOD_k
             settings.WaterMaskingEnable = this.WaterMaskingEnabledCheckBox.Checked;
             if (this.WaterMaskingEnabledCheckBox.Checked == false)
             {
@@ -243,7 +233,6 @@ namespace AeroScenery.UI
             settings.WaterFadeThresholdDistance = this.waterFadeThresholdSlider.Value;
             settings.WaterReplaceThresholdDistance = this.waterReplaceThresholdSlider.Value;
 
-            //#MOD_k
             settings.AllowShiftCorrectionEnable = this.AllowShiftCorrectionEnabledCheckBox.Checked;
             if (this.AllowShiftCorrectionEnabledCheckBox.Checked == false) 
             { 
@@ -252,13 +241,11 @@ namespace AeroScenery.UI
             } 
 
             AeroSceneryManager.Instance.SaveSettings();
-            //#MOD_k
             //this.Hide();
             this.Close();
 
             log.Info("Settings saved");
 
-            //#MOD
             if (showMessageStartAppAgain) 
             {
                 var messageBox = new CustomMessageBox("Please restart the App to make the changes effective.",
@@ -279,7 +266,6 @@ namespace AeroScenery.UI
             this.afsSDKFolderTextBox.Text = GeoConvertSdkPath.NormalizeToExe(settings.AFS2SDKDirectory);
             this.afs2UserFolderTextBox.Text = settings.AFS2UserDirectory;
             this.fsgWorkingFolderTextBox.Text = settings.FsgWorkingDirectory;
-            //#MOD
             this.qgisFolderTextBox.Text = settings.QGISDirectory;
             this.afsSceneryFolderTextBox.Text = settings.AFSSceneryFolder;
 
@@ -287,7 +273,6 @@ namespace AeroScenery.UI
             this.downloadWaitTextBox.Text = settings.DownloadWaitMs.ToString();
             this.downloadWaitRandomTextBox.Text = settings.DownloadWaitRandomMs.ToString();
 
-            //#MOD
             this.simultaneousDownloadsComboBox.Text = Convert.ToString(settings.SimultaneousDownloads);
 
             this.maxTilesPerStitchedImageTextBox.Text = settings.MaximumStitchedImageSize.GetValueOrDefault(66).ToString();
@@ -338,12 +323,10 @@ namespace AeroScenery.UI
             this.usgsUsernameTextBox.Text = settings.USGSUsername;
             this.usgsPasswordTextBox.Text = settings.USGSPassword;
             this.linzKeyTextBox.Text = settings.LinzApiKey;
-            //#MOD
             this.mapboxKeyTextBox.Text = settings.MapboxApiKey;
             this.openTopographyAPITextBox.Text = settings.OpenTopographyApiKey;
             this.openTopographyDataSetTextBox.Text = settings.OpenTopographyDataSet;
             this.herewegoKeyTextBox.Text = settings.HereWeGoApiKey;
-            //#MOD_k
             this.cartodbKeyTextBox.Text = settings.CartoDBApiKey;
 
             this.enableDownloadOsmDataCheckBox.Checked = settings.DownloadOSMDataEnable.Value;
@@ -372,10 +355,8 @@ namespace AeroScenery.UI
             this.imgProcBlueSlider.Value = settings.BlueAdjustment.Value;
             this.imgProcBlueTextBox.Text = settings.BlueAdjustment.Value.ToString();
 
-            //#MOD
             this.imageRemoveAlphaChannelCheckBox.Checked = settings.RemoveAlphaChannelAdjustment.Value;
 
-            //#MOD_k
             this.WaterMaskingEnabledCheckBox.Checked = settings.WaterMaskingEnable.Value;
 
             this.waterFadeThresholdSlider.Value = settings.WaterFadeThresholdDistance.Value;
@@ -383,7 +364,6 @@ namespace AeroScenery.UI
             this.waterReplaceThresholdSlider.Value = settings.WaterReplaceThresholdDistance.Value;
             this.waterReplaceThresholdTextBox.Text = settings.WaterReplaceThresholdDistance.Value.ToString();
 
-            //#MOD_k
             this.FixMissingTilesEnabledCheckBox.Checked = settings.FixMissingTilesEnable.Value;
             this.AllowShiftCorrectionEnabledCheckBox.Checked = settings.AllowShiftCorrectionEnable.Value;
 
@@ -398,7 +378,6 @@ namespace AeroScenery.UI
                 this.ToggleImageProcessingControlsEnabled(false);
             }
 
-            //#MOD_k
             if (this.WaterMaskingEnabledCheckBox.Checked)
             {
                 this.ToggleImageWaterMaskingControlsEnabled(true);
@@ -504,7 +483,6 @@ namespace AeroScenery.UI
         private void workingFolderButton_Click(object sender, EventArgs e)
         {
             var settings = AeroSceneryManager.Instance.Settings;
-            //#MOD
             this.folderBrowserDialog1.SelectedPath = this.workingFolderTextBox.Text;
 
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
@@ -520,7 +498,6 @@ namespace AeroScenery.UI
         private void aerosceneryDatabaseFolderButton_Click(object sender, EventArgs e)
         {
             var settings = AeroSceneryManager.Instance.Settings;
-            //#MOD
             this.folderBrowserDialog1.SelectedPath = this.aeroSceneryDatabaseFolderTextBox.Text;
 
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
@@ -573,7 +550,6 @@ namespace AeroScenery.UI
         private void afsUserFolderButton_Click(object sender, EventArgs e)
         {
             var settings = AeroSceneryManager.Instance.Settings;
-            //#MOD
             this.folderBrowserDialog1.SelectedPath = this.afs2UserFolderTextBox.Text;
 
             DialogResult result = this.folderBrowserDialog1.ShowDialog();
@@ -596,7 +572,6 @@ namespace AeroScenery.UI
             }
         }
 
-        //#MOD
         private void qgisFolderButton_Click(object sender, EventArgs e)
         {
             var settings = AeroSceneryManager.Instance.Settings;
@@ -940,7 +915,6 @@ namespace AeroScenery.UI
             else
             {
                 this.ToggleImageProcessingControlsEnabled(false);
-                //#MOD
                 this.imageRemoveAlphaChannelCheckBox.Checked = false;
 
             }
@@ -992,7 +966,6 @@ namespace AeroScenery.UI
  
         private void LinkLabel1_Click(object sender, EventArgs e)
         {
-            //#MOD
             //System.Diagnostics.Process.Start("https://www.linz.govt.nz/data/linz-data-service/guides-and-documentation/creating-an-api-key");
             System.Diagnostics.Process.Start("https://basemaps.linz.govt.nz/?i=nz-satellite-2021-2022-10m#@-41.3768088,172.9687500,z5.2493");
         }
@@ -1002,24 +975,20 @@ namespace AeroScenery.UI
             System.Diagnostics.Process.Start("https://account.mapbox.com/auth/signup/");
         }
 
-        //#MOD
         private void LinkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://portal.opentopography.org/login");
         }
-        //#MOD
         private void LinkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://platform.here.com/");
         }
 
-        //#MOD
         private void LinkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://trac.osgeo.org/osgeo4w/");
         }
 
-        //#MOD_k
         private void linkLabel6_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://carto.com/basemaps/apikey/");
@@ -1030,7 +999,6 @@ namespace AeroScenery.UI
             System.Diagnostics.Process.Start("https://www.aerofly-sim.de/aerofly_fs_2_sdk/");
         }
 
-        //#MOD_k
         private void AfsSceneryFolderTextBox_TextChanged(object sender, EventArgs e)
         {
             this.afsSceneryFolderTextBox.Text = pathWithTrailingDirectorySeparatorChar(this.afsSceneryFolderTextBox.Text);
@@ -1043,7 +1011,6 @@ namespace AeroScenery.UI
             }
         }
 
-        //#MOD_k
         private void WaterMaskingEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             if (this.WaterMaskingEnabledCheckBox.Checked)

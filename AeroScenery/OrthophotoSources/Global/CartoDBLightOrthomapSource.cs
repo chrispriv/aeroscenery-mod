@@ -1,16 +1,14 @@
-﻿using AeroScenery.OrthoPhotoSources;
+using AeroScenery.OrthoPhotoSources;
 using System.Collections.Generic;
 
-namespace AeroScenery.OrthophotoSources //#MOD
+namespace AeroScenery.OrthophotoSources
 {
     public class CartoDBLightOrthomapSource : GenericOrthophotoSource
     {
-        //#MOD_k
         //API key now needed for Carto DB Light (no labels) tiles. You can get one here: https://carto.com/apikey/
         //public static string DefaultUrlTemplate = "https://cartodb-basemaps-a.global.ssl.fastly.net/light_nolabels/{zoom}/{x}/{y}.png"; // Carto DB Light (no labels)
         public static string DefaultUrlTemplate = "https://cartodb-basemaps-a.global.ssl.fastly.net/light_nolabels/{zoom}/{x}/{y}.png?key={apikey}"; // Carto DB Light (no labels)
 
-        //#MOD_k
         private string apiKey;
 
         public string ApiKey
@@ -53,7 +51,6 @@ namespace AeroScenery.OrthophotoSources //#MOD
             this.imageExtension = "png";
             this.source = OrthophotoSourceDirectoryName.CartoDBLight;
             this.tiledWebMapType = TiledWebMapType.Google;
-            //#MOD_k
             this.AdditionalUrlParams = new Dictionary<string, string>();
         }
 

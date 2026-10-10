@@ -296,6 +296,7 @@ namespace AeroScenery.Data
         private void UpgradeToVersion11()
         {
             log.Info("Updating database to version 11");
+            // Elevation-only squares used to be marked Fixed = 0; map that onto ElevationDownloaded.
 
             using (var con = DbConnection())
             {

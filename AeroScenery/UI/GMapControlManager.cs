@@ -1,4 +1,4 @@
-﻿using AeroScenery.AFS2;
+using AeroScenery.AFS2;
 using GMap.NET.WindowsForms;
 using System.Drawing;
 
@@ -26,12 +26,10 @@ namespace AeroScenery.UI
                     polygon.Fill = new SolidBrush(Color.FromArgb(40, Color.Orange));
                     polygon.Stroke = new Pen(Color.Orange, 1);
                     break;
-                //#MOD
                 case GridSquareDisplayType.Show:
                     polygon.Fill = new SolidBrush(Color.FromArgb(40, Color.GhostWhite));
                     polygon.Stroke = new Pen(Color.GhostWhite, 1);
                     break;
-                //#MOD_k
                 case GridSquareDisplayType.Data:
                     polygon.Fill = new SolidBrush(Color.FromArgb(20, Color.Green));
                     polygon.Stroke = new Pen(Color.Green, 1);
@@ -47,6 +45,7 @@ namespace AeroScenery.UI
             this.GMapControl.Overlays.Add(polygonOverlay);
 
             this.GMapControl.Refresh();
+            // GMap.NET only paints a newly added overlay after a visibility toggle.
             polygonOverlay.IsVisibile = false;
             polygonOverlay.IsVisibile = true;
 

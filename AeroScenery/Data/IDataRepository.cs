@@ -1,4 +1,4 @@
-﻿using AeroScenery.Common;
+using AeroScenery.Common;
 using AeroScenery.Data.Models;
 using System.Collections.Generic;
 
@@ -7,65 +7,32 @@ namespace AeroScenery.Data
     public interface IDataRepository
     {
         Settings Settings { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+
         void CreateDatabase();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         List<GridSquare> GetAllGridSquares();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gridSquare"></param>
         void UpdateGridSquare(GridSquare gridSquare);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gridSquare"></param>
+        /// <summary>Inserts a square after orthophoto download (Fixed = 1).</summary>
         void CreateGridSquare(GridSquare gridSquare);
 
-        //#MOD_k
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gridSquare"></param>
+        /// <summary>Inserts a square after an elevation-only download (Fixed = 0, ElevationDownloaded = 1).</summary>
         void CreateDataSquare(GridSquare gridSquare);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gridSquare"></param>
         void DeleteGridSquare(GridSquare gridSquare);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gridSquare"></param>
         void DeleteGridSquare(string gridSquareName);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         GridSquare FindGridSquare(string key);
 
+        /// <summary>Writes Generate AID/TMC metadata; inserts the square if it does not exist yet.</summary>
         void SaveBuiltInConversion(GridSquare gridSquare);
 
         void SetOsmDownloaded(string gridSquareName);
 
         void SetElevationDownloaded(string gridSquareName);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         void UpgradeDatabase();
     }
 }

@@ -1,4 +1,4 @@
-﻿using AeroScenery.AFS2;
+using AeroScenery.AFS2;
 using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.Download;
@@ -139,7 +139,6 @@ namespace AeroScenery.Data
             log.Info(String.Format("AFS2Directory: {0}", settings.AFS2Directory));
             log.Info(String.Format("AFS2UserDirectory: {0}", settings.AFS2UserDirectory));
             log.Info(String.Format("FsgWorkingDirectory: {0}", settings.FsgWorkingDirectory));
-            //#MOD
             log.Info(String.Format("AFSSceneryFolder: {0}", settings.AFSSceneryFolder));
             log.Info(String.Format("WorkingDirectory: {0}", settings.WorkingDirectory));
             log.Info(String.Format("AeroSceneryDBDirectory: {0}", settings.AeroSceneryDBDirectory));
@@ -149,7 +148,6 @@ namespace AeroScenery.Data
             log.Info(String.Format("StitchImageTiles: {0}", settings.StitchImageTiles));
             log.Info(String.Format("GenerateAIDAndTMCFiles: {0}", settings.GenerateAIDAndTMCFiles));
             log.Info(String.Format("RunGeoConvert: {0}", settings.RunGeoConvert));
-            //#MOD
             log.Info(String.Format("RunTreesDetection: {0}", settings.RunTreesDetection));
             log.Info(String.Format("RunTreesDetectionMask: {0}", settings.RunTreesDetectionMask));
             log.Info(String.Format("RunTreesDetectionDetection: {0}", settings.RunTreesDetectionDetection));
@@ -170,7 +168,6 @@ namespace AeroScenery.Data
             log.Info(String.Format("ConverterThreads: {0}", settings.ConverterThreads));
             log.Info(String.Format("BuiltInConvertTarget: {0}", settings.BuiltInConvertTarget));
             log.Info(String.Format("ShowMultipleConcurrentSquaresWarning: {0}", settings.ShowMultipleConcurrentSquaresWarning));
-            //#MOD_k
             log.Info(String.Format("WaterMaskingEnable: {0}", settings.WaterMaskingEnable));
             log.Info(String.Format("WaterMaskingProcessing: {0}", settings.WaterMaskingProcessing));
             log.Info(String.Format("AllowShiftCorrectionEnable: {0}", settings.AllowShiftCorrectionEnable));
@@ -196,7 +193,6 @@ namespace AeroScenery.Data
             log.Info(String.Format("RedAdjustment: {0}", settings.RedAdjustment));
             log.Info(String.Format("GreenAdjustment: {0}", settings.GreenAdjustment));
             log.Info(String.Format("BlueAdjustment: {0}", settings.BlueAdjustment));
-            //#MOD
             log.Info(String.Format("RemoveAlphaChannelAdjustment: {0}", settings.RemoveAlphaChannelAdjustment));
 
         }
@@ -232,7 +228,6 @@ namespace AeroScenery.Data
             if (settings.AFSLevelsToGenerate == null)
             {
                 settings.AFSLevelsToGenerate = new List<int>();
-                //#MOD_k
                 settings.AFSLevelsToGenerate.Add(9);
                 settings.AFSLevelsToGenerate.Add(10);
                 settings.AFSLevelsToGenerate.Add(11);
@@ -240,7 +235,7 @@ namespace AeroScenery.Data
                 //settings.AFSLevelsToGenerate.Add(14);
             }
 
-            //#MOD Trying out different setting for useragent
+            // HTTP User-Agent sent with image-tile requests.
             settings.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36";
             //settings.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36 Edg/90.0.818.46";
             //settings.UserAgent = "Mozilla / 5.0(Windows NT 10.0; Win64; x64) AppleWebKit / 537.36(KHTML, like Gecko) Chrome / 42.0.2311.135 Safari / 537.36 Edge / 12.246";
@@ -299,10 +294,8 @@ namespace AeroScenery.Data
                 settings.WorkingDirectory = aeroSceneryWorkingDirectoryPath;
             }
 
-            //#MOD_l
             OurAirportsImporter.GetCsvDirectory();
 
-            //#MOD
             if ((settings.AFSSceneryFolder == null) || (settings.AFSSceneryFolder == ""))
                 settings.AFSSceneryFolder = "myscenery\\";
 
@@ -321,7 +314,6 @@ namespace AeroScenery.Data
             if (settings.GeoConvertUseWrapper == null)
                 settings.GeoConvertUseWrapper = true;
 
-            //#MOD_l
             if (settings.UseBuiltInTtcConverter == null)
                 settings.UseBuiltInTtcConverter = true;
 
@@ -351,7 +343,6 @@ namespace AeroScenery.Data
             if (settings.LinzApiKey == null)
                 settings.LinzApiKey = "";
 
-            //#MOD
             if (settings.MapboxApiKey == null)
                 settings.MapboxApiKey = "";
             
@@ -363,7 +354,6 @@ namespace AeroScenery.Data
             if (settings.HereWeGoApiKey == null)
                 settings.HereWeGoApiKey = "";
 
-            //#MOD_k
             if (settings.CartoDBApiKey == null)
                 settings.CartoDBApiKey = "";
 
@@ -419,7 +409,6 @@ namespace AeroScenery.Data
             if (settings.BlueAdjustment == null)
                 settings.BlueAdjustment = 0;
 
-            //#MOD
             if (settings.RemoveAlphaChannelAdjustment == null)
                 settings.RemoveAlphaChannelAdjustment = false;
 
@@ -429,13 +418,11 @@ namespace AeroScenery.Data
             if (settings.OrthophotoSourceSettings.BN_OrthophotoSourceUrlTemplate == null)
                 settings.OrthophotoSourceSettings.BN_OrthophotoSourceUrlTemplate = BingOrthophotoSource.DefaultUrlTemplate;
 
-            //#MOD
             if (settings.FixMissingTilesEnable == null)
                 settings.FixMissingTilesEnable = false;
             if (settings.FixMissingTilesProcessing == null)
                 settings.FixMissingTilesProcessing = false;
 
-            //#MOD
             if (settings.DownloadOSMDataEnable == null)
                 settings.DownloadOSMDataEnable = false;
 
@@ -445,7 +432,6 @@ namespace AeroScenery.Data
             if (settings.DownloadElevationData == null)
                 settings.DownloadElevationData = false;
 
-            //#MOD_k
             if (settings.WaterMaskingEnable == null)
                 settings.WaterMaskingEnable = false;
             if (settings.WaterMaskingProcessing == null)
@@ -455,7 +441,6 @@ namespace AeroScenery.Data
             if (settings.WaterReplaceThresholdDistance == null)
                 settings.WaterReplaceThresholdDistance = 5;
 
-            //#MOD_k
             if (settings.AllowShiftCorrectionEnable == null)
                 settings.AllowShiftCorrectionEnable = false;
             if (settings.AllowShiftCorrectionProcessing == null)
@@ -487,13 +472,11 @@ namespace AeroScenery.Data
                     messageBox.ShowDialog();
                 }
 
-                //#MOD_k
                 if (!Directory.Exists(Path.Combine(settings.AeroSceneryDBDirectory, "elevation")))
                 {
                     Directory.CreateDirectory(Path.Combine(settings.AeroSceneryDBDirectory, "elevation"));
                 }
 
-                //#MOD_l
                 OurAirportsImporter.GetCsvDirectory();
 
                 if (!Directory.Exists(settings.WorkingDirectory))

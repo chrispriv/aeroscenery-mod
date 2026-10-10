@@ -5,6 +5,17 @@ Based on AeroScenery 1.1.3-beta
 
 ---
 
+## v1.1.3-mod.l
+- Built-in TTC converter for FS4, FSG Android, or both (SDK GeoConvert optional)
+- Copy scenery to FSG working folder; Default Actions follow the convert target
+- OurAirports import for Show Airports
+- Tile Info and right-click Open Folder on the map
+- Install confirmation shows FS4/FSG paths; Cancel aborts
+- Up to 16 simultaneous downloads
+- Credits: parallel downloads, in-process conversion and run timer follow Juan Luis Gabriel’s AeroScenery FS4 (https://github.com/jlgabriel/aeroscenery-fs4); TTC writing (compression, masks, DXT1/ETC2) is this fork’s path
+
+---
+
 ## v1.1.3-mod.k
 - Portable app (no MSI required)
 - Sequential GeoConvert built into AeroScenery (GeoConvert Wrapper removed)

@@ -1,13 +1,13 @@
-﻿namespace AeroScenery.UI
+namespace AeroScenery.UI
 {
     public enum GridSquareDisplayType
     {
         Selected,
         Active,
         Downloaded,
-        //#MOD
+        /// <summary>Temporary highlight when searching for a tile by name.</summary>
         Show,
-        //#MOD_k
+        /// <summary>Elevation-only square (green overlay).</summary>
         Data
     }
 }

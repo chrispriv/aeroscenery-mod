@@ -7,6 +7,40 @@ This project is a community-maintained fork of
 
 ---
 
+## [1.1.3-mod.l] – Community Mod l
+**Maintainer:** chrispriv  
+**Based on:** AeroScenery 1.1.3-beta / community Mod k
+
+### Added
+- Built-in TTC converter (default): Aerofly FS4 (DXT1), FSG Android (ETC2), or both, without launching SDK GeoConvert
+- FSG Scenery Working Folder and **Copy Scenery to FSG Scenery Working Folder** after conversion
+- OurAirports CSV import; **Show Airports** on the map toolbar after import
+- Per-tile Generate AID/TMC metadata in the database; **Tile Info** on the map toolbar
+- Right-click a map tile to open its working folder
+- Green map border for elevation-only squares (`ElevationDownloaded`)
+
+### Changed
+- Settings GeoConvert path is `aerofly_fs_2_geoconvert.exe` (folder paths are still accepted)
+- Default Actions follow the convert target (FS4 install and/or FSG copy)
+- Install confirmation lists FS4 install and/or FSG copy destinations; Cancel aborts the run
+- Status bar: Working scenery first, then selected square count
+- Progress labels clear on Start; elapsed timer starts after the install confirmation
+- Up to 16 simultaneous image downloads
+- GitHub Pages docs and screenshots for Mod l
+
+### Removed
+- Open Scenery Editor toolbar item
+- Legacy “Additionally for mobile” extra step (SDK Generate AID/TMC still writes the mobile TMC folder)
+
+### Credits
+- Parallel downloads, in-process conversion in place of SDK GeoConvert, and the
+  run timer follow **Juan Luis Gabriel**’s
+  [AeroScenery FS4](https://github.com/jlgabriel/aeroscenery-fs4).
+  TTC writing here is a separate path (compressed tiles, alpha-channel masks,
+  DXT1 and ETC2). Aerofly FS4 Bridge remains credited for the moving-map DLL.
+
+---
+
 ## [1.1.3-mod.k] – Community Mod k
 **Maintainer:** chrispriv  
 **Based on:** AeroScenery 1.1.3-beta / community Mod j

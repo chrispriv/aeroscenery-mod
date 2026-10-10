@@ -1,9 +1,9 @@
-﻿using AeroScenery.OrthoPhotoSources;
+using AeroScenery.OrthoPhotoSources;
 using System.Collections.Generic;
 
 namespace AeroScenery.OrthophotoSources
 {
-    public class HereWeGoOrthophotoSource : GenericOrthophotoSource //#MOD
+    public class HereWeGoOrthophotoSource : GenericOrthophotoSource
     {
         //public static string DefaultUrlTemplate = "https://1.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{zoom}/{x}/{y}/256/jpg?apiKey=RBx63mkCvx-pB_w9dWzVj2tnCTDTozT3C-O14S_H2Ls";
         public static string DefaultUrlTemplate = "https://1.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{zoom}/{x}/{y}/256/jpg?apiKey={apikey}";

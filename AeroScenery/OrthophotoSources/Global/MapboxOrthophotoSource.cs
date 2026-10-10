@@ -1,9 +1,9 @@
-﻿using AeroScenery.OrthoPhotoSources;
+using AeroScenery.OrthoPhotoSources;
 using System.Collections.Generic;
 
 namespace AeroScenery.OrthophotoSources
 {
-    public class MapboxOrthophotoSource : GenericOrthophotoSource //#MOD
+    public class MapboxOrthophotoSource : GenericOrthophotoSource
     {
         public static string DefaultUrlTemplate = "https://api.mapbox.com/v4/mapbox.satellite/{zoom}/{x}/{y}.jpg?access_token={apikey}";
 

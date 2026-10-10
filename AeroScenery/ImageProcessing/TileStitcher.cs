@@ -1,4 +1,4 @@
-﻿using AeroScenery.Common;
+using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.OrthoPhotoSources;
 using log4net;
@@ -24,7 +24,6 @@ namespace AeroScenery.ImageProcessing
 
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
 
-        //#MOD
         //public async Task StitchImageTilesAsync(string tileDownloadDirectory, string stitchedTilesDirectory, bool deleteOriginals, IProgress<TileStitcherProgress> progress)
         public async Task StitchImageTilesAsync(string tileDownloadDirectory, string stitchedTilesDirectory, string stitchedMaskTilesDirectory, bool deleteOriginals, OrthophotoSource orthophotSource, IProgress<TileStitcherProgress> progress)
         {
@@ -267,11 +266,9 @@ namespace AeroScenery.ImageProcessing
 
                                 var settings = AeroSceneryManager.Instance.Settings;
 
-                                //#MOD
                                 //if (settings.EnableImageProcessing.Value)
                                 if ((settings.EnableImageProcessing.Value) && (orthophotSource != OrthophotoSource.GoogleMaps) && (orthophotSource != OrthophotoSource.GoogleRoads) && (orthophotSource != OrthophotoSource.OSMMaps) && (orthophotSource != OrthophotoSource.CartoDBLight))
                                 {
-                                    //#MOD
                                     log.InfoFormat("Starting Image processing on stitched image {0}", stitchFilename);
 
                                     var imageProcessingSettings = new ImageProcessingSettings();
@@ -320,11 +317,9 @@ namespace AeroScenery.ImageProcessing
                                                 }
                                             }
 
-                                            //#MOD_k
                                             // ...
                                             if (settings.WaterMaskingProcessing.Value) 
                                             {
-                                                //#MOD_k: 
                                                 var osmStichedImageFilePath = stitchedMaskTilesDirectory + stitchMaskFilename;
 
                                                 if (File.Exists(osmStichedImageFilePath)) 
@@ -336,7 +331,6 @@ namespace AeroScenery.ImageProcessing
                                                     var coastDistanceBuilder = new WaterDistanceMatrixBuilder();
                                                     var distanceMatrix = coastDistanceBuilder.BuildWaterDistanceMatrix(matrix);
 
-                                                    //#MOD_k
                                                     log.InfoFormat("Applying water masking to stitched image {0} (Input folder: {1})", stitchFilename, tileDownloadDirectory);
                                                     int zoomFactor = (int)Math.Pow(2, zoomLevel - 12); // e.g. zoom level 15 = zoom level 8
                                                     int fadeThreshold = (int)(Math.Pow(settings.WaterFadeThresholdDistance.Value, 2)) * zoomFactor;

@@ -1,4 +1,4 @@
-﻿using AeroScenery.OrthoPhotoSources;
+using AeroScenery.OrthoPhotoSources;
 using System.Collections.Generic;
 
 namespace AeroScenery.Common
@@ -42,7 +42,6 @@ namespace AeroScenery.Common
 
         public bool? RunGeoConvert { get; set; }
 
-        //#MOD
         public bool? DownloadOSMDataEnable { get; set; }
         public bool? DownloadOsmData { get; set; }
   
@@ -77,7 +76,6 @@ namespace AeroScenery.Common
 
         public bool? GeoConvertUseWrapper { get; set; }
 
-        //#MOD_l
         /// <summary>
         /// True: in-process TTC converter. False: Aerofly FS2 GeoConvert from the SDK.
         /// </summary>
@@ -101,13 +99,11 @@ namespace AeroScenery.Common
 
         public string LinzApiKey { get; set; }
 
-        //#MOD
         public string MapboxApiKey { get; set; }
         public string OpenTopographyApiKey { get; set; }
         public string OpenTopographyDataSet { get; set; }
         public string HereWeGoApiKey { get; set; }
 
-        //#MOD_k
         public string CartoDBApiKey { get; set; }
 
         public int? MapControlLastZoomLevel { get; set;}
@@ -118,7 +114,6 @@ namespace AeroScenery.Common
         public double? ShrinkTMCGridSquareCoords { get; set; }
         public string AFS2UserDirectory { get; set; }
 
-        //#MOD_l
         /// <summary>
         /// Folder where FSG Android scenery is assembled for the user to zip as a .tme.
         /// Not the Aerofly FS4 addons path.
@@ -141,10 +136,8 @@ namespace AeroScenery.Common
         public int? GreenAdjustment { get; set; }
         public int? BlueAdjustment { get; set; }
 
-        //#MOD
         public bool? RemoveAlphaChannelAdjustment { get; set; }
 
-        //#MOD_k
         public bool? WaterMaskingEnable { get; set; }
         public bool? WaterMaskingProcessing { get; set; }
         public int? WaterFadeThresholdDistance { get; set; }

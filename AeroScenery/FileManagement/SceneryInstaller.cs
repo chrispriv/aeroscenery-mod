@@ -1,4 +1,4 @@
-﻿using AeroScenery.AFS2;
+using AeroScenery.AFS2;
 using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.OrthoPhotoSources;
@@ -18,7 +18,6 @@ namespace AeroScenery.FileManagement
         private readonly ILog log = LogManager.GetLogger("AeroScenery");
         private AFS2Grid afsGrid;
 
-        //#MOD_k
         public SceneryInstaller()
         {
             this.afsGrid = new AFS2Grid();

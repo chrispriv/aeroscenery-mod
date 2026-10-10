@@ -1,4 +1,4 @@
-﻿using AeroScenery.Controls;
+using AeroScenery.Controls;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,6 @@ namespace AeroScenery.AFS2
         public Stopwatch Stopwatch { get; set; }
     }
 
-    //#MOD_k
     // The public class GeoConvertManager has been completely replaced; it now runs asynchronously, and the GeoConvert process is stopped based on monitoring of CPU utilisation and memory usage
     public class GeoConvertManager
     {

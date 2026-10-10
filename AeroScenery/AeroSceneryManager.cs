@@ -1,4 +1,4 @@
-﻿using AeroScenery.AFS2;
+using AeroScenery.AFS2;
 using AeroScenery.Common;
 using AeroScenery.Controls;
 using AeroScenery.Data;
@@ -23,7 +23,6 @@ using OSGeo.GDAL;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-//#MOD_k
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -51,7 +50,6 @@ namespace AeroScenery
         private HittaOrthophotoSource hittaOrthophotoSource;
         private HereWeGoOrthophotoSource hereWeGoOrthophotoSource;
         private GuleSiderOrthophotoSource guleSiderOrthophotoSource;
-        //#MOD
         private MapboxOrthophotoSource mapboxOrthophotoSource;
         private GoogleOrthomapSource googleOrthomapSource;
         private GoogleOrthoroadmapSource googleOrthoroadmapSource;
@@ -63,12 +61,10 @@ namespace AeroScenery
         private GeoConvertManager geoConvertManager;
         private TtcConverterManager ttcConverterManager;
 
-        //#MOD_l
         private bool UseBuiltInTtcConverter
         {
             get { return this.settings.UseBuiltInTtcConverter.GetValueOrDefault(true); }
         }
-        //#MOD_k
         private TerrainData _terrainData;
 
         //private DownloadFailedForm downloadFailedForm;
@@ -94,7 +90,6 @@ namespace AeroScenery
         private string version;
         private int incrementalVersion;
 
-        //#MOD_l
         // Overall download progress is the sum of all workers, not the fastest worker.
         private readonly int[] downloadThreadFilesDownloaded = new int[DownloadManager.MaxSimultaneousDownloads];
         private readonly int[] downloadThreadFilesTotal = new int[DownloadManager.MaxSimultaneousDownloads];
@@ -112,7 +107,7 @@ namespace AeroScenery
             dataRepository = new SqlLiteDataRepository();
 
             imageTiles = null;
-            version = "1.1.3 MOD l DEVL by @chrispriv"; //#MOD_l
+            version = "1.1.3 MOD l by @chrispriv";
             incrementalVersion = 13;
         }
 
@@ -177,7 +172,6 @@ namespace AeroScenery
             hittaOrthophotoSource = new HittaOrthophotoSource();
             hereWeGoOrthophotoSource = new HereWeGoOrthophotoSource();
             guleSiderOrthophotoSource = new GuleSiderOrthophotoSource();
-            //#MOD
             mapboxOrthophotoSource = new MapboxOrthophotoSource();
             googleOrthomapSource = new GoogleOrthomapSource(); 
             googleOrthoroadmapSource = new GoogleOrthoroadmapSource(); 
@@ -187,7 +181,6 @@ namespace AeroScenery
             this.mainForm = new MainForm();
             this.mainForm.StartStopClicked += async (sender, eventArgs) =>
             {
-                //#MOD
                 // Bug fix: Adding a delay for Start & Stops reduces the occurrence of an unhandled error when stopping the download (bug appears since the number of download threads has been increased from 4 to 8)
                 await Task.Delay(600);
 
@@ -237,7 +230,6 @@ namespace AeroScenery
                         }
                     }
 
-                    //#MOD
                     // Bug fix: Sometimes it's still occured, than even mainForm.ActionRunning value is false download will starts instead of stops!?! Handle this critical exception to to avoid an abort of the app (is there a nother approach?)  
                     try
                     {
@@ -314,7 +306,6 @@ namespace AeroScenery
                 case OrthophotoSource.NO_GuleSider:
                     tileDownloadDirectory += String.Format("\\{0}\\", OrthophotoSourceDirectoryName.NO_GuleSider);
                     break;
-                //#MOD
                 case OrthophotoSource.Mapbox:
                     tileDownloadDirectory += String.Format("\\{0}\\", OrthophotoSourceDirectoryName.Mapbox);
                     break;
@@ -362,8 +353,6 @@ namespace AeroScenery
         }
 
 
-
-
         public async Task StartSceneryGenerationProcessAsync(object sender, EventArgs e)
         {
             try
@@ -372,10 +361,8 @@ namespace AeroScenery
 
                 // Set settings on orthophoto sources
                 this.linzOrthophotoSource.ApiKey = settings.LinzApiKey;
-                //#MOD
                 this.mapboxOrthophotoSource.ApiKey = settings.MapboxApiKey;
                 this.hereWeGoOrthophotoSource.ApiKey = settings.HereWeGoApiKey;
-                //#MOD_k
                 this.cartoDBLightOrthomapSource.ApiKey = settings.CartoDBApiKey;
 
                 double selectedTilesEastLongitude = -180;
@@ -388,31 +375,27 @@ namespace AeroScenery
                 {
                     var currentGrideSquareMessage = String.Format("Working on AFS Grid Square {0} of {1}", i + 1, this.mainForm.SelectedAFS2GridSquares.Count());
                     this.mainForm.UpdateParentTaskLabel(currentGrideSquareMessage);
-                    //#MOD_k    
                     await Task.Delay(50);
                     log.Info(currentGrideSquareMessage);
 
-                    //#MOD
                     // Determine maximum coverage of all selected tiles/area (actually not needed anymore)
                     if (selectedTilesEastLongitude < afs2GridSquare.EastLongitude) { selectedTilesEastLongitude = afs2GridSquare.EastLongitude; }
                     if (selectedTilesWestLongitude > afs2GridSquare.WestLongitude) { selectedTilesWestLongitude = afs2GridSquare.WestLongitude; }
                     if (selectedTilesNorthLatitude < afs2GridSquare.NorthLatitude) { selectedTilesNorthLatitude = afs2GridSquare.NorthLatitude; }
                     if (selectedTilesSouthLatitude > afs2GridSquare.SouthLatitude) { selectedTilesSouthLatitude = afs2GridSquare.SouthLatitude; }
 
-                    //#MOD
                     // If Action Running Check at the level of tiles check and create the working folders and subfolders (not done if only "Downlaod Elevation Data (30m) for selected area" selected) 
                     var afsGridSquareDirectory = this.settings.WorkingDirectory + afs2GridSquare.Name;
 
                     var tileDownloadDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"\";
                     var stitchedTilesDirectory = GetTileDownloadDirectory(afsGridSquareDirectory) + this.settings.ZoomLevel + @"-stitched\";
 
-                    //#MOD_k (var declaration for optional masking shifted)
+                    // Carto/OSM mask tiles live under c-mask so they never overwrite the orthophoto download.
                     var afsGridSquareDirectoryMask = this.settings.WorkingDirectory + afs2GridSquare.Name;
 
                     var tileDownloadDirectoryMask = afsGridSquareDirectoryMask + @"\c-mask\" + this.settings.ZoomLevel + @"\";
                     var stitchedTilesDirectoryMask = afsGridSquareDirectoryMask + @"\c-mask\" + +this.settings.ZoomLevel + @"-stitched\";
 
-                    //#MOD_k
                     // 1.
                     // Download of the masking images for Trees Detection if Mask Image or Water Masking on stiched images is selected (both optional) by overriding the image tiles of the orthophoto source
                     // (do this new as first step, so that the images are available for optional water masking after stiching)
@@ -476,7 +459,6 @@ namespace AeroScenery
                             var tileStitcherProgress = new Progress<TileStitcherProgress>();
                             tileStitcherProgress.ProgressChanged += TileStitcherProgress_ProgressChanged;
 
-                            //#MOD_k
                             //await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectoryMask, stitchedTilesDirectoryMask, true, OrthophotoSource.CartoDBLight, tileStitcherProgress);
                             await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectoryMask, stitchedTilesDirectoryMask, "", true, OrthophotoSource.CartoDBLight, tileStitcherProgress);
 
@@ -574,7 +556,6 @@ namespace AeroScenery
                                     imageTiles = guleSiderOrthophotoSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
                                     orthophotoSourceInstance = guleSiderOrthophotoSource;
                                     break;
-                                //#MOD
                                 case OrthophotoSource.Mapbox:
                                     imageTiles = mapboxOrthophotoSource.ImageTilesForGridSquares(afs2GridSquare, settings.ZoomLevel.Value);
                                     orthophotoSourceInstance = mapboxOrthophotoSource;
@@ -609,7 +590,6 @@ namespace AeroScenery
                         this.ResetDownloadThreadProgressTotals();
 
                         // Send the image tiles to the download manager
-                        //#MOD (max. number of simultaneous downloads can be set in settings)
                         await downloadManager.DownloadImageTiles(settings.OrthophotoSource.Value, imageTiles, downloadThreadProgress, tileDownloadDirectory, orthophotoSourceInstance, Convert.ToInt16(settings.SimultaneousDownloads));
 
                         // Only finalise if we weren't cancelled
@@ -633,7 +613,6 @@ namespace AeroScenery
 
                     }
 
-                    //#MOD
                     // Check & Fix missing Image Tiles using a PS1 PowerShell-Script (PowerSell-Script has been written before, as a part of DownloadMagaer-Process)
                     if (this.Settings.FixMissingTilesProcessing.Value && this.mainForm.ActionsRunning) 
                     {
@@ -671,7 +650,6 @@ namespace AeroScenery
                         var tileStitcherProgress = new Progress<TileStitcherProgress>();
                         tileStitcherProgress.ProgressChanged += TileStitcherProgress_ProgressChanged;
 
-                        //#MOD_k (settings.OrthophotoSource.Value and tileDownloadDirectoryMask added)
                         await this.tileStitcher.StitchImageTilesAsync(tileDownloadDirectory, stitchedTilesDirectory, stitchedTilesDirectoryMask, true, settings.OrthophotoSource.Value, tileStitcherProgress);
                     }
 
@@ -714,7 +692,6 @@ namespace AeroScenery
                         File.WriteAllText(outputFilePath, textTMCImages.GeneratedContent);
                     }
 
-                    //#MOD_k
                     // 5. Download OSM Data from opemstreetmap.org
                     if (this.settings.DownloadOsmData.Value && this.mainForm.ActionsRunning)
                     {
@@ -786,7 +763,6 @@ namespace AeroScenery
 
                     }
 
-                    //#MOD_k
                     // 5. Download Elevation Data
                     // ...
                     if ((settings.OpenTopographyApiKey == "") && (this.settings.DownloadElevationData == true) && (this.mainForm.ActionsRunning))
@@ -999,8 +975,7 @@ namespace AeroScenery
                     await this.StartGeoConvertProcessAsync();
                 }
 
-                //#Nickohod (not implemented)
-                // Delete Stitched Immage Tiles
+                // Delete stitched image tiles is not implemented.
                 //if (this.Settings.DeleteStitchedImageTiles)
                 //{
                 //    this.mainForm.UpdateChildTaskLabel("Deleting Stitched Image Tiles");
@@ -1014,9 +989,7 @@ namespace AeroScenery
                 //}
 
 
-                //#MOD_k
                 // Install Scenery
-                //#MOD_k
                 // Install Scenery
                 if (this.mainForm.InstallSceneryForFs4IsApplicable()
                     && this.settings.InstallScenery.Value && this.mainForm.ActionsRunning)
@@ -1043,7 +1016,6 @@ namespace AeroScenery
                     System.GC.Collect();
                 }
 
-                //#MOD_k
                 // Shut down the computer after the complete scenery generation process
                 // has finished.
                 if (this.mainForm.ShutdownComputerWhenDone)
@@ -1095,7 +1067,6 @@ namespace AeroScenery
                         {
                             if (this.settings.ShowMultipleConcurrentSquaresWarning.HasValue && this.settings.ShowMultipleConcurrentSquaresWarning.Value)
                             {
-                                //#MOD_k
                                 string message = "When running GeoConvert on multiple squares it's advisable to run GeoConvert sequentially.\n";
                                 message += "This will make GeoConvert instances run sequentially rather than in parallel.\n";
                                 message += "You can enable run GeoConvert sequentially in the GeoConvert tab of the settings form.\n";
@@ -1351,6 +1322,7 @@ namespace AeroScenery
         }
         */
 
+        /// <summary>Stores Generate AID/TMC options for this square so Tile Info can show them later.</summary>
         private void SaveGenerateAidTmcRecord(AFS2GridSquare afs2GridSquare)
         {
             bool waterMasking = this.settings.WaterMaskingProcessing.GetValueOrDefault(false);
@@ -1391,7 +1363,6 @@ namespace AeroScenery
             this.dataRepository.SaveBuiltInConversion(record);
         }
 
-        //#MOD_k
         /// <summary>
         /// Installs the generated ttc files of every selected grid square into the Aerofly scenery
         /// folder. Choosing the action is the confirmation, so the user is not prompted per square -
@@ -1551,7 +1522,6 @@ namespace AeroScenery
         {
             get
             {
-                //#MOD_k
                 //Solution doesn't work when debugging in Visual Studio; but works when running as an executable --> fixed
                 //var applicationUri = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
                 //var applicationLocalPath = new Uri(Path.GetDirectoryName(applicationUri)).LocalPath;

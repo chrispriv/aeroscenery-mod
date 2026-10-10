@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Net;
 
 
-//#MOD_k
 namespace AeroScenery.Download
 {
     public class OSMDataDownloader

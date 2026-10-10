@@ -1,17 +1,24 @@
 ﻿# Get Started – First Photo Scenery
 
-Create a small test scenery for **Aerofly FS4** with **Community Mod k**.
+Create a small test scenery for **Aerofly FS4** and optionally **FSG Android**
+with **Community Mod l**.
 
 Install first: [Installation Guide](installation.md) (portable ZIP by default).
 Complete Settings tabs **AeroScenery** and **GeoConvert** before you continue.
 
 The main window in **easy** mode (**Run Default Actions**) after a first start:
 
-<img src="aeroscenery_main_default.jpg" alt="AeroScenery Mod k main window, easy mode with Run Default Actions" width="900">
+<img src="aeroscenery_main_default_mod-l.jpg" alt="AeroScenery Mod l main window, Run Default Actions" width="900">
 
-**Choose Actions To Run** shows the extra steps (expert / pro mode):
+**Choose Actions To Run** lets you run or repeat **individual steps** (for
+example stitch or convert again after editing images). Extra options such as
+water masking, OSM, elevation or shift correction are activated in **Settings**.
 
-<img src="aeroscenery_main_expert.jpg" alt="AeroScenery Mod k main window, expert mode with Choose Actions To Run" width="900">
+<img src="aeroscenery_main_expert_mod-l.jpg" alt="AeroScenery Mod l main window, Choose Actions To Run" width="900">
+
+The status bar shows **Working scenery: *name* / *n* Grid Square(s) Selected**.
+**Tile Info** on the map toolbar opens stored details for the selected square.
+**Right-click** a tile on the map opens that square’s working folder.
 
 ---
 
@@ -27,20 +34,20 @@ Users often pick tiles that are too small, or Size 9 at much too high zoom **20*
 | Airports, towns (smaller area) | Smaller than the base, or a subset | 17 | ~1.2 m |
 | Airport grounds, FS4 **PC** only | Small area | 18 | ~0.6 m |
 
-Zoom **18** is not useful for the **mobile** (FSG Android) path.
+Zoom **18** and a Generate AFS Levels level of 14 and higher is not useful for the **mobile** (FSG Android) path.
 
 On the main window: set **Grid Square Selection Size** in the toolbar first,
 then **Image Source**. The `(?)` next to Image Source explains the same order.
 
-Do not start **nine Size 9** squares on a first run. One test square is enough.
+Do not start **multiples Size 9** squares on a first run. One test square is enough.
 
 ---
 
 ## Step 1 – Location and size
 
-- Pan the map, pick land
+- Pan the map, pick area
 - Toolbar: Size 11 for a test, later Size 9 or 10
-- Click the map to select the square(s), one may be enough for a first try
+- Click the map to select the square(s); one may be enough for a first try
 
 ---
 
@@ -48,91 +55,71 @@ Do not start **nine Size 9** squares on a first run. One test square is enough.
 
 - Choose an image source (Google and similar sources have their own limits)
 - Set **Image Detail (Zoom Level)** — 15 or 16 for the first scenery
-- **Generate AFS Levels** → **Choose For Me** (see the `(?)` there)
+- **Generate AFS Levels** → **Choose For Me** (see the `(?)` there) - keep the proposed levels
 
 ---
 
-## Step 3 – Actions
+## Step 3 – Converter target and actions
 
-- **Run Default Actions** runs the usual chain
-- Or **Choose Actions To Run** for single steps (for example **Run GeoConvert**
-  again after you edited stitched images)
+Next to **Run Built-in converter**, choose:
 
-Set **AFS Working Scenery Folder** in Settings first. Enable **Install Scenery (waiting for GeoConvert)** so every
-selected square is installed for FS4 PC when GeoConvert finishes. 
+- **Aerofly FS4** — DXT1 tiles for the PC
+- **Aerofly FSG (Android)** — ETC2 tiles for mobile
+- **FS4 and FSG (Android)** — both in one run
 
-**Install Tile** on the map toolbar installs **only** the square that is
+**Run Default Actions** runs the usual chain for that target (including
+**Install Scenery for FS4** and/or **Copy Scenery to FSG Scenery Working
+Folder**). Or **Choose Actions To Run** for single steps (for example run the
+converter again after you edited stitched images). Keep **Run Default Actions** for a first try.
+
+Set **AFS Working Scenery Folder** (and **FSG Scenery Working Folder** if you
+use Android) in Settings first.
+
+**Install FS4 Tile** on the map toolbar installs **only** the square that is
 selected. Prefer these functions over copying files by hand.
+
+On Start, confirm the destination path(s). **Cancel** stops the run. Progress
+labels stay empty until work actually begins.
 
 ---
 
 ## Step 4 – Run and wait
 
-Click **Start**. Downloads can take time. GeoConvert is heavier than the
-image download, takes much longer and is CPU and memory intensive. 
-You can continue to work in AeroScenery while GeoConvert runs on powerful hardware.
+Click **Start**. Downloads can take time. Conversion is heavier than the image
+download.
 
-On a normal PC, turn on sequential GeoConvert in Settings if you process
-more than one square. With **Install Scenery (waiting for GeoConvert)**,
-AeroScenery waits about **60 seconds** of idle GeoConvert (stable memory and
-lower CPU) before it closes the GeoConvert window, unless you close it
-yourself. If the automatic “finished” detection fails, close the GeoConvert
-console manually. Details: [Installation](installation.md) and [FAQ](faq.md).
+The **built-in converter** always processes squares one after another. You can
+keep using the map while it runs.
 
----
-
-## Step 5 – Check in Aerofly
-
-- Start Aerofly FS4
-- Confirm the scenery name/folder you set in Settings
-- If nothing shows: you probably copied files manually — use **Install Tile**
-  or **Install Scenery** and check the AFS user folder path
+If you switched Settings to **Aerofly FS2 SDK GeoConvert**, that former process is
+CPU and memory intensive and takes much longer. On a normal PC, turn on sequential GeoConvert in
+Settings if you process more than one square. Details:
+[Installation](installation.md) and [FAQ](faq.md).
 
 ---
 
-## Step 6 – Optional: convert for FSG Android (mobile)
+## Step 5 – Check in Aerofly FS4
 
-Always build the scenery **for Aerofly FS4 on the PC first** (the steps above).
-Mobile is an **extra** conversion of that desktop result, not a separate
-workflow.
+- Start Aerofly FS4 and check the scenery
+- If nothing shows: you probably copied files manually — use **Install FS4
+  Tile** or **Install Scenery for FS4** and check the AFS user folder path
 
-### If you have no Aerofly FS4 on this PC
+---
 
-You can still run the full AeroScenery chain. Create an empty **dummy AFS user
-folder** anywhere on disk (for example `D:\AFS4UserDummy\`) and enter it under
-Settings → **AeroScenery** as the AFS user folder. Set **AFS Working Scenery
-Folder** as usual, then use **Install Tile** or **Install Scenery** so the
-desktop `.ttc` files land in that dummy folder. You do not need a licensed
-Aerofly install for that.
+## Step 6 – Optional: FSG Android (mobile)
 
-### Extra conversion for Android
+If you have no Aerofly FS4 on this PC, you can still create FSG Android scenery.
 
-1. Install **Aerofly FS 2 Content Converter** from the FS2 SDK tools on the PC
-   (same SDK family as GeoConvert; it is a **separate** app and must already
-   be installed).
-2. In Settings → **GeoConvert**, enable **Conversion for mobile**. Then the
-   step **Generate AID / TMC Files** also creates:
-   - a folder named `##-geoconvert-ttc-mobile` (`##` is the zoom level), and
-   - `content_converter_config_mobile.tmc`
-3. After GeoConvert has finished, right-click that **TMC** file and choose
-   **Run with Aerofly FS 2 Content Converter**. That writes FSG (Android)
-   compatible `.ttc` files.
-4. In the scenery **install** folder (the dummy folder is fine if you do not
-   use FS4) — **better: a copy of that folder** — replace the desktop `.ttc`
-   files with these mobile `.ttc` files.
-5. Pack the scenery for FSG as a **`.tme`** file. The folder layout is close
-   to FS4; only the front part (the `scenery` insert) differs:
+1. Set **FSG Scenery Working Folder** in Settings.
+2. Choose **Aerofly FSG (Android)** or **FS4 and FSG (Android)**.
+3. Run Default Actions (or enable **Copy Scenery to FSG Scenery Working
+   Folder** under Choose Actions To Run).
+4. After conversion, AeroScenery copies ETC2 `.ttc` files into:
 
-   `dlc_<scenery-name>\scenery\images\map_09_...`
+   `fsg_scenery_<name>\fsg_scenery_<name>_images\scenery\images\<level-9 map>\`
 
-   Zip that folder, then rename `.zip` to `.tme`. This rename trick is **only
-   for image scenery**, not for other FSG add-ons.
-
-Use a sensible zoom for mobile (15–17). Zoom **18** is for FS4 PC hotspots
-only.
-
-The `(?)` next to **Conversion for mobile** in Settings covers the TMC step.
-To run the extra conversion **later** on existing tiles, see the [FAQ](faq.md).
+5. Zip the `_images` folder, rename `.zip` to `.tme`, and copy that file to
+   FSG data path on the device. Zip & rename works **only for image scenery**. 
 
 ---
 
@@ -166,7 +153,7 @@ This mode uses **AeroflyBridge** by [Juan Luis Gabriel (jlgabriel)](https://gith
 
 1. Copy `AeroflyBridge.dll` into  
    `%USERPROFILE%\Documents\Aerofly FS 4\external_dll\`  
-   Mod k includes a copy under `Resources\external_dll\`. You can also take
+   Mod l includes a copy under `Resources\external_dll\`. You can also take
    the DLL from the [Aerofly-FS4-Bridge releases](https://github.com/jlgabriel/Aerofly-FS4-Bridge/releases).
 2. Start Aerofly FS4 and load a flight.
 3. In AeroScenery, select **DLL (Shared Memory)** on the Moving Map tab.
@@ -179,7 +166,8 @@ Credits: Aerofly FS4 Bridge — https://github.com/jlgabriel/Aerofly-FS4-Bridge
 
 - Raise zoom only on airports and cities (17, or up to 18 on FS4 PC)
 - Optional: OSM / elevation downloads, water masking (Settings + Actions)
-- Optional: FSG Android conversion and `.tme` pack (Step 6)
+- **Tile Info** after Generate AID/TMC; map squares with elevation-only data
+  use a green border
 - Moving map: UDP or shared-memory DLL (FS4 PC only)
 - [Feature Overview](featureoverview.md)
 - [FAQ](faq.md)

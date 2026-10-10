@@ -1,20 +1,26 @@
 ﻿# Installation Guide
 
-This guide covers **AeroScenery Community Mod k**.
+This guide covers **AeroScenery Community Mod l**.
 
 **Default:** unzip, place the folder, start `AeroScenery.exe`. No installer.
 
 **Alternative:** overlay the ZIP on Nick Hod’s official **AeroScenery 1.0.1 MSI**
 (he did not publish an installer for 1.1.3).
 
-GeoConvert from the Aerofly FS2 SDK is **not** inside the ZIP. You must unpack
-it yourself and set the SDK folder under Settings.
+The **built-in converter** is the default: it writes Aerofly FS4 and/or FSG
+Android tiles in-process. The Aerofly FS2 SDK **GeoConvert** EXE is optional
+and is **not** inside the ZIP. If you use it, unpack it yourself and set the
+path under Settings.
+
+Imagery from Google, Bing, ArcGIS and similar sources stays under those
+providers’ terms even after conversion. Use it for your own, non-commercial
+flying only.
 
 ---
 
 ## Method A — Portable (recommended)
 
-1. Download the Mod k ZIP from [GitHub Releases](https://github.com/chrispriv/aeroscenery-mod/releases).
+1. Download the Mod l ZIP from [GitHub Releases](https://github.com/chrispriv/aeroscenery-mod/releases).
 2. Extract the **entire** folder anywhere you can write (for example under
    Documents). Do not copy only `AeroScenery.exe`.
 3. Start `AeroScenery.exe`.
@@ -22,7 +28,7 @@ it yourself and set the SDK folder under Settings.
    **before** you download tiles (see below).
 
 No Program Files install is required. Do not mix this folder with an old
-`GeoConvertWrapper.exe` tree. Sequential GeoConvert is built into Mod k.
+`GeoConvertWrapper.exe` tree.
 
 ---
 
@@ -33,7 +39,7 @@ Use this if you already have (or prefer) the original installed app.
 1. Install **AeroScenery 1.0.1** with Nick Hod’s official MSI:  
    https://github.com/nickhod/aeroscenery/releases/tag/1.0.1  
    There is no official MSI for 1.1.3.
-2. Download the Community Mod k ZIP.
+2. Download the Community Mod l ZIP.
 3. Extract it and copy **all** files into the install folder, typically  
    `C:\Program Files (x86)\AeroScenery\`
 4. Overwrite when Windows asks (administrator rights are required).
@@ -45,22 +51,23 @@ Keep every DLL next to the EXE. A partial copy will fail at start.
 
 ## Verify the download (EXE hashes)
 
-Mod k ships as a portable ZIP. Values below are for
-[release v1.1.3-mod.k](https://github.com/chrispriv/aeroscenery-mod/releases/tag/v1.1.3-mod.k).
+Mod l ships as a portable ZIP
+(`AeroScenery_v1_1_3_MOD_l.zip` on
+[release v1.1.3-mod.l](https://github.com/chrispriv/aeroscenery-mod/releases)).
 
 | File | Algorithm | Hash |
 |---|---|---|
-| `AeroScenery.exe` | SHA-256 | `2AD252BF100927E707DB9255F5253DDE28E6CEE199DC6BB6F32F974AB9A538C4` |
-| `AeroScenery.exe` | SHA-1 | `E30179A98B24A9595106D6297E2A75CB746E8B64` |
-| `AeroScenery_v1_1_3_MOD_k.zip` | SHA-256 | `E5F8F99408EB767577B4A481C626F952617E620FF5A005DECB7CC193E4C068B7` |
+| `AeroScenery.exe` | SHA-256 | `F37DDB26913294D38B7D15AED1553A7E3D5E681A7D672CFD31E40079CA06526A` |
+| `AeroScenery.exe` | SHA-1 | `97A74DB37622749B8BB955B03E7AE3C46AF2DDA7` |
+| `AeroScenery_v1_1_3_MOD_l.zip` | SHA-256 | `5F84D82C2DEF0A5BC116F509E32A27309391DDF135BDFFADA4E26C5666C59C94` |
 
 On Windows PowerShell, hash the ZIP in the download folder first, then the EXE
-after unzip (path depends on extract location; this is the Visual Studio layout):
+after unzip:
 
 ```powershell
-Get-FileHash .\AeroScenery_v1_1_3_MOD_k.zip -Algorithm SHA256
-Get-FileHash .\AeroScenery_v1_1_3_MOD_k\AeroScenery\AeroScenery.exe -Algorithm SHA256
-Get-FileHash .\AeroScenery_v1_1_3_MOD_k\AeroScenery\AeroScenery.exe -Algorithm SHA1
+Get-FileHash .\AeroScenery_v1_1_3_MOD_l.zip -Algorithm SHA256
+Get-FileHash .\AeroScenery_v1_1_3_MOD_l\AeroScenery\AeroScenery.exe -Algorithm SHA256
+Get-FileHash .\AeroScenery_v1_1_3_MOD_l\AeroScenery\AeroScenery.exe -Algorithm SHA1
 ```
 
 The hashes must match. Do not run the EXE if they differ.
@@ -72,55 +79,77 @@ The hashes must match. Do not run the EXE if they differ.
 Many problems come from skipping Settings. Example of typical first-run values
 on the first two tabs:
 
-<img src="aeroscenery_settings1_aeroscenery.jpg" alt="Settings tab AeroScenery with folders and download defaults" width="800">
+<img src="aeroscenery_settings1_aeroscenery-mod-l.jpg" alt="Settings tab AeroScenery with folders and download defaults" width="800">
 
-<img src="aeroscenery_settings2_geoconvert.jpg" alt="Settings tab GeoConvert with SDK path and sequential option" width="800">
+<img src="aeroscenery_settings2_geoconvert_mod-l.jpg" alt="Settings tab GeoConvert with built-in converter and optional SDK path" width="800">
 
 Paths on your PC will differ. Fill in **AeroScenery** and **GeoConvert** as below.
 
 ### Tab 1 — AeroScenery
 
-Set at least:
+**Folders** (set these before Install / FSG copy):
 
-- **Working folder** — downloads, stitches, scripts (you may keep the default)
-- **AeroScenery database folder** — user settings and SQLite database (you may keep the default)
-- **Aerofly FS2 SDK path** (mandatory) — see the separate GeoConvert section
-- **AFS user folder** — Aerofly FS4 user folder (Install Tile Scenery), users without fs4 may create a dummy folder
-- **AFS Working Scenery Folder** — scenery name/folder used when installing
-  into Aerofly FS4. Set this **before** using **Install Scenery (waiting for GeoConvert)**
+- **Working Folder** — downloads, stitches and working files (you may keep the
+  default)
+- **AeroScenery Database Folder** — user settings and SQLite database (you may
+  keep the default)
+- **FS4 Install Folder** — Aerofly FS4 scenery install root (typically
+  `Documents\Aerofly FS 4\addons\scenery`). Used by **Install Scenery for FS4**
+  and **Install FS4 Tile**
+- **Working Scenery Name** — name of the scenery folder created under the FS4
+  Install Folder (lowercase, no spaces; underscore allowed). Set this before
+  you install
+- **FSG Scenery Working Folder** — separate folder for Android (ETC2) copy.
+  Required when the convert target includes FSG; you later zip
+  `fsg_scenery_<name>_images` to `.tme`
+
+The same tab also has **Downloads** (simultaneous downloads, wait times) and
+**Tile Stitching**. Defaults are fine for a first run.
 
 ### Tab 2 — GeoConvert
 
-- Optional: **Run GeoConvert sequentially for multiple squares** (recommended
-  on a normal PC)
-- Optional: conversion-for-mobile folder (FSG Android only)
+- **Built-in converter** (default) — converts TMC to TTC inside AeroScenery much faster (no SDK GeoConvert needed anymore). Choose the convert target on the main window:
+  Aerofly FS4, Aerofly FSG (Android), or both.
+- Optional: **Aerofly FS2 SDK GeoConvert** — set the path to
+  **`aerofly_fs_2_geoconvert.exe`**. If you paste a folder, AeroScenery fills
+  in the executable. Elevation mesh conversion uses the same file.
+- Optional (SDK only): **Run GeoConvert sequentially for multiple squares**
+  (recommended on a normal PC when using the SDK)
 
-Do not start a job until these two tabs are filled.
+Do not start a job until the folder fields on the AeroScenery tab are filled
+(and GeoConvert if you use the SDK).
+
+### Tab Extras — OurAirports (optional)
+
+**Show Airports** is on the last Settings tab, **Extras**. Download the
+OurAirports CSV files, import `airports.csv` (and optionally `runways.csv`),
+then the map toolbar button appears.
 
 ---
 
-## GeoConvert (Aerofly FS2 SDK)
+## GeoConvert (Aerofly FS2 SDK) — optional
 
-AeroScenery calls `aerofly_fs_2_geoconvert.exe`. It is **not** bundled.
+You only need this if you select **Aerofly FS2 SDK GeoConvert** instead of the
+built-in converter. AeroScenery then calls former `aerofly_fs_2_geoconvert.exe`. It is
+**not** bundled.
 
-The SDK is no longer one installer package and supported by IPACS. It's even still available as **separate apps**. Download GeoConvert from:
+The SDK is no longer one installer package. Download GeoConvert from:
 
 https://www.aerofly-sim.de/aerofly_fs_2_sdk
 
 Then:
 
 1. **Unzip** the GeoConvert archive onto a disk (for example `D:\aerofly_sdk\`).
-   Do not run a Windows “install” caus it contains no setup.
-2. You need a subfolder that contains **`aerofly_fs_2_geoconvert\`** (with the
-   EXE inside that subfolder).
-3. In Settings → GeoConvert, set the path to the **SDK root**, not to the
-   `.exe`.
+   It contains no Windows setup.
+2. In Settings → GeoConvert, set the path to **`aerofly_fs_2_geoconvert.exe`**.
+   A folder that contains that EXE (or the `aerofly_fs_2_geoconvert` folder) is
+   also accepted and is stored as the EXE path.
 
 Example:
 
-- Correct: `D:\aerofly_sdk\`  
-  (that folder contains `aerofly_fs_2_geoconvert\`)
-- Wrong: `D:\aerofly_sdk\aerofly_fs_2_geoconvert\aerofly_fs_2_geoconvert.exe`
+- Correct: `D:\aerofly_sdk\aerofly_fs_2_geoconvert\aerofly_fs_2_geoconvert.exe`
+- Also accepted: `D:\aerofly_sdk\` or `D:\aerofly_sdk\aerofly_fs_2_geoconvert\`
+  (AeroScenery resolves the EXE)
 
 The `(?)` next to the SDK field describes the same rule.
 
@@ -128,32 +157,38 @@ The `(?)` next to the SDK field describes the same rule.
 
 ## Installing scenery into Aerofly (do not copy by hand)
 
-Once the GeoConverter process is complete, do **not** copy `.ttc` files into Aerofly folders manually.
+Once conversion is complete, do **not** copy `.ttc` files into Aerofly folders
+manually.
 
-- **Install Tile** (map toolbar) — current grid square only, after GeoConvert
-- **Install Scenery (waiting for GeoConvert)** (Actions) — all selected squares,
-  after GeoConvert has finished. Set **AFS Working Scenery Folder** on the
-  AeroScenery Settings tab first. This is the straightforward path for
-  Aerofly FS4 on PC.
+- **Install FS4 Tile** (map toolbar) — current grid square only, after conversion
+- **Install Scenery for FS4** (Actions) — all selected squares, after conversion.
+  Set **FS4 Install Folder** and **Working Scenery Name** on the AeroScenery
+  tab first
+- **Copy Scenery to FSG Scenery Working Folder** (Actions, when the convert
+  target includes FSG) — copies ETC2 tiles into **FSG Scenery Working Folder**
+  so you can zip them to `.tme`
+
+On Start, if install and/or FSG copy is on, AeroScenery shows the destination
+path(s) and waits for OK. **Cancel** aborts the run.
 
 ---
 
-## Several squares and GeoConvert load
+## Several squares and converter load
 
 Downloading many Size 9 tiles in sequence is usually fine.
 
-**GeoConvert** on Mod j started several processes **in parallel**. On a typical
-PC that saturates CPU and memory.
+The **built-in converter** always processes selected squares **one after
+another**.
 
-In Mod k:
+**SDK GeoConvert** can start several processes in parallel. On a typical PC
+that saturates CPU and memory.
 
 - Settings → GeoConvert → **Run GeoConvert sequentially for multiple squares**
-- If **Install Scenery (waiting for GeoConvert)** is on, processing stays
-  sequential so install can wait for each job. AeroScenery then closes the
-  GeoConvert window after about **60 seconds** of idle work unless you close
-  it first. If detection fails, close the GeoConvert console manually.
+- If **Install Scenery for FS4** is on, sequential SDK jobs wait so install can
+  run after each conversion. AeroScenery then closes the GeoConvert window after
+  about **60 seconds** of idle work unless you close it first.
 
-A fast PC can still run GeoConvert in parallel (sequential option off) and
+A fast PC can still run SDK GeoConvert in parallel (sequential option off) and
 download or stitch further tiles while GeoConvert is busy. Start with
 **one** test square.
 
@@ -161,9 +196,11 @@ download or stitch further tiles while GeoConvert is busy. Start with
 
 ## Check that it works
 
-- AeroScenery starts
-- SDK path is accepted (GeoConvert is found)
-- One small square: download → stitch → GeoConvert → **Install Tile**
+- AeroScenery starts (title bar: **1.1.3 MOD l**)
+- One small square: download → stitch → Generate AID/TMC → **Run Built-in
+  converter** (or SDK GeoConvert) → **Install FS4 Tile** and/or FSG copy
+- Right-click a tile on the map opens its working folder; **Tile Info** on the
+  map toolbar shows stored Generate AID/TMC details
 
 ---
 
@@ -171,8 +208,9 @@ download or stitch further tiles while GeoConvert is busy. Start with
 
 | Problem | Typical cause |
 |---|---|
-| GeoConvert not found | Path points at the EXE, or GeoConvert was “installed” and the folder layout is wrong |
+| SDK GeoConvert not found | Path does not resolve to `aerofly_fs_2_geoconvert.exe` |
 | App starts then crashes on libraries | Incomplete ZIP copy; need all files beside the EXE |
 | Access denied | Overlay under Program Files without admin rights — use Method A (portable) |
-| Scenery missing in Aerofly | Files copied by hand; use Install Tile / Install Scenery and set the working scenery folder |
-| PC freezes during GeoConvert | Many squares in parallel — enable sequential GeoConvert |
+| Scenery missing in Aerofly | Files copied by hand; use Install Tile / Install Scenery and check FS4 Install Folder plus Working Scenery Name |
+| PC freezes during SDK GeoConvert | Many squares in parallel — enable sequential GeoConvert, or use the built-in converter |
+| Start dialog Cancel still ran | Use the current Mod l build; Cancel now aborts before conversion |

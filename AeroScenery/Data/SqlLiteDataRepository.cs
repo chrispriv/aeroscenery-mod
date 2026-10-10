@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +44,6 @@ namespace AeroScenery.Data
                 gridSquare.GridSquareId = con.Query<long>(query, gridSquare).First();
             }
         }
-        //#MOD_k
         public void CreateDataSquare(GridSquare gridSquare)
         {
                 gridSquare.Fixed = 0;
@@ -79,7 +78,6 @@ namespace AeroScenery.Data
                 con.Query(query, gridSquare);
             }
         }
-
 
 
         public void DeleteGridSquare(GridSquare gridSquare)

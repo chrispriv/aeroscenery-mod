@@ -1,4 +1,4 @@
-﻿using AeroScenery.Controls;
+using AeroScenery.Controls;
 using AeroScenery.Data.Models;
 using GMap.NET;
 using GMap.NET.WindowsForms;
@@ -65,7 +65,6 @@ namespace AeroScenery.UI
         public void UpdateFSCloudPortMarkers()
         {
             airportMarkers.Markers.Clear();
-            //#MOD_k
             int index = this.GMapControl.Overlays.IndexOf(airportMarkers);
             if (index >= 0)
             {
@@ -157,7 +156,6 @@ namespace AeroScenery.UI
         {
             this.containerForFSCloudPortPopup.Close();
         }
-
 
 
     }

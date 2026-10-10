@@ -5,6 +5,9 @@ using AeroScenery.Data.Models;
 
 namespace AeroScenery.UI
 {
+    /// <summary>
+    /// Read-only details for one Aerofly grid square (Generate AID/TMC, OSM, elevation).
+    /// </summary>
     public class GridSquareInfoForm : Form
     {
         public GridSquareInfoForm(string tileName, GridSquare record)

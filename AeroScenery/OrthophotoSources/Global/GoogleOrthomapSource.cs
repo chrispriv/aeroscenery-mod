@@ -1,6 +1,6 @@
-﻿using AeroScenery.OrthoPhotoSources;
+using AeroScenery.OrthoPhotoSources;
 
-namespace AeroScenery.OrthophotoSources //#MOD
+namespace AeroScenery.OrthophotoSources
 {
     public class GoogleOrthomapSource : GenericOrthophotoSource
     {

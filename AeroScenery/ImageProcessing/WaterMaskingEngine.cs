@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 
-//#MOD_k
 namespace AeroScenery.ImageProcessing
 {
     public class WaterMaskingEngine

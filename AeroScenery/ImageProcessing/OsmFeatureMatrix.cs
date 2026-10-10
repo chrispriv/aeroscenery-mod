@@ -1,4 +1,3 @@
-﻿//#MOD_k
 namespace AeroScenery.ImageProcessing
 {
     public enum OsmFeatureType { None, Water1, Water2, Water3, Road1, Road2, Building1, Building2, Forest, Runway }

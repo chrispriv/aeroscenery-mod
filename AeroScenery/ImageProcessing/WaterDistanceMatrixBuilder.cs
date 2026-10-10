@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 
-//#MOD_k
 namespace AeroScenery.ImageProcessing
 {
     public class WaterDistanceMatrixBuilder
