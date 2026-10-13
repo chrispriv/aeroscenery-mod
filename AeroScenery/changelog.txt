@@ -27,6 +27,7 @@ Change log
  - Status bar shows Working scenery first, then the selected square count
  - Progress labels clear on Start; the elapsed timer starts after install confirmation
  - Increased maximum simultaneous image downloads to 16
+ - Fixed download not starting after the confirmation dialog when TreesDetection flags were missing from settings.xml
  - Removed Open Scenery Editor from the toolbar
  - Credits: parallel downloads, in-process conversion and the run timer follow Juan Luis Gabriel’s AeroScenery FS4 (github.com/jlgabriel/aeroscenery-fs4). TTC writing (compression, alpha masks, DXT1/ETC2) is this fork’s own path.
 

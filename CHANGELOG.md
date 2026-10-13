@@ -28,6 +28,9 @@ This project is a community-maintained fork of
 - Up to 16 simultaneous image downloads
 - GitHub Pages docs and screenshots for Mod l
 
+### Fixed
+- Download would not start after the confirmation dialog when TreesDetection flags were missing from `settings.xml` (typical portable / fresh install)
+
 ### Removed
 - Open Scenery Editor toolbar item
 - Legacy “Additionally for mobile” extra step (SDK Generate AID/TMC still writes the mobile TMC folder)

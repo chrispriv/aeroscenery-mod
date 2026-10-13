@@ -12,6 +12,7 @@ Based on AeroScenery 1.1.3-beta
 - Tile Info and right-click Open Folder on the map
 - Install confirmation shows FS4/FSG paths; Cancel aborts
 - Up to 16 simultaneous downloads
+- Fix: download start after confirmation when TreesDetection flags are missing from settings.xml
 - Credits: parallel downloads, in-process conversion and run timer follow Juan Luis Gabriel’s AeroScenery FS4 (https://github.com/jlgabriel/aeroscenery-fs4); TTC writing (compression, masks, DXT1/ETC2) is this fork’s path
 
 ---
