@@ -216,6 +216,15 @@ namespace AeroScenery.Data
             if (settings.RunGeoConvert == null)
                 settings.RunGeoConvert = false;
 
+            if (settings.RunTreesDetection == null)
+                settings.RunTreesDetection = false;
+
+            if (settings.RunTreesDetectionMask == null)
+                settings.RunTreesDetectionMask = false;
+
+            if (settings.RunTreesDetectionDetection == null)
+                settings.RunTreesDetectionDetection = false;
+
             if (settings.InstallScenery == null)
                 settings.InstallScenery = false;
 

@@ -235,9 +235,11 @@ namespace AeroScenery
                     {
                         await StartSceneryGenerationProcessAsync(sender, eventArgs);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        log.Error("Scenery generation stopped with an error after the start confirmation.", ex);
                         StopSceneryGenerationProcess(sender, eventArgs);
+                        this.mainForm.ActionsComplete();
                     }
 
                 }
@@ -399,7 +401,7 @@ namespace AeroScenery
                     // 1.
                     // Download of the masking images for Trees Detection if Mask Image or Water Masking on stiched images is selected (both optional) by overriding the image tiles of the orthophoto source
                     // (do this new as first step, so that the images are available for optional water masking after stiching)
-                    if (((this.Settings.RunTreesDetectionMask.Value && this.Settings.RunTreesDetection.Value) || this.Settings.WaterMaskingProcessing.Value) && this.mainForm.ActionsRunning)
+                    if (((this.Settings.RunTreesDetectionMask.GetValueOrDefault(false) && this.Settings.RunTreesDetection.GetValueOrDefault(false)) || this.Settings.WaterMaskingProcessing.GetValueOrDefault(false)) && this.mainForm.ActionsRunning)
                     {
                         // Do we have a directory for the afs grid square and this orthophoto source
                         if (!Directory.Exists(tileDownloadDirectoryMask))
@@ -468,7 +470,13 @@ namespace AeroScenery
 
                     // 2.Download of the image tiles
                     // Download of the image tiles for the orthophoto source selected in the settings
-                    if ((this.Settings.DownloadImageTiles.Value || (this.Settings.DownloadImageTiles.Value || (this.Settings.FixMissingTilesProcessing.Value) || (this.Settings.StitchImageTiles.Value) || (this.Settings.GenerateAIDAndTMCFiles.Value) || (this.Settings.RunGeoConvert.Value) || (this.Settings.RunTreesDetection.Value)) && this.mainForm.ActionsRunning)) 
+                    if ((this.Settings.DownloadImageTiles.GetValueOrDefault(false)
+                        || this.Settings.FixMissingTilesProcessing.GetValueOrDefault(false)
+                        || this.Settings.StitchImageTiles.GetValueOrDefault(false)
+                        || this.Settings.GenerateAIDAndTMCFiles.GetValueOrDefault(false)
+                        || this.Settings.RunGeoConvert.GetValueOrDefault(false)
+                        || this.Settings.RunTreesDetection.GetValueOrDefault(false))
+                        && this.mainForm.ActionsRunning) 
                     {
                         // Do we have a directory for this afs grid square in our working directory?
                         if (!Directory.Exists(this.settings.WorkingDirectory + afs2GridSquare.Name))
