@@ -1855,12 +1855,12 @@ namespace AeroScenery
             if (allowShiftCorrectionCheckBox.Checked)
             {
                 AeroSceneryManager.Instance.Settings.AllowShiftCorrectionProcessing = true;
-                //shiftCorrectionLevel.Visible = true;
             }
             else
             {
                 AeroSceneryManager.Instance.Settings.AllowShiftCorrectionProcessing = false;
-                //shiftCorrectionLevel.Visible = false;
+                this.shiftCorrectionLevel.Value = 0;
+                AeroSceneryManager.Instance.Settings.AllowShiftCorrectionLevel = 0;
             }
 
             AeroSceneryManager.Instance.SaveSettings();

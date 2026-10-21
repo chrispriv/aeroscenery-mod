@@ -959,6 +959,8 @@ namespace AeroScenery.UI
             this.imgProcRedSlider.Value = 0;
             this.imgProcGreenSlider.Value = 0;
             this.imgProcBlueSlider.Value = 0;
+            this.waterReplaceThresholdSlider.Value = 5;
+            this.waterFadeThresholdSlider.Value = 2;
             this.updateImagePreview = true;
 
             this.UpdateImagePreview();

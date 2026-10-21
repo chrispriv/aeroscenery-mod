@@ -266,8 +266,18 @@ namespace AeroScenery.ImageProcessing
 
                                 var settings = AeroSceneryManager.Instance.Settings;
 
-                                //if (settings.EnableImageProcessing.Value)
-                                if ((settings.EnableImageProcessing.Value) && (orthophotSource != OrthophotoSource.GoogleMaps) && (orthophotSource != OrthophotoSource.GoogleRoads) && (orthophotSource != OrthophotoSource.OSMMaps) && (orthophotSource != OrthophotoSource.CartoDBLight))
+                                bool skipOverlaySources = (orthophotSource == OrthophotoSource.GoogleMaps)
+                                    || (orthophotSource == OrthophotoSource.GoogleRoads)
+                                    || (orthophotSource == OrthophotoSource.OSMMaps)
+                                    || (orthophotSource == OrthophotoSource.CartoDBLight);
+
+                                bool adjustStitchedImages = settings.EnableImageProcessing.GetValueOrDefault(false) && !skipOverlaySources;
+                                bool removeAlpha = adjustStitchedImages && settings.RemoveAlphaChannelAdjustment.GetValueOrDefault(false);
+                                bool applyWaterMasking = settings.WaterMaskingEnable.GetValueOrDefault(false)
+                                    && settings.WaterMaskingProcessing.GetValueOrDefault(false)
+                                    && !skipOverlaySources;
+
+                                if (adjustStitchedImages)
                                 {
                                     log.InfoFormat("Starting Image processing on stitched image {0}", stitchFilename);
 
@@ -281,9 +291,9 @@ namespace AeroScenery.ImageProcessing
                                     imageProcessingSettings.BlueAdjustment = settings.BlueAdjustment;
 
                                     this.imageProcessingFilters.ApplyFilters(imageProcessingSettings, bitmap);
+                                }
 
-
-                                    if ((settings.RemoveAlphaChannelAdjustment.Value) || (settings.WaterMaskingEnable.Value)) // add new CheckBox in Settings and replace (1==1) for testing purposes
+                                    if (removeAlpha || applyWaterMasking)
                                     {
                                         var stitchMaskFilename = String.Format("{0}_{1}_stitch_{2}_{3}.png", "c-mask", zoomLevel, stitchedImagesXIx + 1, stitchedImagesYIx + 1);
 
@@ -298,7 +308,7 @@ namespace AeroScenery.ImageProcessing
                                             int width = bitmap.Width;
                                             int stride = bmpData.Stride;
 
-                                            if (settings.RemoveAlphaChannelAdjustment.Value)
+                                            if (removeAlpha)
                                             {
                                                 for (int y = 0; y < stitchedImage.Height; y++)
                                                 {
@@ -318,7 +328,7 @@ namespace AeroScenery.ImageProcessing
                                             }
 
                                             // ...
-                                            if (settings.WaterMaskingProcessing.Value) 
+                                            if (applyWaterMasking) 
                                             {
                                                 var osmStichedImageFilePath = stitchedMaskTilesDirectory + stitchMaskFilename;
 
@@ -406,7 +416,6 @@ namespace AeroScenery.ImageProcessing
 
                                         bitmap.UnlockBits(bmpData);
                                     }
-                                }
 
                                 // Have we drawn an image to the maximum number of rows and columns for this image?
                                 if (columnsUsed == maxTilesPerStitchedImageX && rowsUsed == maxTilesPerStitchedImageY)
